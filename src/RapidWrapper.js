@@ -29,13 +29,6 @@ function getMIDINotesFromDoc(doc) {
     return result;
 }
 
-function getMergeFromMIDITrack(track, user) {
-    return {
-        name: track.name,
-        user,
-    };
-}
-
 function getObjFromMIDINote(note) {
     return {
         measure:  note.measure,
@@ -69,6 +62,7 @@ class RapidWrapper {
     /*void*/ dsCallback(/*String*/ eventName, /*Object*/ eventParams) {
         switch (eventName) {
             case 'trackAddedOrUpdated':
+            {
                 let {track} = eventParams;
                 let doc = this.rp_collections.tracks.document(track.id);
                 doc.execute(doc => {
@@ -78,12 +72,16 @@ class RapidWrapper {
                     return data;
                 });
                 break;
+            }
             case 'trackRemoved':
+            {
                 let {track} = eventParams;
                 let doc = this.rp_collections.tracks.document(track.id);
                 doc.delete();
                 break;
+            }
             case 'noteAddedOrUpdated':
+            {
                 let {track, note} = eventParams;
                 let doc = this.rp_collections.tracks.document(track.id);
                 doc.execute(doc => {
@@ -93,7 +91,9 @@ class RapidWrapper {
                     return data;
                 });
                 break;
+            }
             case 'noteRemoved':
+            {
                 let {track, note} = eventParams;
                 let doc = this.rp_collections.tracks.document(track.id);
                 doc.execute(doc => {
@@ -103,6 +103,7 @@ class RapidWrapper {
                     return data;
                 });
                 break;
+            }
             default:
                 console.log("RapidWrapper: unknown event " + eventName);
                 break;
@@ -133,7 +134,7 @@ class RapidWrapper {
             }
         }
         for (let doc of removed) {
-            let track = documentToMIDITrack(doc);
+            let track = getMIDITrackFromDoc(doc);
             this.ds_client.removeTrack(track);
         }
     }
