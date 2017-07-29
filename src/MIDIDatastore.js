@@ -24,7 +24,7 @@ class MIDIDatastore {
     /*void*/ fireEvent(/*String*/ client, /*String*/ eventName, /*Object*/ eventParams) {
         let clientName = client.name;
         for (let cbName in this.callbacks) {
-            if (cbName != clientName) {
+            if (cbName !== clientName) {
                 let cb = this.callbacks[cbName];
                 cb && cb(clientName, eventName, eventParams);
             }
@@ -56,13 +56,13 @@ class MIDIDatastoreClient {
         this.datastore.fireEvent(this, 'noteDeleted', {track, note});
     }
 
-    /*void*/ refreshNotes/(/*MIDITrack*/ track, /*MIDINote[]*/ notes) {
+    /*void*/ refreshNotes(/*MIDITrack*/ track, /*MIDINote[]*/ notes) {
         let newNotes = {};
         for (let note of notes) {
             newNotes[note.id] = note;
         }
         this.notesByTrackId[track.id] = newNotes;
-        this.datastore.fireEvent(this, 'notesRefreshed', {track, Object.values(newNotes)});
+        this.datastore.fireEvent(this, 'notesRefreshed', {track, notes: Object.values(newNotes)});
     }
 
     /*void*/ addOrUpdateTrack(/*MIDITrack*/ track) {
