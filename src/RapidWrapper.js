@@ -40,11 +40,15 @@ function getObjFromMIDINote(note) {
 
 class RapidWrapper {
     constructor(/*MIDIDatastore*/ datastore, /*String*/ proj_id) {
+        proj_id = 'BEST_PROJECT_ID_EVER' // TODO
+
         this.rp_user = generateID();
         this.rp_client = Rapid.createClient('NDA1OWE0MWo1b3AzYzc0LnJhcGlkLmlv');
 
-        this.rp_collections.projects = this.rp_client.collection('projects');
-        this.rp_collections.tracks   = this.rp_client.collection('tracks').filter({proj_id});
+        this.rp_collections = {
+            projects: this.rp_client.collection('projects'),
+            tracks:   this.rp_client.collection('tracks').filter({proj_id}),
+        };
 
         this.rp_proj = this.rp_collections.projects.document(proj_id);
         this.rp_proj.subscribe(this.rpProjValueCallback.bind(this),
