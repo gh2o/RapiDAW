@@ -88,9 +88,9 @@ class RapidWrapper {
                 let doc = this.rp_collections.tracks.document(track.id);
                 doc.execute(doc => {
                     let data = doc.body;
-                    body[NOTE_KEY_PREFIX + note.id] = getObjFromMIDINote(note);
+                    data[NOTE_KEY_PREFIX + note.id] = getObjFromMIDINote(note);
                     this.updateTrackRev(data, track);
-                    return body;
+                    return data;
                 });
                 break;
             case 'noteRemoved':
@@ -98,9 +98,9 @@ class RapidWrapper {
                 let doc = this.rp_collections.tracks.document(track.id);
                 doc.execute(doc => {
                     let data = doc.body;
-                    delete body[NOTE_KEY_PREFIX + note.id];
+                    delete data[NOTE_KEY_PREFIX + note.id];
                     this.updateTrackRev(data, track);
-                    return body;
+                    return data;
                 });
                 break;
             default:
