@@ -1,0 +1,20 @@
+.track-container {
+  background-color: #E0E0E0;
+  width: 100%;
+  height: 10rem;
+  transition: background-color 0.33s;
+  margin-bottom: 0.5rem;
+  display: flex;
+}
+
+.track-container:hover {
+  background-color: #EEEEEE;
+}
+
+.track-info {
+  border-right: 1px solid white;
+  background-color: #E0E0E0;
+  height: 100%;
+  width: 8rem;
+  text-align: center;
+}

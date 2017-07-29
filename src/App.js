@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-
 import './App.css';
 
 // MODEL
-import RapidWrapper from './RapidWrapper.js';
+// import RapidWrapper from './RapidWrapper.js';
 import { MIDINote, MIDITrack, MIDIDatastore } from './MIDIDatastore.js';
 import { generateID } from './Utils.js';
 
@@ -26,7 +25,7 @@ class App extends Component {
     this.MIDIDatastore = new MIDIDatastore();
     this.MIDIDatastoreClient = this.MIDIDatastore.getClient("MainClient");
 
-    this.rapidWrapper = new RapidWrapper(this.MIDIDatastore);
+    // this.rapidWrapper = new RapidWrapper(this.MIDIDatastore);
 
     this.handleCreateTrack = this.handleCreateTrack.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -104,17 +103,6 @@ class App extends Component {
           <FloatingActionButton className="button-addtrack">
             <ContentAdd />
           </FloatingActionButton>
-
-          {/*
-          <div className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <h2>Welcome to React</h2>
-          </div>
-
-          <p className="App-intro">
-            To get started, edit <code>src/App.js</code> and save to reload.
-          </p>
-          */}
 
         </div>
       </MuiThemeProvider>
