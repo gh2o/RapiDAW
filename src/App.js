@@ -1,9 +1,20 @@
 import React, { Component } from 'react';
-import RapidWrapper from './RapidWrapper.js';
-import Track from './Track.js';
-import logo from './logo.svg';
+
 import './App.css';
-import { MIDIDatastore } from './MIDIDatastore.js';
+
+// MODEL
+import RapidWrapper from './RapidWrapper.js';
+import { MIDINote, MIDITrack, MIDIDatastore } from './MIDIDatastore.js';
+import { generateID } from './Utils.js';
+
+// MATERIAL UI COMPONENTS
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+
+// UI COMPONENTS
+import Header from './Header.js';
+import Track from './Track.js';
 
 var ENTER_KEY = 13;
 
@@ -20,6 +31,8 @@ class App extends Component {
     this.handleCreateTrack = this.handleCreateTrack.bind(this);
     this.handleChange = this.handleChange.bind(this);
 
+    this.MIDIDatastoreClient.registerCallback(this.addTrack);
+
     this.state = {
       newTrackName: ""
     };
@@ -27,42 +40,84 @@ class App extends Component {
 
   handleChange(event) {
     console.log(this.state);
-    this.setState({newTrackName: event.target.value})
+    this.setState({newTrackName: event.target.value});
   }
 
   handleCreateTrack(event) {
-
     if (event.keyCode !== ENTER_KEY) {
       return;
     }
+    console.log("enter pressed - handleCreateTrack Called");
     event.preventDefault();
+
     var trackName = this.state.newTrackName.trim();
+    var id = generateID();
     var newTrack = new MIDITrack(id,trackName);
-    this.MIDIDatastoreClient.addOrUpdateTrack(this.state.newTrackName);
+
+    this.MIDIDatastoreClient.addOrUpdateTrack(newTrack);
+    this.setState({newTrackName: ""});
+  }
+
+  addTrack(event) {
+    console.log("addTrack called");
+    this.setState({newTrackName: ""});
   }
 
   render() {
-    return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>RapidDAW</h2>
-        </div>
-        <div id="trackbox">
-          <Track/>
-        </div>
-        <input id="input"
-               placeholder="Create Track"
-               value={this.state.newTrackName}
-               onKeyDown={this.handleCreateTrack}
-               onChange={this.handleChange}
-               autoFocus={true}
-        />
 
-        <p className="footer">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
+    var tracksBody;
+    var tracks = this.MIDIDatastoreClient.getTracks();
+
+    var trackItems = tracks.map(function (track) {
+      return (
+        <Track/>
+      );
+    }, this);
+
+    if (tracks.length) {
+      tracksBody = (
+        <div className="body-container">
+          {trackItems}
+        </div>
+      );
+    }
+
+    return (
+      <MuiThemeProvider>
+        <div className="App">
+
+          <Header />
+
+          <p> WHERE AM I </p>
+
+          <Track/>
+          <input id="input"
+                 placeholder="Create Track"
+                 value={this.state.newTrackName}
+                 onKeyDown={this.handleCreateTrack}
+                 onChange={this.handleChange}
+                 autoFocus={true}
+          />
+
+          {tracksBody}
+
+          <FloatingActionButton className="button-addtrack">
+            <ContentAdd />
+          </FloatingActionButton>
+
+          {/*
+          <div className="App-header">
+            <img src={logo} className="App-logo" alt="logo" />
+            <h2>Welcome to React</h2>
+          </div>
+
+          <p className="App-intro">
+            To get started, edit <code>src/App.js</code> and save to reload.
+          </p>
+          */}
+
+        </div>
+      </MuiThemeProvider>
     );
   }
 }

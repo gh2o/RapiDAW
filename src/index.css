@@ -1,7 +1,9 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  font-family: 'Roboto', sans-serif;
+}
+  /*font-family: sans-serif;
 }
 
 #chatbox {
@@ -25,4 +27,4 @@ input {
 }
 input:focus {
   border-color: #c4c3c9;
-}
+}*/

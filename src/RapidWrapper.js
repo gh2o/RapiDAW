@@ -1,7 +1,5 @@
 import Rapid from 'rapid-io'
 
-var classNames = require('classnames');
-
 class RapidWrapper {
   constructor(datastore) {
     this.datastore = datastore;
