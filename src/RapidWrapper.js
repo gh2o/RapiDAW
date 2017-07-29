@@ -29,13 +29,6 @@ function getMIDINotesFromDoc(doc) {
     return result;
 }
 
-function getMergeFromMIDITrack(track, user) {
-    return {
-        name: track.name,
-        user,
-    };
-}
-
 function getObjFromMIDINote(note) {
     return {
         measure:  note.measure,
@@ -47,11 +40,15 @@ function getObjFromMIDINote(note) {
 
 class RapidWrapper {
     constructor(/*MIDIDatastore*/ datastore, /*String*/ proj_id) {
+        proj_id = 'BEST_PROJECT_ID_EVER' // TODO
+
         this.rp_user = generateID();
         this.rp_client = Rapid.createClient('NDA1OWE0MWo1b3AzYzc0LnJhcGlkLmlv');
 
-        this.rp_collections.projects = this.rp_client.collection('projects');
-        this.rp_collections.tracks   = this.rp_client.collection('tracks').filter({proj_id});
+        this.rp_collections = {
+            projects: this.rp_client.collection('projects'),
+            tracks:   this.rp_client.collection('tracks').filter({proj_id}),
+        };
 
         this.rp_proj = this.rp_collections.projects.document(proj_id);
         this.rp_proj.subscribe(this.rpProjValueCallback.bind(this),
@@ -69,6 +66,7 @@ class RapidWrapper {
     /*void*/ dsCallback(/*String*/ eventName, /*Object*/ eventParams) {
         switch (eventName) {
             case 'trackAddedOrUpdated':
+            {
                 let {track} = eventParams;
                 let doc = this.rp_collections.tracks.document(track.id);
                 doc.execute(doc => {
@@ -78,31 +76,38 @@ class RapidWrapper {
                     return data;
                 });
                 break;
+            }
             case 'trackRemoved':
+            {
                 let {track} = eventParams;
                 let doc = this.rp_collections.tracks.document(track.id);
                 doc.delete();
                 break;
+            }
             case 'noteAddedOrUpdated':
+            {
                 let {track, note} = eventParams;
                 let doc = this.rp_collections.tracks.document(track.id);
                 doc.execute(doc => {
                     let data = doc.body;
-                    body[NOTE_KEY_PREFIX + note.id] = getObjFromMIDINote(note);
+                    data[NOTE_KEY_PREFIX + note.id] = getObjFromMIDINote(note);
                     this.updateTrackRev(data, track);
-                    return body;
+                    return data;
                 });
                 break;
+            }
             case 'noteRemoved':
+            {
                 let {track, note} = eventParams;
                 let doc = this.rp_collections.tracks.document(track.id);
                 doc.execute(doc => {
                     let data = doc.body;
-                    delete body[NOTE_KEY_PREFIX + note.id];
+                    delete data[NOTE_KEY_PREFIX + note.id];
                     this.updateTrackRev(data, track);
-                    return body;
+                    return data;
                 });
                 break;
+            }
             default:
                 console.log("RapidWrapper: unknown event " + eventName);
                 break;
@@ -133,7 +138,7 @@ class RapidWrapper {
             }
         }
         for (let doc of removed) {
-            let track = documentToMIDITrack(doc);
+            let track = getMIDITrackFromDoc(doc);
             this.ds_client.removeTrack(track);
         }
     }
