@@ -70,7 +70,7 @@ class RapidWrapper {
                 let {track} = eventParams;
                 let doc = this.rp_collections.tracks.document(track.id);
                 doc.execute(doc => {
-                    let data = doc.body;
+                    let data = doc ? doc.body : {};
                     data.name = track.name;
                     this.updateTrackRev(data, track);
                     return data;
@@ -89,7 +89,7 @@ class RapidWrapper {
                 let {track, note} = eventParams;
                 let doc = this.rp_collections.tracks.document(track.id);
                 doc.execute(doc => {
-                    let data = doc.body;
+                    let data = doc ? doc.body : {};
                     data[NOTE_KEY_PREFIX + note.id] = getObjFromMIDINote(note);
                     this.updateTrackRev(data, track);
                     return data;
@@ -101,7 +101,7 @@ class RapidWrapper {
                 let {track, note} = eventParams;
                 let doc = this.rp_collections.tracks.document(track.id);
                 doc.execute(doc => {
-                    let data = doc.body;
+                    let data = doc ? doc.body : {};
                     delete data[NOTE_KEY_PREFIX + note.id];
                     this.updateTrackRev(data, track);
                     return data;
