@@ -3,3 +3,26 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+#chatbox {
+  flex: 1;
+  overflow: scroll;
+}
+#chatbox div {
+  padding: 15px 30px;
+  border-bottom: 1px solid #EEEBF3
+}
+
+input {
+  border: 1px solid #EEEBF3;
+  border-left: none;
+  padding: 25px 30px;
+  font-size: 1rem;
+  width: 100%;
+  display: block;
+  outline: none;
+  transition: border .2s ease;
+}
+input:focus {
+  border-color: #c4c3c9;
+}

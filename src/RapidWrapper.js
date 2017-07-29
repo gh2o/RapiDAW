@@ -1,27 +1,27 @@
 import Rapid from 'rapid-io'
 
 var classNames = require('classnames');
-//MIDIDatastore datastore
+
 class RapidWrapper {
-  constructor() {
-    // this.datastore = datastore;
+  constructor(datastore) {
+    this.datastore = datastore;
     this.client = Rapid.createClient('NDA1OWE0MWo1b3AzYzc0LnJhcGlkLmlv');
     this.client
       .collection('tracks')
       .subscribe((messages, changes) => {
         console.log(messages);
-      // changes.added.forEach(message => {
-      //   $('#trackbox').append($('<div>').text(message.body.text))
-      // })
+        console.log("SUBSCRIBED");
     });
   }
 
   //Pass the iobject you want to mutate
-  addTrack() {
+  addTrack(newTrackName) {
+    console.log("ADDTRACK CALLED");
     this.client
       .collection('tracks')
       .newDocument()
-      // .mutate({ text: $('#input').val() })
+      .mutate({ text: newTrackName })
+    console.log("NEW TRACK CREATED");
   }
 }
 
