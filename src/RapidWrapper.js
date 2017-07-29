@@ -40,7 +40,7 @@ function getObjFromMIDINote(note) {
 
 class RapidWrapper {
     constructor(/*MIDIDatastore*/ datastore, /*String*/ proj_id) {
-        proj_id = 'BEST_PROJECT_ID_EVER' // TODO
+        this.proj_id = proj_id = 'BEST_PROJECT_ID_EVER' // TODO
 
         this.rp_user = generateID();
         this.rp_client = Rapid.createClient('NDA1OWE0MWo1b3AzYzc0LnJhcGlkLmlv');
@@ -72,6 +72,7 @@ class RapidWrapper {
                 doc.execute(doc => {
                     let data = doc ? doc.body : {};
                     data.name = track.name;
+                    data.proj_id = this.proj_id;
                     this.updateTrackRev(data, track);
                     return data;
                 });
