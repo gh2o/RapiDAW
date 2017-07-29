@@ -1,3 +1,4 @@
+/*HEAD*/
 .header-container {
   position: fixed;
   top: 0px;
@@ -8,14 +9,27 @@
   background-color: #EEEEEE !important;
 }
 
+.header-subcontainer {
+  display: flex;
+}
+
 .header-toolbar {
   background-color: #EEEEEE !important;
+}
+
+.header-addtrack {
+  margin: 0rem 0rem 1rem 1rem;
+  padding: 0.5rem 0.5rem 0.5rem 1rem;
+}
+
+.header-addtrack-button {
+  width: 1rem;
 }
 
 .header-trackcontrol {
   text-align: left !important;
   width: 50%;
-  margin: 0rem 1rem 1rem 1rem;
+  margin: 0rem 0rem 1rem 1rem;
   padding: 0.5rem;
 }
 
@@ -23,6 +37,8 @@
   color: #616161 !important;
   font-size: 250% !important;
 }
+
+/*BODY*/
 
 .body-container {
   padding-top: 9rem;
@@ -35,16 +51,4 @@
   position: fixed;
   bottom: 2rem;
   right: 2rem;
-}
-
-.track-container {
-  background-color: #BDBDBD;
-  width: 100%;
-  height: 10rem;
-  transition: background-color 0.33s;
-  margin-bottom: 0.5rem;
-}
-
-.track-container:hover {
-  background-color: #E0E0E0;
 }
