@@ -27,7 +27,7 @@ class MIDIDatastore {
         for (let cbName in this.callbacks) {
             if (cbName !== clientName) {
                 let cb = this.callbacks[cbName];
-                cb && cb(clientName, eventName, eventParams);
+                cb && cb(eventName, eventParams);
             }
         }
     }
@@ -54,7 +54,7 @@ class MIDIDatastoreClient {
 
     /*void*/ removeNote(/*MIDITrack*/ track, /*MIDINote*/ note) {
         delete this.notesByTrackId[track.id][note.id];
-        this.datastore.fireEvent(this, 'noteDeleted', {track, note});
+        this.datastore.fireEvent(this, 'noteRemoved', {track, note});
     }
 
     /*void*/ refreshNotes(/*MIDITrack*/ track, /*MIDINote[]*/ notes) {
