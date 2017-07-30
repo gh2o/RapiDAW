@@ -45,6 +45,8 @@ class Track extends Component {
 
     this.state = {
       mouseActive: false,
+      resizedNote: null,
+      resizedCell: null,
     }
   }
 
@@ -73,6 +75,12 @@ class Track extends Component {
         noteDragStarted={note => {
           this.props.noteDeletedCallback(this.props.track, note);
           this.setState({mouseActive: true});
+        }}
+        noteResizeStarted={(note, cell) => {
+          this.setState({
+            resizedNote: note,
+            resizedCell: cell
+          });
         }}/>);
     }
 
@@ -80,8 +88,13 @@ class Track extends Component {
       <div className="track-container"
            onContextMenu={evt => evt.preventDefault()}
            onMouseDown={evt => evt.button !== 2 && this.setState({mouseActive: true})}
-           onMouseUp={() => this.setState({mouseActive: false})}
-           onMouseLeave={() => this.setState({mouseActive: false})}>
+           onMouseUp={() => this.setState({mouseActive: false, resizedNote: null, resizedCell: null})}
+           onMouseLeave={() => this.setState({mouseActive: false, resizedNote: null, resizedCell: null})}
+           onMouseMove={evt => {
+             if (this.state.resizedNote) {
+               this.state.resizedCell.resizeUpdate(evt, this.pianoConDiv.getBoundingClientRect());
+             }
+           }}>
 
         <div className="track-info">
           <FontIcon className="material-icons close-link"  onClick={() => this.props.trackDeleteClicked(this.props.track)}>close</FontIcon>
@@ -101,7 +114,7 @@ class Track extends Component {
           <div className="piano">
             {this.pianoElements}
           </div>
-          <div className="piano-container">
+          <div className="piano-container" ref={div => { this.pianoConDiv = div; }}>
             {trackRows}
           </div>
         </div>
