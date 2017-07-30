@@ -1,8 +1,14 @@
+// vim: ts=2 sw=2
+
 import React, { Component } from 'react';
 
 import { TrackRow } from './TrackRow.js';
 
+// MATERIAL UI
 import FontIcon from 'material-ui/FontIcon';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import MenuItem from 'material-ui/MenuItem';
+import Slider from 'material-ui/Slider';  
 
 import './Track.css';
 
@@ -38,13 +44,18 @@ class Track extends Component {
     this.pianoElements.reverse();
 
     this.state = {
-      mouseActive: false
+      mouseActive: false,
+      instrument: 2,
+      activeNote: null
     }
   }
 
+  handleChange = (event, index, instrument) => this.setState({instrument});
+
+
   render() {
     var notesByPitch = {};
-    for (let note of this.props.notes) {
+    for (let note of Object.values(this.props.notes)) {
       if (!(note.pitch in notesByPitch)) {
         notesByPitch[note.pitch] = [];
       }
@@ -59,19 +70,31 @@ class Track extends Component {
         pitch={pitch}
         notes={notesByPitch[pitch] || []}
         mouseActive={this.state.mouseActive}
-        noteAdded={note => this.props.noteAddedCallback(this.props.track, note)}/>);
+        noteAdded={note => this.props.noteAddedCallback(this.props.track, note)}
+        noteDeleted={note => this.props.noteDeletedCallback(this.props.track, note)}/>);
     }
 
     return (
       <div className="track-container"
-           onMouseDown={() => this.setState({mouseActive: true})}
+           onContextMenu={evt => evt.preventDefault()}
+           onMouseDown={evt => evt.button !== 2 && this.setState({mouseActive: true})}
            onMouseUp={() => this.setState({mouseActive: false})}
            onMouseLeave={() => this.setState({mouseActive: false})}>
+
         <div className="track-info">
           <FontIcon className="material-icons close-link"  onClick={() => this.props.trackDeleteClicked(this.props.track)}>close</FontIcon>
           <br />
           <p>{this.props.track.name}</p>
+          <DropDownMenu value={this.state.instrument} onChange={this.handleChange}>
+            <MenuItem value={1} primaryText="Instrument" />
+            <MenuItem value={2} primaryText="Instrument2" />
+            <MenuItem value={3} primaryText="Instrument3" />
+            <MenuItem value={4} primaryText="Instrument4" />
+            <MenuItem value={5} primaryText="Instrument5" />
+          </DropDownMenu>
+          <Slider defaultValue={1} className="track-info-slider"/>
         </div>
+
         <div className="pianoroll-container">
           <div className="piano">
             {this.pianoElements}

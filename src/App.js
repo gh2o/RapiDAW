@@ -1,6 +1,7 @@
 // vim: ts=2 sw=2
 
 import React, { Component } from 'react';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 import update from 'immutability-helper';
 import './App.css';
 
@@ -12,6 +13,7 @@ import { generateID } from './Utils.js';
 // MATERIAL UI COMPONENTS
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import FontIcon from 'material-ui/FontIcon';
 
 // UI COMPONENTS
@@ -29,6 +31,14 @@ class App extends Component {
 
   constructor() {
     super();
+    injectTapEventPlugin();
+
+    this.muiTheme = getMuiTheme({
+      palette: {
+        primary1Color: '#8D6E63',
+        accent1Color: '#009688'
+      }
+    });
 
     this.handleCreateTrack = this.handleCreateTrack.bind(this);
     this.datastoreCallback = this.datastoreCallback.bind(this);
@@ -43,11 +53,6 @@ class App extends Component {
 
     this.state = {
       midiTracks: {},
-      position: 250,
-      iconorigpos: {left: '14.5rem'},
-      iconseekpos: {left: '14.5rem'},
-      barorigpos: {left: '16rem'},
-      barseekpos: {left: '16rem'},
       notesByTrackId: {}
     };
   }
@@ -63,6 +68,11 @@ class App extends Component {
       this.setState({
         midiTracks: update(this.state.midiTracks, {[track.id]: {$set: track}})
       });
+      if (!(track.id in this.state.notesByTrackId)) {
+        this.setState({
+          notesByTrackId: update(this.state.notesByTrackId, {[track.id]: {$set: {}}})
+        });
+      }
     }
   }
 
@@ -101,8 +111,13 @@ class App extends Component {
       case 'notesRefreshed':
       {
         let {track, notes} = eventParams;
+        let notesObj = {};
+        for (let note of notes) {
+          notesObj[note.id] = note;
+        }
         this.setState({
-          notesByTrackId: update(this.state.notesByTrackId, {[track.id]: {$set: notes}})
+          notesByTrackId: update(this.state.notesByTrackId,
+            {[track.id]: {$set: notesObj}})
         });
         break;
       }
@@ -121,13 +136,14 @@ class App extends Component {
   updateSeekHead() {
     var seekhead = document.getElementById("seekhead");
     var seekbar = document.getElementById("seekbar");
-    var currPos = seekhead.getBoundingClientRect().left;
+    var currbarPos = seekbar.getBoundingClientRect().left;
+    var currheadPos = seekhead.getBoundingClientRect().left;
     var currPlayPos = this.playbackEngine.currentPosition();
 
     console.log("updateSeekHead before", currPos, currPlayPos);
 
-    seekbar.style.left = (currPos+currPlayPos)+'px';
-    seekhead.style.left = (currPos+currPlayPos)+'px';
+    seekbar.style.left = (currbarPos+currPlayPos+10)+'px';
+    seekhead.style.left = (currheadPos+currPlayPos+10)+'px';
 
     var currPos = seekhead.getBoundingClientRect().left;
     console.log("updateSeekHead after", currPos, currPlayPos);
@@ -151,7 +167,7 @@ class App extends Component {
         <Track
             key={track.id}
             track={track}
-            notes={this.MIDIDatastoreClient.getNotes(track) || []}
+            notes={this.state.notesByTrackId[track.id] || {}}
             trackDeleteClicked={track => {
                 this.MIDIDatastoreClient.removeTrack(track);
                 this.updateOrRemoveStateTrack(track, true);
@@ -159,14 +175,22 @@ class App extends Component {
             noteAddedCallback={(track, note) => {
               this.MIDIDatastoreClient.addOrUpdateNote(track, note);
               this.setState({
-                notesByTrackId: update(this.state.notesByTrackId, {[track.id]: {$push: [note]}})
+                notesByTrackId: update(this.state.notesByTrackId,
+                  {[track.id]: {[note.id]: {$set: note}}})
+              });
+            }}
+            noteDeletedCallback={(track, note) => {
+              this.MIDIDatastoreClient.removeNote(track, note);
+              this.setState({
+                notesByTrackId: update(this.state.notesByTrackId,
+                  {[track.id]: {$unset: [note.id]}})
               });
             }}/>
       );
     });
 
     return (
-      <MuiThemeProvider>
+      <MuiThemeProvider muiTheme={this.muiTheme}>
         <div className="App">
 
           <Header

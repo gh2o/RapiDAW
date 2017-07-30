@@ -1,12 +1,21 @@
+// vim: ts=2 sw=2
+
 import React, { Component } from 'react';
 import { PIXELS_PER_BEAT } from './TrackRow.js'
 import './Track.css';
 
 class TrackCell extends Component {
-
   render() {
     return (
-      <div className="track-cell-container" style={this.getStyle()}>
+      <div
+        className="track-cell-container"
+        style={this.getStyle()}
+        onContextMenu={evt => {
+          evt.preventDefault();
+          if (this.props.note) {
+            this.props.noteDeleteClicked(this.props.note);
+          }
+        }}>
       </div>
     );
   }
@@ -18,4 +27,4 @@ class TrackCell extends Component {
   }
 }
 
-export {TrackCell};
+export default TrackCell;

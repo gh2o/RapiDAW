@@ -1,3 +1,10 @@
+/*COLOR PALETTE
+PRIMARY BROWN: #8D6E63;
+SECONDARY TEAL: #009688;
+*/
+
+
+
 /*HEAD*/
 .header-container {
   z-index: 5;
@@ -31,7 +38,7 @@
 
 .header-trackcontrol {
   text-align: left !important;
-  flex: 1;
+  /*flex: 1;*/
   margin: 0rem 1rem 1rem 1rem;
   padding: 0.5rem 0.5rem 0rem 0.5rem;
 }
@@ -39,6 +46,11 @@
 .header-trackcontrol-icon {
   color: #616161 !important;
   font-size: 250% !important;
+}
+
+.header-trackcontrol-icon:hover {
+  color: #5D4037 !important;
+  cursor: pointer;
 }
 
 .header-avatar {

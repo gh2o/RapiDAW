@@ -12,6 +12,9 @@
 }
 
 .track-info {
+  box-sizing: border-box;
+  padding: 1rem;
+  font-size: 120%;
   min-width: 11rem;
   max-width: 11rem;
   border-right: 1px solid white;
