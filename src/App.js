@@ -51,8 +51,8 @@ class App extends Component {
     console.log("enter pressed - handleCreateTrack Called");
     event.preventDefault();
 
-    // var trackName = this.state.newTrackName.trim();
     var trackName = event.target.value.trim();
+    event.target.value = '';
     var id = generateID();
     var track = new MIDITrack(id,trackName);
 
@@ -79,6 +79,14 @@ class App extends Component {
         this.setState(this.state);
         break;
       }
+      case 'notesRefreshed':
+      {
+        this.setState(this.state);
+        break;
+      }
+      default:
+        console.log('unknown event', eventName);
+        break;
     }
   }
 
@@ -91,12 +99,15 @@ class App extends Component {
       return (
         <Track
             key={track.id}
+            datastoreClient={this.MIDIDatastoreClient}
             track={track}
+            notes={this.MIDIDatastoreClient.getNotes(track) || []}
             trackDeleteClicked={track => {
                 this.MIDIDatastoreClient.removeTrack(track);
                 delete this.state.midiTracks[track.id];
                 this.setState(this.state);
-            }}/>
+            }}
+            noteAddedCallback={() => this.setState(this.state)}/>
       );
     });
 

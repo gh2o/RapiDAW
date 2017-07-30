@@ -13,13 +13,7 @@ class Track extends PureComponent {
     super();
     console.log("track constructor called");
 
-    var TrackRows = new Array(88);
-
-    for (var i = 0; i < TrackRows.length; i++) {
-      TrackRows[i] = <TrackRow/>;
-    }
-
-    this.piano = [false, true, false,
+    this.pianoElements = [false, true, false,
       false, true, false, true, false,
       false, true, false, true, false, true, false,
       false, true, false, true, false,
@@ -36,43 +30,62 @@ class Track extends PureComponent {
       false, true, false, true, false, true, false,
       false
     ];
-    for (var i=0; i < this.piano.length; i++) {
-        if (this.piano[i]) {
-          this.piano[i] = (<div className="piano-key black"></div>);
+    for (var i=0; i < this.pianoElements.length; i++) {
+        if (this.pianoElements[i]) {
+          this.pianoElements[i] = (<div className="piano-key black"></div>);
         } else {
-          this.piano[i] = (<div className="piano-key white"></div>);
+          this.pianoElements[i] = (<div className="piano-key white"></div>);
         }
     }
-    this.piano.reverse();
+    this.pianoElements.reverse();
 
     this.state = {
-      trackRows: TrackRows
+      mouseActive: false
     }
   }
 
+  noteAddedCallback(note) {
+    this.props.datastoreClient.addOrUpdateNote(this.props.track, note);
+    this.props.noteAddedCallback();
+  }
+
   render() {
-    var midiBody;
-    if (this.state.trackRows.length) {
-      midiBody = (
-        <div className="piano-container">
-          {this.state.trackRows}
-        </div>
-      );
+    var notesByPitch = {};
+    for (let note of this.props.notes) {
+      if (!(note.pitch in notesByPitch)) {
+        notesByPitch[note.pitch] = [];
+      }
+      notesByPitch[note.pitch].push(note);
+    }
+
+    var trackRows = [];
+    for (var i = 0; i < 88; i++) {
+      let pitch = 87 - i;
+      trackRows.push(<TrackRow
+        key={pitch}
+        pitch={pitch}
+        notes={notesByPitch[pitch] || []}
+        mouseActive={this.state.mouseActive}
+        noteAdded={this.noteAddedCallback.bind(this)}/>);
     }
 
     return (
-      <div className="track-container">
+      <div className="track-container"
+           onMouseDown={() => this.setState({mouseActive: true})}
+           onMouseUp={() => this.setState({mouseActive: false})}
+           onMouseLeave={() => this.setState({mouseActive: false})}>
         <div className="track-info">
           <FontIcon className="material-icons close-link"  onClick={() => this.props.trackDeleteClicked(this.props.track)}>close</FontIcon>
           <br />
           <p>{this.props.track.name}</p>
         </div>
-
         <div className="pianoroll-container">
           <div className="piano">
-            {this.piano}
+            {this.pianoElements}
           </div>
-          {midiBody}
+          <div className="piano-container">
+            {trackRows}
+          </div>
         </div>
     </div>
     );

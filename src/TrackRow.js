@@ -1,28 +1,47 @@
+// vim: ts=2 sw=2
+
 import React, { Component } from 'react';
 import { TrackCell } from './TrackCell.js';
+import { MIDINote } from './MIDIDatastore.js';
+import { generateID } from './Utils.js';
 import './Track.css';
+
+const PIXELS_PER_BEAT = 40;
 
 class TrackRow extends Component {
   constructor() {
     super();
-    this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.handleMouseDownOrMove = this.handleMouseDownOrMove.bind(this);
     this.handleMouseUp = this.handleMouseUp.bind(this);
     this.state = {
-      pressed: false,
-      released: false,
-      cells: []
+      notes: [],
+      mouseX: 0,
+      mouseY: 0,
+      mouseIn: false
     };
   }
 
-  handleMouseDown(event) {
-    console.log("pageX :" + event.pageX);
-    console.log("pageY :" + event.pageY);
-    this.setState({pressed: !this.state.pressed});
-    console.log(this.state.pressed);
+  getOffsetForEventX(x) {
+    var rect = this.rowDiv.getBoundingClientRect();
+    return x - rect.left;
   }
 
-  handleMouseUp(event) {
-    var rect = this.rowDiv.getBoundingClientRect()
+  handleMouseDownOrMove(evt) {
+    this.setState({
+      mouseX: evt.pageX,
+      mouseY: evt.pageY,
+      mouseIn: true
+    });
+  }
+
+  handleMouseUp(evt) {
+    var offsetPx = this.getOffsetForEventX(evt.pageX);
+    var beat = offsetPx / PIXELS_PER_BEAT;
+    beat = Math.round(beat * 2) / 2;
+    var note = new MIDINote(generateID(), beat, 1, this.props.pitch);
+    this.props.noteAdded(note);
+
+    /*
     console.log(rect.top, rect.right, rect.bottom, rect.left);
 
     this.setState({
@@ -32,28 +51,26 @@ class TrackRow extends Component {
     });
 
     console.log(this.state.pressed);
-  }
-
-  handleDrag(event) {
-    console.log(event);
+    */
   }
 
   render() {
-    if(!this.state.pressed && this.state.released) {
-      this.state.cells.push(
-        <TrackCell
-          position={this.state.position}/>
-      );
+    var cells = [];
+    for (let note of this.props.notes) {
+      cells.push(<TrackCell key={note.id} position={note.beat * PIXELS_PER_BEAT}/>);
+    }
+    if (this.state.mouseIn && this.props.mouseActive) {
+      cells.push(<TrackCell key="TEMP" position={this.getOffsetForEventX(this.state.mouseX)}/>);
     }
     return (
       <div
         className="track-row-container"
-        onDrag={this.handleDrag}
-        onMouseDown={this.handleMouseDown}
+        onMouseDown={this.handleMouseDownOrMove}
+        onMouseMove={this.handleMouseDownOrMove}
         onMouseUp={this.handleMouseUp}
-        ref={(div) => { this.rowDiv = div; }}
-        >
-        {this.state.cells}
+        onMouseLeave={() => {this.setState({mouseIn: false})}}
+        ref={(div) => { this.rowDiv = div; }}>
+        {cells}
       </div>
     );
   }

@@ -1,10 +1,15 @@
 import Tone from 'tone';
+import {MIDITrack, MIDINote} from './MIDIDatastore.js';
 
 function beatsToToneTime(beats) {
     if (beats < 0 || isNaN(beats) || beats > 1e10) {
         throw new Error("bad beats");
     }
     return `0:${beats}:0`;
+}
+
+function pitchNumToFrequency(num) {
+    return 440 * Math.pow(2, (num - 69) / 12);
 }
 
 class PlaybackEngine {
@@ -17,7 +22,10 @@ class PlaybackEngine {
         this.transport_evt = null;
         this.note_timeline = null;
 
+        this.main_instrument = new Tone.PolySynth(6, Tone.Synth).toMaster();
+
         window.peng = this;
+        window.mins = this.main_instrument;
     }
 
     play() {
@@ -28,12 +36,39 @@ class PlaybackEngine {
         // add all known notes into BST
         let ppq = Tone.Transport.PPQ;
         this.note_timeline = new Tone.Timeline();
+        /*
         for (let track of this.ds_client.getTracks()) {
             for (let note of this.ds_client.getNotes(track)) {
-                let ticks = note.beats * ppq;
+                let ticks = note.beat * ppq;
                 if (ticks >= Tone.Transport.ticks) {
                     this.note_timeline.add({time: ticks, track, note});
                 }
+            }
+        }
+        */
+
+        let track = [
+            new MIDITrack('k', 'blah'),
+        ];
+        let notes = [
+            new MIDINote('1', 0, 1, 69),
+            new MIDINote('2', 1, 1, 71),
+            new MIDINote('3', 2, 1, 73),
+            new MIDINote('4', 3, 1, 74),
+            new MIDINote('5', 4, 1, 76),
+            new MIDINote('6', 5, 1, 78),
+            new MIDINote('7', 6, 1, 80),
+            new MIDINote('8', 7, 1, 81),
+        ];
+        for (let note of notes) {
+            let ticks = note.beat * ppq;
+            console.log('cmp', ticks, Tone.Transport.ticks);
+            if (ticks >= Tone.Transport.ticks) {
+                this.note_timeline.add({
+                    time: ticks,
+                    duration: note.duration * ppq,
+                    track,
+                    note});
             }
         }
 
@@ -41,6 +76,7 @@ class PlaybackEngine {
         Tone.Transport.start();
 
         // schedule note transport
+        this.transport_evt = true; // force start
         this.transportCallback(void 0, Tone.Transport.ticks);
     }
 
@@ -79,6 +115,7 @@ class PlaybackEngine {
     }
 
     transportCallback(real_time, cur_ticks) {
+        console.log('tc entry', cur_ticks, 'ticks');
         if (this.transport_evt === null) {
             return;
         } else {
@@ -88,6 +125,7 @@ class PlaybackEngine {
         let item;
         while (true) {
             item = this.note_timeline.peek();
+            console.log('peek got', item);
             if (!item) {
                 this.stop(false);
                 return;
@@ -95,11 +133,16 @@ class PlaybackEngine {
             if (item.time > cur_ticks) {
                 break;
             }
-            console.log('play note', item.note);
+            this.main_instrument.triggerAttackRelease(
+                pitchNumToFrequency(item.note.pitch),
+                new Tone.Time(item.duration, "i").toSeconds(),
+                real_time);
             this.note_timeline.shift();
         }
 
-        this.transport_evt = Tone.Transport.scheduleOnce(t => this.transportCallback(t, item.time), item.time);
+        this.transport_evt = Tone.Transport.scheduleOnce(
+            t => this.transportCallback(t, item.time),
+            new Tone.Time(item.time, "i"));
     }
 
     datastoreCallback(/*String*/ eventName, /*Object*/ eventParams) {
