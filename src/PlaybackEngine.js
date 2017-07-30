@@ -1,5 +1,7 @@
 import Tone from 'tone';
 
+export const BEATS_PER_MEASURE = 4;
+
 function beatsToToneTime(beats) {
     if (beats < 0 || isNaN(beats) || beats > 1e10) {
         throw new Error("bad beats " + beats);
@@ -194,6 +196,11 @@ class PlaybackEngine {
                 }
             }
         }
+
+        // round end to next measure
+        this.ticks_end /= (ppq * BEATS_PER_MEASURE);
+        this.ticks_end = Math.ceil(this.ticks_end);
+        this.ticks_end *= (ppq * BEATS_PER_MEASURE);
 
         /*
         let track = [
