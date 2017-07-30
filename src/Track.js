@@ -48,6 +48,7 @@ class Track extends Component {
 
     this.state = {
       mouseActive: false,
+      moveDuration: null,
       resizedNote: null,
       resizedCell: null,
     }
@@ -67,6 +68,7 @@ class Track extends Component {
     }
     this.setState({
       mouseActive: false,
+      moveDuration: null,
       resizedNote: null,
       resizedCell: null
     });
@@ -90,11 +92,12 @@ class Track extends Component {
         pitch={pitch}
         notes={notesByPitch[pitch] || []}
         mouseActive={this.state.mouseActive}
+        moveDuration={this.state.moveDuration}
         noteAdded={note => this.props.noteAddedOrUpdatedCallback(this.props.track, note)}
         noteDeleted={note => this.props.noteDeletedCallback(this.props.track, note)}
         noteDragStarted={note => {
           this.props.noteDeletedCallback(this.props.track, note);
-          this.setState({mouseActive: true});
+          this.setState({mouseActive: true, moveDuration: note.duration});
         }}
         noteResizeStarted={(note, cell) => {
           this.setState({
@@ -120,7 +123,12 @@ class Track extends Component {
           <FontIcon className="material-icons close-link"  onClick={() => this.props.trackDeleteClicked(this.props.track)}>close</FontIcon>
           <br />
           <p>{this.props.track.name}</p>
-          <DropDownMenu value={this.props.track.instrument} onChange={this.handleChange}>
+          <DropDownMenu 
+            value={this.props.track.instrument} 
+            onChange={this.handleChange}
+            iconStyle={{fill: '#8D6E63'}}
+            underlineStyle={{borderColor: '#8D6E63'}}
+          >
             <MenuItem value={0} primaryText="RAW" />
             <MenuItem value={1} primaryText="Instrument1" />
             <MenuItem value={2} primaryText="Instrument2" />
