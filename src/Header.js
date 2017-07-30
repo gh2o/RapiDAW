@@ -93,19 +93,24 @@ class Header extends Component {
               onClick={this.props.handleRewindPress}>
               skip_previous
             </FontIcon>
+            <FontIcon
+              className="material-icons header-trackcontrol-icon"
+              onClick={this.props.handleLoopPress}>
+              loop
+            </FontIcon>
           </div>
 
-          <IconButton tooltip="Leo" touch={true} tooltipPosition="bottom-right">
+          <IconButton className="tooltip-icon-button" tooltip="Leo" touch={true} tooltipPosition="bottom-right">
           <Badge className="badge online" primary={true}>
             <Avatar className="header-avatar" src={img1} />
           </Badge>
           </IconButton>
-          <IconButton tooltip="Arlen" touch={true} tooltipPosition="bottom-right">
+          <IconButton className="tooltip-icon-button" tooltip="Arlen" touch={true} tooltipPosition="bottom-right">
           <Badge className="badge online" primary={true}>
             <Avatar className="header-avatar" src={img2} />
           </Badge>
           </IconButton>
-          <IconButton tooltip="Gavin" touch={true} tooltipPosition="bottom-right">
+          <IconButton className="tooltip-icon-button" tooltip="Gavin" touch={true} tooltipPosition="bottom-right">
           <Badge className="badge offline" primary={true}>
             <Avatar className="header-avatar" src={img3} />
           </Badge>
