@@ -15,7 +15,7 @@
   min-width: 11rem;
   max-width: 11rem;
   border-right: 1px solid white;
-  background-color: #E0E0E0;
+  /*background-color: #E0E0E0;*/  
   height: 100%;
   width: 11rem;
   text-align: center;
@@ -29,7 +29,7 @@
 }
 
 .close-link:hover {
-  background-color: #EEEEEE;
+  background-color: #BDBDBD;
 }
 
 .pianoroll-container {
@@ -57,7 +57,7 @@
 
 .black {
   color: white;
-  background-color: black;
+  background-color: #212121;
 }
 
 .white {
@@ -76,6 +76,10 @@
   margin: 0px;
   padding: 0px;
   position: relative;
+}
+
+.track-row-container:hover {
+  background-color: #E0E0E0;
 }
 
 .track-cell-container {

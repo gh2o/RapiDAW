@@ -12,9 +12,9 @@ class Header extends Component {
   constructor() {
     super();
     this.measure = [];
-    for (var i=0; i < 100; i++) {
-      if (i%3 === 0 && i !== 0) {
-        this.measure.push((<div key={i} className="measure-cell thick"></div>));
+    for (var i=1; i < 100; i++) {
+      if (i%4 == 0 && i != 0) {
+        this.measure.push((<div className="measure-cell thick"></div>));
       } else {
         this.measure.push((<div key={i} className="measure-cell"></div>));
       }
