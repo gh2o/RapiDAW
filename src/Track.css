@@ -41,9 +41,7 @@
 }
 
 .pianoroll-container {
-  overflow: scroll;
-  width: 100%;
-  overflow-x: hidden;
+  width: calc(100% - 11rem);
   display: flex;
 }
 
@@ -51,6 +49,7 @@
   min-width: 5rem;
   width: 5rem;
   height: 100%;
+  overflow:hidden;
 }
 
 .piano-key {
@@ -74,7 +73,8 @@
 
 .piano-container {
   width: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 
 .piano-sub {
