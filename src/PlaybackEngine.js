@@ -11,6 +11,10 @@ function pitchNumToFrequency(num) {
     return 440 * Math.pow(2, (num - 69) / 12);
 }
 
+function isSameInstrument(spc1, spc2) {
+    return spc1 === spc2;
+}
+
 class Instrument {
 }
 
@@ -61,6 +65,7 @@ class PlaybackEngine {
         this.note_timeline = null;
 
         this.instr_by_track_id = {};
+        this.instrspc_by_track_id = {};
 
         window.peng = this;
     }
@@ -192,8 +197,11 @@ class PlaybackEngine {
             {
                 let {track} = eventParams;
                 let instr = this.instr_by_track_id[track.id];
-                instr && instr.destroy()
-                this.instr_by_track_id[track.id] = this.createInstrumentForTrack(track);
+                if (!isSameInstrument(track.instrument, this.instrspc_by_track_id[track.id])) {
+                    instr && instr.destroy();
+                    this.instr_by_track_id[track.id] = this.createInstrumentForTrack(track);
+                    this.instrspc_by_track_id[track.id] = track.instrument;
+                }
                 break;
             }
             case 'trackRemoved':
@@ -202,6 +210,7 @@ class PlaybackEngine {
                 let instr = this.instr_by_track_id[track.id];
                 instr && instr.destroy();
                 delete this.instr_by_track_id[track.id];
+                delete this.instrspc_by_track_id[track.id];
                 break;
             }
             default:
