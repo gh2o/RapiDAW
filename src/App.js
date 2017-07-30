@@ -17,6 +17,9 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import Header from './Header.js';
 import Track from './Track.js';
 
+// PLAYBACK
+import PlaybackEngine from './PlaybackEngine.js';
+
 var ENTER_KEY = 13;
 
 class App extends Component {
@@ -32,7 +35,8 @@ class App extends Component {
     this.MIDIDatastoreClient = this.MIDIDatastore.getClient("MainClient");
     this.MIDIDatastoreClient.registerCallback(this.datastoreCallback);
 
-    this.rapidWrapper = new RapidWrapper(this.MIDIDatastore);
+    this.rapidWrapper   = new RapidWrapper(this.MIDIDatastore);
+    this.playbackEngine = new PlaybackEngine(this.MIDIDatastore);
 
     this.state = {
       newTrackName: "",
