@@ -221,11 +221,18 @@ class PlaybackEngine {
     }
 
     /*Tone*/ createInstrumentForTrack(/*MIDITrack*/ track) {
+        let instr;
         switch (track.instrument) {
             case "lead1":
             default:
-                return new Tone.PolySynth(6, Tone.Synth).toMaster();
+                instr = new Lead1();
+                break;
+            case "hihat":
+                instr = new HiHat();
+                break;
         }
+        instr.output.toMaster();
+        return instr;
     }
 }
 
