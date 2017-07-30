@@ -71,11 +71,15 @@ class App extends Component {
       scrollPos: 0,
       seekActive: false,
       seekAtEnd: false,
+      loaded: false,
       markerPos: null,
     };
   }
 
   updateOrRemoveStateTrack(track, remove) {
+    if (!this.state.loaded) {
+      this.setState({loaded: true});
+    }
     if (remove) {
       var unset = {$unset: [track.id]};
       this.setState({
