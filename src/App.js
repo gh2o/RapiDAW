@@ -170,6 +170,8 @@ class App extends Component {
           this.instantBarSeek(this.state.markerPos);
         }
         break;
+      default:
+        break;
     }
   }
 
@@ -252,7 +254,7 @@ class App extends Component {
       this.setState({
         seekActive: false,
         seekAtEnd: true
-      }, () => this.handlePlayPress());
+      }, () => this.playbackEngine.looping && this.handlePlayPress());
     }
   }
 
