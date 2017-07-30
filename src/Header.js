@@ -19,16 +19,11 @@ class Header extends Component {
     this.measure = [];
     for (var i=1; i < 100; i++) {
       if (i%4 === 0 && i !== 0) {
-        this.measure.push((<div key={i} className="measure-cell thick"></div>));
+        this.measure.push((<div key={i} className="measure-cell thick">{count}</div>));
       } else {
-        if ((i-1)%4 == 0) {
-          this.measure.push((<div key={i} className="measure-cell">{count}</div>));
-          count++;
-          if (count > 4) count = count % 4;
-        } else {
-          this.measure.push((<div key={i} className="measure-cell"></div>));
-        }
+        this.measure.push((<div key={i} className="measure-cell">{count}</div>));
       }
+      count++;
     }
   }
 
@@ -36,8 +31,6 @@ class Header extends Component {
     return (
       <Paper className="header-container" zDepth={2}>
         <div className="header-subcontainer">
-
-
           <p>{this.props.songname}</p>
 
           <div className="header-trackcontrol">

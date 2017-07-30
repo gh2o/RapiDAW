@@ -105,6 +105,8 @@ SECONDARY TEAL: #009688;
 
 .measure-cell {
   box-sizing: border-box;
+  font-size: 0.8rem;
+  padding-left: 5px;
   color: #BCAAA4;
   border-right: 1px solid #BCAAA4;
   width: 40px;
