@@ -84,7 +84,7 @@ class App extends Component {
     var tracksBody;
     var tracks = this.MIDIDatastoreClient.getTracks();
 
-    var trackItems = tracks.map(track => {
+    var trackItems = tracks.reverse().map(track => {
       return (
         <Track
             key={track.id}
