@@ -11,6 +11,45 @@ function pitchNumToFrequency(num) {
     return 440 * Math.pow(2, (num - 69) / 12);
 }
 
+class Instrument {
+}
+
+class Lead1 extends Instrument {
+    constructor() {
+        super();
+        this.synth = new Tone.PolySynth(7, Tone.Synth,
+            {oscillator: {type: 'fatsawtooth'}});
+        this.output = this.synth;
+    }
+    destroy() {
+        this.synth.dispose();
+    }
+    play(freq, dur, time) {
+        this.synth.triggerAttackRelease(freq, dur, time);
+    }
+}
+
+class HiHat extends Instrument {
+    constructor() {
+        super();
+        this.filter = new Tone.Filter(800, 'highpass');
+        this.synth = new Tone.NoiseSynth({
+            envelope: {
+                attack: 0.005,
+                decay: 0.2,
+            }
+        }).chain(this.filter);
+        this.output = this.filter;
+    }
+    destroy() {
+        this.synth.dispose();
+        this.filter.dispose()
+    }
+    play(freq, dur, time) {
+        this.synth.triggerAttackRelease(dur, time);
+    }
+}
+
 class PlaybackEngine {
     constructor(/*MIDIDatastore*/ datastore) {
         this.datastoreCallback = this.datastoreCallback.bind(this);
@@ -135,7 +174,7 @@ class PlaybackEngine {
                 break;
             }
             this.instr_by_track_id[item.track.id]
-                .triggerAttackRelease(
+                .play(
                     pitchNumToFrequency(item.note.pitch),
                     new Tone.Time(item.duration, "i").toSeconds(),
                     real_time);
@@ -152,6 +191,8 @@ class PlaybackEngine {
             case 'trackAddedOrUpdated':
             {
                 let {track} = eventParams;
+                let instr = this.instr_by_track_id[track.id];
+                instr && instr.destroy()
                 this.instr_by_track_id[track.id] = this.createInstrumentForTrack(track);
                 break;
             }
@@ -159,7 +200,7 @@ class PlaybackEngine {
             {
                 let {track} = eventParams;
                 let instr = this.instr_by_track_id[track.id];
-                instr && instr.dispose();
+                instr && instr.destroy();
                 delete this.instr_by_track_id[track.id];
                 break;
             }
