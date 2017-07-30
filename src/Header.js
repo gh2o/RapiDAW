@@ -11,11 +11,12 @@ import FontIcon from 'material-ui/FontIcon';
 import TextField from 'material-ui/TextField';
 import Avatar from 'material-ui/Avatar';
 import Badge from 'material-ui/Badge';
-import Slider from 'material-ui/Slider';  
+import IconButton from 'material-ui/IconButton';
+import ActionGrade from 'material-ui/svg-icons/action/grade';
+import Slider from 'material-ui/Slider';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
-
 
 class Header extends Component {
   constructor() {
@@ -56,7 +57,7 @@ class Header extends Component {
       <Paper className="header-container" zDepth={2}>
         <div className="header-subcontainer">
           <p>{this.props.songname} <FontIcon className="material-icons header-edit-icon" onClick={this.handleOpen}>mode_edit</FontIcon></p>
-          <Dialog className="header-edit-dialog" title="Edit Song Name" modal={false} open={this.state.editNameDialogOpen} onRequestClose={this.handleClose}>  
+          <Dialog className="header-edit-dialog" title="Edit Song Name" modal={false} open={this.state.editNameDialogOpen} onRequestClose={this.handleClose}>
             <TextField
               id="header-editname-input"
               className="header-editname-input"
@@ -92,17 +93,29 @@ class Header extends Component {
               onClick={this.props.handleRewindPress}>
               skip_previous
             </FontIcon>
+            <FontIcon
+              className="material-icons header-trackcontrol-icon"
+              onClick={this.props.handleLoopPress}>
+              loop
+            </FontIcon>
           </div>
 
+          <IconButton className="tooltip-icon-button" tooltip="Leo" touch={true} tooltipPosition="bottom-right">
           <Badge className="badge online" primary={true}>
             <Avatar className="header-avatar" src={img1} />
           </Badge>
+          </IconButton>
+          <IconButton className="tooltip-icon-button" tooltip="Arlen" touch={true} tooltipPosition="bottom-right">
           <Badge className="badge online" primary={true}>
             <Avatar className="header-avatar" src={img2} />
           </Badge>
+          </IconButton>
+          <IconButton className="tooltip-icon-button" tooltip="Gavin" touch={true} tooltipPosition="bottom-right">
           <Badge className="badge offline" primary={true}>
             <Avatar className="header-avatar" src={img3} />
           </Badge>
+          </IconButton>
+
         </div>
 
         <div className="header-bottombar">
