@@ -53,11 +53,9 @@ class Track extends Component {
     }
   }
 
-<<<<<<< HEAD
   handleChange = (event, index, instrument) => {
       this.props.trackInstrumentUpdated(this.props.track, instrument);
-=======
-  handleChange = (event, index, instrument) => this.setState({instrument});
+  }
 
   finishDragOrResize() {
     if (this.state.resizedNote) {
@@ -72,7 +70,6 @@ class Track extends Component {
       resizedNote: null,
       resizedCell: null
     });
->>>>>>> 3e886fe81a0cc37140c2e4dd9fb86245e460ba4c
   }
 
   render() {
