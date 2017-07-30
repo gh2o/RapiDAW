@@ -162,6 +162,7 @@ class PlaybackEngine {
         this.ds_client.registerCallback(this.datastoreCallback);
         this.transport_evt = null;
         this.note_timeline = null;
+        this.ticks_end = 0;
 
         this.trkst_by_track_id = {};
 
@@ -176,16 +177,20 @@ class PlaybackEngine {
         // add all known notes into BST
         let ppq = Tone.Transport.PPQ;
         this.note_timeline = new Tone.Timeline();
+        this.ticks_end = 0; // find last end of note
 
         for (let track of this.ds_client.getTracks()) {
             for (let note of this.ds_client.getNotes(track)) {
                 let ticks = note.beat * ppq;
                 if (ticks >= Tone.Transport.ticks) {
-                    this.note_timeline.add({
+                    let it;
+                    this.note_timeline.add(it = {
                         time: ticks,
                         duration: note.duration * ppq,
                         track,
                         note});
+                    this.ticks_end = Math.max(
+                        this.ticks_end, it.time + it.duration);
                 }
             }
         }
@@ -266,13 +271,20 @@ class PlaybackEngine {
             this.transport_evt = null;
         }
 
+        if (cur_ticks >= this.ticks_end) {
+            this.stop(false);
+            return;
+        }
+
         let item;
+        let next_sched;
         while (true) {
             item = this.note_timeline.peek();
             if (!item) {
-                this.stop(false);
-                return;
+                next_sched = this.ticks_end;
+                break;
             }
+            next_sched = item.time;
             if (item.time > cur_ticks) {
                 break;
             }
@@ -285,8 +297,8 @@ class PlaybackEngine {
         }
 
         this.transport_evt = Tone.Transport.scheduleOnce(
-            t => this.transportCallback(t, item.time),
-            new Tone.Time(item.time, "i"));
+            t => this.transportCallback(t, next_sched),
+            new Tone.Time(next_sched, "i"));
     }
 
     datastoreCallback(/*String*/ eventName, /*Object*/ eventParams) {
