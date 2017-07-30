@@ -41,25 +41,30 @@ class Track extends PureComponent {
 
     this.state = {
       mouseActive: false,
-      notes: {},
     }
   }
 
   noteAddedCallback(note) {
     this.props.datastoreClient.addOrUpdateNote(this.props.track, note);
-    this.state.notes[note.id] = note;
-    console.log('nac', note);
+    this.props.noteAddedCallback();
   }
 
   render() {
+    var notesByPitch = {};
+    for (let note of this.props.notes) {
+      if (!(note.pitch in notesByPitch)) {
+        notesByPitch[note.pitch] = [];
+      }
+      notesByPitch[note.pitch].push(note);
+    }
+
     var trackRows = [];
     for (var i = 0; i < 88; i++) {
       let pitch = 87 - i;
-      let notes = Object.values(this.state.notes).filter(note => note.pitch === pitch);
       trackRows.push(<TrackRow
         key={pitch}
         pitch={pitch}
-        notes={notes}
+        notes={notesByPitch[pitch]}
         mouseActive={this.state.mouseActive}
         noteAdded={this.noteAddedCallback.bind(this)}/>);
     }
@@ -67,8 +72,8 @@ class Track extends PureComponent {
     return (
       <div className="track-container"
            onMouseDown={() => this.setState({mouseActive: true})}
-           onMouseUp={() => this.setState({mouseActive: false})}>
-           onMouseLeave={() => this.setState({mouseActive: false})}
+           onMouseUp={() => this.setState({mouseActive: false})}
+           onMouseLeave={() => this.setState({mouseActive: false})}>
         <div className="track-info">
           <FontIcon className="material-icons close-link"  onClick={() => this.props.trackDeleteClicked(this.props.track)}>close</FontIcon>
           <br />
