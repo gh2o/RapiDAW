@@ -277,6 +277,7 @@ class App extends Component {
             key={track.id}
             track={track}
             notes={this.state.notesByTrackId[track.id] || {}}
+            scrollPos={this.state.scrollPos}
             trackDeleteClicked={track => {
               this.MIDIDatastoreClient.removeTrack(track);
               this.updateOrRemoveStateTrack(track, true);

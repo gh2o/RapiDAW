@@ -153,6 +153,12 @@ class Track extends Component {
     </FadeIn>
     );
   }
+
+  componentDidUpdate() {
+    if (this.pianoConDiv.scrollLeft !== this.props.scrollPos) {
+      this.pianoConDiv.scrollLeft = this.props.scrollPos;
+    }
+  }
 }
 
 export default Track;
