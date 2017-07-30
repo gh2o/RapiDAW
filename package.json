@@ -9,6 +9,7 @@
     "rapid-io": "^0.4.2",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
+    "react-fade-in": "^0.1.4",
     "react-scripts": "1.0.10",
     "react-tap-event-plugin": "*",
     "tone": "^0.10.0"

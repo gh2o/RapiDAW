@@ -1,6 +1,7 @@
 // vim: ts=2 sw=2
 
 import React, { Component } from 'react';
+import FadeIn from 'react-fade-in';
 
 import { TrackRow } from './TrackRow.js';
 import { pitchToName } from './Utils.js';
@@ -98,6 +99,7 @@ class Track extends Component {
     }
 
     return (
+      <FadeIn>
       <div className="track-container"
            onContextMenu={evt => evt.preventDefault()}
            onMouseDown={evt => evt.button !== 2 && this.setState({mouseActive: true})}
@@ -141,6 +143,7 @@ class Track extends Component {
           </div>
         </div>
     </div>
+    </FadeIn>
     );
   }
 }

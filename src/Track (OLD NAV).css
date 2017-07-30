@@ -1,0 +1,131 @@
+/* vim sw=2 ts=2 */
+
+.track-container {
+  background-color: #E0E0E0;
+  width: 100%;
+  height: 15rem;
+  transition: background-color 0.33s;
+  margin-bottom: 0.5rem;
+  display: flex;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
+
+.track-container:hover {
+  background-color: #EEEEEE;
+}
+
+.track-info {
+  box-sizing: border-box;
+  padding: 1rem;
+  font-size: 120%;
+  min-width: 11rem;
+  max-width: 11rem;
+  border-right: 1px solid white;
+  /*background-color: #E0E0E0;*/  
+  height: 100%;
+  width: 11rem;
+  text-align: center;
+}
+
+.close-link {
+  float: left;
+  left: 0px;
+  padding: 0.5rem;
+  font-size: 70% !important;
+}
+
+.close-link:hover {
+  background-color: #BDBDBD;
+}
+
+.pianoroll-container {
+  overflow: scroll;
+  width: 100%;
+  overflow-x: hidden;
+  display: flex;
+}
+
+.piano {
+  min-width: 5rem;
+  width: 5rem;
+  height: 100%;
+}
+
+.piano-key {
+  box-sizing: border-box;
+  padding-right: 0.5rem;
+  text-align: right;
+  height: 20px;
+  border-right: 1px solid #BDBDBD;
+  border-bottom: 1px solid #BDBDBD;
+  background-color: grey;
+}
+
+.black {
+  color: white;
+  background-color: #212121;
+}
+
+.white {
+  background-color: white;
+}
+
+.piano-container {
+  width: 100%;
+}
+
+.track-row-container {
+  box-sizing: border-box;
+  height: 20px;
+  width: 100%;
+  border-bottom: 1px solid #BDBDBD;
+  margin: 0px;
+  padding: 0px;
+  position: relative;
+  background: repeating-linear-gradient(to right,
+    rgba(0,0,0,0)         0px,
+    rgba(0,0,0,0)         39px,
+    rgba(190,190,190,0.5) 39px,
+    rgba(190,190,190,0.5) 40px,
+
+    rgba(0,0,0,0)         40px,
+    rgba(0,0,0,0)         79px,
+    rgba(190,190,190,0.5) 79px,
+    rgba(190,190,190,0.5) 80px,
+
+    rgba(0,0,0,0)         80px,
+    rgba(0,0,0,0)         119px,
+    rgba(190,190,190,0.5) 119px,
+    rgba(190,190,190,0.5) 120px,
+
+    rgba(0,0,0,0)         120px,
+    rgba(0,0,0,0)         158.5px,
+    rgba(190,190,190,0.5) 158.5px,
+    rgba(190,190,190,0.5) 160px);
+}
+
+.track-row-container:hover {
+  background-color: #E0E0E0;
+}
+
+.track-cell-container {
+  box-sizing: border-box;
+  background: #8D6E63;
+  opacity: 0.8;
+  height: 20px;
+  width: 40px;
+  position: absolute;
+  cursor: move;
+}
+
+.track-cell-handle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: calc(100% - 4px);
+  background-color: #6D4E43;
+  cursor: ew-resize;
+}

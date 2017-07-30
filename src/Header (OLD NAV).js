@@ -15,25 +15,45 @@ import Badge from 'material-ui/Badge';
 class Header extends Component {
   constructor() {
     super();
-    var count = 1;
     this.measure = [];
     for (var i=1; i < 100; i++) {
       if (i%4 === 0 && i !== 0) {
-        this.measure.push((<div key={i} className="measure-cell thick">{count}</div>));
+        this.measure.push((<div key={i} className="measure-cell thick"></div>));
       } else {
-        this.measure.push((<div key={i} className="measure-cell">{count}</div>));
+        this.measure.push((<div key={i} className="measure-cell"></div>));
       }
-      count++;
     }
   }
 
   render() {
     return (
-      <Paper className="header-container" zDepth={2}>
-        <div className="header-subcontainer">
-          <p>{this.props.songname}</p>
+      <Paper className="header-container" zDepth={1}>
+        <Toolbar className="header-toolbar">
+          <ToolbarTitle text={this.props.songname} />
+          <ToolbarGroup>
+            <Badge className="badge online" primary={true}>
+              <Avatar className="header-avatar" src={img1} />
+            </Badge>
+            <Badge className="badge online" primary={true}>
+              <Avatar className="header-avatar" src={img2} />
+            </Badge>
+            <Badge className="badge offline" primary={true}>
+              <Avatar className="header-avatar" src={img3} />
+            </Badge>
+          </ToolbarGroup>
+        </Toolbar>
 
-          <div className="header-trackcontrol">
+        <div className="header-subcontainer">
+          <Paper className="header-addtrack" zDepth={1}>
+            <TextField
+              id="header-addtrack-input"
+              className="header-addtrack-input"
+              placeholder="create new track"
+              onKeyDown={this.props.create.onKeyDown}
+            />
+            </Paper>
+
+          <Paper className="header-trackcontrol" zDepth={1}>
             <FontIcon
               className="material-icons header-trackcontrol-icon"
               onClick={this.props.handlePlayPress}>
@@ -49,32 +69,14 @@ class Header extends Component {
               onClick={this.props.handleStopPress}>
               skip_previous
             </FontIcon>
-          </div>
-
-          <Badge className="badge online" primary={true}>
-            <Avatar className="header-avatar" src={img1} />
-          </Badge>
-          <Badge className="badge online" primary={true}>
-            <Avatar className="header-avatar" src={img2} />
-          </Badge>
-          <Badge className="badge offline" primary={true}>
-            <Avatar className="header-avatar" src={img3} />
-          </Badge>
+          </Paper>
         </div>
 
-        <div className="header-bottombar">
-          <TextField
-            id="header-addtrack-input"
-            className="header-addtrack-input"
-            placeholder="create new track"
-            onKeyDown={this.props.create.onKeyDown}
-          />
-          <div
-            id="measureBar"
-            className="header-track-measure"
-            onClick={this.props.handleMeasureBarClick}>
-            {this.measure}
-          </div>
+        <div
+          id="measureBar"
+          className="header-track-measure"
+          onClick={this.props.handleMeasureBarClick}>
+          {this.measure}
         </div>
 
       </Paper>
