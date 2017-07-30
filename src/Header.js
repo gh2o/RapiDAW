@@ -11,7 +11,9 @@ import FontIcon from 'material-ui/FontIcon';
 import TextField from 'material-ui/TextField';
 import Avatar from 'material-ui/Avatar';
 import Badge from 'material-ui/Badge';
-import Slider from 'material-ui/Slider';  
+import Slider from 'material-ui/Slider';
+import IconButton from 'material-ui/IconButton';
+import ActionGrade from 'material-ui/svg-icons/action/grade';
 
 class Header extends Component {
   constructor() {
@@ -58,15 +60,22 @@ class Header extends Component {
             </FontIcon>
           </div>
 
+          <IconButton tooltip="Leo" touch={true} tooltipPosition="bottom-right">
           <Badge className="badge online" primary={true}>
             <Avatar className="header-avatar" src={img1} />
           </Badge>
+          </IconButton>
+          <IconButton tooltip="Arlen" touch={true} tooltipPosition="bottom-right">
           <Badge className="badge online" primary={true}>
             <Avatar className="header-avatar" src={img2} />
           </Badge>
+          </IconButton>
+          <IconButton tooltip="Gavin" touch={true} tooltipPosition="bottom-right">
           <Badge className="badge offline" primary={true}>
             <Avatar className="header-avatar" src={img3} />
           </Badge>
+          </IconButton>
+
         </div>
 
         <div className="header-bottombar">
