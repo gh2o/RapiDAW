@@ -1,6 +1,6 @@
 class MIDINote {
-    constructor(/*string*/ id, /*int*/ measure, /*float*/ beat, /*float*/ duration, /*int*/ pitch) {
-        Object.assign(this, {id, measure, beat, duration, pitch});
+    constructor(/*string*/ id, /*float*/ beat, /*float*/ duration, /*int*/ pitch) {
+        Object.assign(this, {id, beat, duration, pitch});
     }
 }
 

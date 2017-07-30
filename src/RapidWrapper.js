@@ -20,7 +20,6 @@ function getMIDINotesFromDoc(doc) {
         if (!val) continue;
         let note = new MIDINote();
         note.id       = key.substring(NOTE_KEY_PFXLEN);
-        note.measure  = val.measure
         note.beat     = val.beat;
         note.duration = val.duration;
         note.pitch    = val.pitch;
@@ -31,7 +30,6 @@ function getMIDINotesFromDoc(doc) {
 
 function getObjFromMIDINote(note) {
     return {
-        measure:  note.measure,
         beat:     note.beat,
         duration: note.duration,
         pitch:    note.pitch,
