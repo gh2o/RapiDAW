@@ -232,7 +232,7 @@ class App extends Component {
           <FontIcon
             id="seekhead"
             className="material-icons floating-seek-icon"
-            style={{position: 'fixed'}}>
+            style={{position: 'fixed', transition: 'none'}}>
             arrow_drop_down
           </FontIcon>
 
