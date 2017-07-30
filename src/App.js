@@ -139,7 +139,6 @@ class App extends Component {
     }
   }
 
-
   //initial
   //play
   //stop

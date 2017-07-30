@@ -54,7 +54,11 @@ class Header extends Component {
               onClick={this.props.handleStopPress}>
               pause
             </FontIcon>
-            <FontIcon className="material-icons header-trackcontrol-icon">skip_previous</FontIcon>
+            <FontIcon
+              className="material-icons header-trackcontrol-icon"
+              onClick={this.props.handleStopPress}>
+              skip_previous
+            </FontIcon>
 
             <div className="header-trackcontrol-seek">
               {/* track seeker here*/}
