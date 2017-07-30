@@ -73,8 +73,7 @@ class App extends Component {
       seekActive: false,
       seekAtEnd: false,
       loaded: false,
-      markerPos: null,
-      loaded: false
+      markerPos: null
     };
   }
 
@@ -418,8 +417,7 @@ class App extends Component {
       }
     }
 
-    var loader;
-    if (!this.state.loaded) loader = (          
+    var loader = (          
       <div className="loader" >
         <svg xmlns="http://www.w3.org/2000/svg" 
            width="200px" height="150px"
@@ -438,7 +436,7 @@ class App extends Component {
       <MuiThemeProvider muiTheme={this.muiTheme}>
         <div className="App">
 
-          {loader}
+          {!this.state.loaded ? loader : null}
 
           <Header
           create={{ onKeyDown: this.handleCreateTrack }}
