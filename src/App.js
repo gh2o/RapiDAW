@@ -67,7 +67,6 @@ class App extends Component {
       notesByTrackId: {},
       marker: false,
       scrollPos: 0,
-      seekPos: 0,
       seekActive: false,
       seekAtEnd: false
     };
@@ -188,8 +187,6 @@ class App extends Component {
     if (!this.state.seekActive) {
       if (this.state.seekAtEnd) {
         this.playbackEngine.seek(0);
-      } else {
-        this.playbackEngine.seek(this.state.seekPos);
       }
       this.playbackEngine.play();
       this.setState({seekActive: true, seekAtEnd: false});
@@ -203,11 +200,9 @@ class App extends Component {
       this.playbackEngine.stop(false);
       this.setState({
         seekActive: false,
-        seekPos: this.playbackEngine.currentPosition()
       });
     } else {
       this.playbackEngine.seek(0);
-      this.setState({seekPos: 0});
     }
     this.updateSeekHeadPosition();
   }
@@ -246,7 +241,6 @@ class App extends Component {
     } else {
       this.setState({
         seekActive: false,
-        seekPos: this.playbackEngine.currentPosition(),
         seekAtEnd: true
       });
     }
@@ -268,7 +262,6 @@ class App extends Component {
       // TODO
     } else {
       this.playbackEngine.seek(beats);
-      this.setState({seekPos: beats});
       this.updateSeekHeadPosition();
 
     }
