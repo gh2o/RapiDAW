@@ -33,7 +33,7 @@ class App extends Component {
     this.MIDIDatastoreClient.registerCallback(this.addTrack);
 
     this.state = {
-      newTrackName: ""
+      newTrackName: "New Track"
     };
   }
 
@@ -85,24 +85,19 @@ class App extends Component {
       <MuiThemeProvider>
         <div className="App">
 
-          <Header />
+          <Header create={{
+            value: this.state.newTrackName,
+            onKeyDown: this.handleCreateTrack,
+            onChange: this.handleChange
+          }}/>
 
-          <p> WHERE AM I </p>
-
-          <Track/>
-          <input id="input"
-                 placeholder="Create Track"
-                 value={this.state.newTrackName}
-                 onKeyDown={this.handleCreateTrack}
-                 onChange={this.handleChange}
-                 autoFocus={true}
-          />
+          <div className="body-padding"></div>
 
           {tracksBody}
 
-          <FloatingActionButton className="button-addtrack">
+          {/*<FloatingActionButton className="button-addtrack">
             <ContentAdd />
-          </FloatingActionButton>
+          </FloatingActionButton>*/}
 
         </div>
       </MuiThemeProvider>
