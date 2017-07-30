@@ -10,12 +10,12 @@ import { generateID } from './Utils.js';
 
 // MATERIAL UI COMPONENTS
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import FontIcon from 'material-ui/FontIcon';
 
 // UI COMPONENTS
 import Header from './Header.js';
+import TrackHead from './TrackHead.js';
 import Track from './Track.js';
 
 // PLAYBACK
@@ -30,6 +30,7 @@ class App extends Component {
 
     this.handleCreateTrack = this.handleCreateTrack.bind(this);
     this.datastoreCallback = this.datastoreCallback.bind(this);
+    this.handlePlayPress = this.handlePlayPress.bind(this);
 
     this.MIDIDatastore = new MIDIDatastore();
     this.MIDIDatastoreClient = this.MIDIDatastore.getClient("MainClient");
@@ -40,7 +41,11 @@ class App extends Component {
 
     this.state = {
       midiTracks: {},
-      seekpos: {left: '-16rem'}
+      position: 250,
+      iconorigpos: {left: '14.5rem'},
+      iconseekpos: {left: '14.5rem'},
+      barorigpos: {left: '16rem'},
+      barseekpos: {left: '16rem'}
     };
   }
 
@@ -90,6 +95,33 @@ class App extends Component {
     }
   }
 
+  handlePlayPress() {
+    console.log("handlePlayPress");
+    this.playbackEngine.play();
+    window.requestAnimationFrame(this.updateSeekHead.bind(this));
+  }
+
+  updateSeekHead() {
+    console.log("updateSeekHead");
+    var currPos = this.seekdiv.getBoundingClientRect.left;
+    var currPlayPos = this.playbackEngine.currentPosition();
+    this.state.position = currPos + currPlayPos;
+    if(this.playbackEngine.isPlaying()) {
+      window.requestAnimationFrame(this.updateSeekHead.bind(this));
+    }
+  }
+
+  getStyle() {
+      return {
+        left:(this.state.position)+"px"
+      };
+  }
+
+  getOffsetForEventX(x) {
+    var rect = this.seekdiv.getBoundingClientRect();
+    return x - rect.left;
+  }
+
   render() {
 
     var tracksBody;
@@ -123,12 +155,22 @@ class App extends Component {
       <MuiThemeProvider>
         <div className="App">
 
-          <Header create={{
-            onKeyDown: this.handleCreateTrack
-          }} songname="THE DOPEST SONG"/>
+          <Header
+          create={{ onKeyDown: this.handleCreateTrack }}
+          songname="THE DOPEST SONG"
+          handlePlayPress={this.handlePlayPress}/>
 
-          <FontIcon className="material-icons floating-seek-icon">arrow_drop_down</FontIcon>
-          <div className="floating-seek-bar"></div>
+          <FontIcon
+            className="material-icons floating-seek-icon"
+            ref={(div) => { this.seekhead = div; }}
+            style={this.getStyle()}>
+            arrow_drop_down
+            </FontIcon>
+          <div
+            className="floating-seek-bar"
+            style={this.getStyle()}
+            ref={(div) => { this.seekdiv = div; }}>
+          </div>
 
           <div className="body-padding"></div>
 
