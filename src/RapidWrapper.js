@@ -10,6 +10,7 @@ function getMIDITrackFromDoc(doc) {
     track.id   = doc.id;
     track.name = doc.body.name;
     track.instrument = doc.body.instrument;
+    track.volume = doc.body.volume;
     return track;
 }
 
@@ -72,6 +73,7 @@ class RapidWrapper {
                     let data = doc ? doc.body : {};
                     data.name = track.name;
                     data.instrument = track.instrument;
+                    data.volume = track.volume;
                     data.proj_id = this.proj_id;
                     this.updateTrackRev(data, track);
                     return data;
