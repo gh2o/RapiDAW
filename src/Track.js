@@ -38,6 +38,7 @@ class Track extends Component {
       moveDuration: null,
       resizedNote: null,
       resizedCell: null,
+      resizeDuration: null, // persistent
     }
   }
 
@@ -55,6 +56,7 @@ class Track extends Component {
       let res_note = this.state.resizedNote;
       res_note.duration = new_duration;
       this.props.noteAddedOrUpdatedCallback(this.props.track, res_note);
+      this.setState({resizeDuration: new_duration});
     }
     this.setState({
       mouseActive: false,
@@ -81,7 +83,7 @@ class Track extends Component {
         pitch={pitch}
         notes={notesByPitch[pitch] || []}
         mouseActive={this.state.mouseActive}
-        moveDuration={this.state.moveDuration}
+        moveDuration={this.state.moveDuration !== null ? this.state.moveDuration : this.state.resizeDuration}
         noteAdded={note => this.props.noteAddedOrUpdatedCallback(this.props.track, note)}
         noteDeleted={note => this.props.noteDeletedCallback(this.props.track, note)}
         noteDragStarted={note => {
