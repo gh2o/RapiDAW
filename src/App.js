@@ -255,6 +255,7 @@ class App extends Component {
   }
 
   getStyle() {
+    console.log("GET STYLE CALLED");
     return {
       left:this.markedposition+"px",
       position: 'fixed',
