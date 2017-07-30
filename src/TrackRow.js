@@ -17,11 +17,10 @@ class TrackRow extends Component {
   }
 
   render() {
-    console.log("LENGTH: " + this.state.trackcells);
+    console.log("LENGTH: " + this.state.trackcells.length);
     return (
       <div className="track-row-container">
-        DUH HELLO
-      	{this.state.trackcells}
+      	{/*this.state.trackcells*/}
       </div>
     );
   }

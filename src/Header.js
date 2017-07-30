@@ -6,12 +6,10 @@ import {Toolbar, ToolbarTitle, ToolbarGroup} from 'material-ui/Toolbar';
 import Paper from 'material-ui/Paper';
 import FontIcon from 'material-ui/FontIcon';
 import TextField from 'material-ui/TextField';
-import FlatButton from 'material-ui/FlatButton';
 import Avatar from 'material-ui/Avatar';
 
 class Header extends Component {
   render() {
-    console.log("YO: ", this.props.value);
     return (
       <Paper className="header-container" zDepth={3}>
         <Toolbar className="header-toolbar">
@@ -27,11 +25,8 @@ class Header extends Component {
           <Paper className="header-addtrack" zDepth={2}>
             <TextField
               className="header-addtrack-input"
-              defaultValue="New Track"
               placeholder="create new track"
-              value={this.props.create.value}
               onKeyDown={this.props.create.onKeyDown}
-              onChange={this.props.create.onChange}
             />
             </Paper>
 

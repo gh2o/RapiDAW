@@ -12,6 +12,7 @@
 }
 
 .track-info {
+  max-width: 11rem;
   border-right: 1px solid white;
   background-color: #E0E0E0;
   height: 100%;
@@ -20,7 +21,14 @@
 }
 
 .close-link {
+  float: left;
   left: 0px;
+  padding: 0.5rem;
+  font-size: 70% !important;
+}
+
+.close-link:hover {
+  background-color: #EEEEEE;
 }
 
 .pianoroll-container {
@@ -31,28 +39,36 @@
 }
 
 .piano {
+  min-width: 5rem;
   width: 5rem;
   height: 100%;
 }
 
 .piano-key {
+  padding-right: 0.5rem;
+  text-align: right;
   height: 19px;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid grey;
   background-color: grey;
+}
+
+.black {
+  color: white;
+  background-color: black;
+}
+
+.white {
+  background-color: white;
 }
 
 .piano-container {
   width: 100%;
-}
-
-.piano-row {
-  height: 1rem;
-  width: 100%;
-  background-color: red;
+  height: 1760px;
 }
 
 .track-row-container {
   height: 19px;
+  width: 1000px;
   border-bottom: 1px solid black;
   margin: 0px;
   padding: 0px;

@@ -28,7 +28,6 @@ class App extends Component {
     super();
 
     this.handleCreateTrack = this.handleCreateTrack.bind(this);
-    this.handleChange = this.handleChange.bind(this);
     this.datastoreCallback = this.datastoreCallback.bind(this);
 
     this.MIDIDatastore = new MIDIDatastore();
@@ -39,14 +38,8 @@ class App extends Component {
     this.playbackEngine = new PlaybackEngine(this.MIDIDatastore);
 
     this.state = {
-      newTrackName: "",
       midiTracks: {}
     };
-  }
-
-  handleChange(event) {
-    console.log(this.state);
-    this.setState({newTrackName: event.target.value});
   }
 
   handleCreateTrack(event) {
@@ -56,18 +49,22 @@ class App extends Component {
     console.log("enter pressed - handleCreateTrack Called");
     event.preventDefault();
 
-    var trackName = this.state.newTrackName.trim();
+    // var trackName = this.state.newTrackName.trim();
+    var trackName = event.target.value.trim();
     var id = generateID();
-    var newTrack = new MIDITrack(id,trackName);
+    var track = new MIDITrack(id,trackName);
 
-    this.MIDIDatastoreClient.addOrUpdateTrack(newTrack);
-    this.setState({newTrackName: ""});
+    this.MIDIDatastoreClient.addOrUpdateTrack(track);
+    this.state.midiTracks[track.id] = track;
+    this.setState();
   }
 
   datastoreCallback(/*String*/ eventName, /*Object*/ eventParams) {
+    console.log(eventName);
     switch (eventName) {
       case 'trackAddedOrUpdated':
       {
+        console.log("TRACK ADDED");
         let {track} = eventParams;
         this.state.midiTracks[track.id] = track;
         this.setState(this.state);
@@ -114,10 +111,8 @@ class App extends Component {
         <div className="App">
 
           <Header create={{
-            value: this.state.newTrackName,
-            onKeyDown: this.handleCreateTrack,
-            onChange: this.handleChange
-          }}/>
+            onKeyDown: this.handleCreateTrack
+          }} songname="THE DOPEST SONG"/>
 
           <div className="body-padding"></div>
 
