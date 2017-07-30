@@ -12,13 +12,11 @@ import { generateID } from './Utils.js';
 
 // MATERIAL UI COMPONENTS
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import ContentAdd from 'material-ui/svg-icons/content/add';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import FontIcon from 'material-ui/FontIcon';
 
 // UI COMPONENTS
 import Header from './Header.js';
-import TrackHead from './TrackHead.js';
 import Track from './Track.js';
 
 // PLAYBACK
