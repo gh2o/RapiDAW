@@ -3,8 +3,6 @@ PRIMARY BROWN: #8D6E63;
 SECONDARY TEAL: #009688;
 */
 
-
-
 /*HEAD*/
 .header-container {
   z-index: 5;
@@ -119,7 +117,6 @@ SECONDARY TEAL: #009688;
 }
 
 
-
 /*BODY*/
 .body-padding {
   height: 6.5rem;
@@ -138,7 +135,7 @@ SECONDARY TEAL: #009688;
 }
 
 .floating-seek-icon {
-  z-index: 10;
+  z-index: 9;
   color: #5D4037 !important;
   font-size: 50px !important;
   background-color: rgba(255, 255, 255, 0) !important;
