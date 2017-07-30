@@ -247,7 +247,7 @@ class App extends Component {
       this.setState({
         seekActive: false,
         seekAtEnd: true
-      });
+      }, () => this.handlePlayPress());
     }
   }
 
