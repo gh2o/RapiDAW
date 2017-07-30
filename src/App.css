@@ -3,8 +3,6 @@ PRIMARY BROWN: #8D6E63;
 SECONDARY TEAL: #009688;
 */
 
-
-
 /*HEAD*/
 .header-container {
   z-index: 5;
@@ -27,6 +25,20 @@ SECONDARY TEAL: #009688;
   font-size: 1.5rem;
   font-weight: lighter;
   color: #9E9E9E;
+}
+
+.header-edit-icon {
+  opacity: 0;
+  color: #757575 !important;
+  cursor: pointer;
+}
+
+.header-edit-dialog {
+  text-align: center;
+}
+
+.header-subcontainer p:hover .header-edit-icon {
+  opacity: 1;
 }
 
 .header-trackcontrol {
@@ -81,6 +93,7 @@ SECONDARY TEAL: #009688;
   align-items: flex-end;
   display: flex;
   height: 1rem;
+  margin-top: 1rem;
 }
 
 .header-addtrack-input {
@@ -135,7 +148,7 @@ SECONDARY TEAL: #009688;
 
 /*BODY*/
 .body-padding {
-  height: 6.5rem;
+  height: 7.5rem;
   width: 100%;
 }
 
@@ -151,7 +164,7 @@ SECONDARY TEAL: #009688;
 }
 
 .floating-seek-icon {
-  z-index: 10;
+  z-index: 9;
   color: #5D4037 !important;
   font-size: 50px !important;
   background-color: rgba(255, 255, 255, 0) !important;
