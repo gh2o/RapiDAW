@@ -12,7 +12,9 @@ class TrackCell extends Component {
         style={this.getStyle()}
         onContextMenu={evt => {
           evt.preventDefault();
-          console.log('note del ctx');
+          if (this.props.note) {
+            this.props.noteDeleteClicked(this.props.note);
+          }
         }}>
       </div>
     );

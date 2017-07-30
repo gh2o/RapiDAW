@@ -47,7 +47,7 @@ class Track extends Component {
 
   render() {
     var notesByPitch = {};
-    for (let note of this.props.notes) {
+    for (let note of Object.values(this.props.notes)) {
       if (!(note.pitch in notesByPitch)) {
         notesByPitch[note.pitch] = [];
       }
@@ -62,7 +62,8 @@ class Track extends Component {
         pitch={pitch}
         notes={notesByPitch[pitch] || []}
         mouseActive={this.state.mouseActive}
-        noteAdded={note => this.props.noteAddedCallback(this.props.track, note)}/>);
+        noteAdded={note => this.props.noteAddedCallback(this.props.track, note)}
+        noteDeleted={note => this.props.noteDeletedCallback(this.props.track, note)}/>);
     }
 
     return (

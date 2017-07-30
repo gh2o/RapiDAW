@@ -13,6 +13,7 @@ class TrackRow extends Component {
     super();
     this.handleMouseDownOrMove = this.handleMouseDownOrMove.bind(this);
     this.handleMouseUp = this.handleMouseUp.bind(this);
+    this.noteDeleteClicked = this.noteDeleteClicked.bind(this);
     this.state = {
       notes: [],
       mouseX: 0,
@@ -48,13 +49,18 @@ class TrackRow extends Component {
     }
   }
 
+  noteDeleteClicked(note) {
+    this.props.noteDeleted(note);
+  }
+
   render() {
     var cells = [];
     for (let note of this.props.notes) {
       cells.push(<TrackCell
         key={note.id}
         beat={note.beat}
-        note={note}/>);
+        note={note}
+        noteDeleteClicked={this.noteDeleteClicked}/>);
     }
     if (this.state.mouseIn && this.props.mouseActive) {
       let beat = this.getOffsetForEventX(this.state.mouseX) / PIXELS_PER_BEAT;
