@@ -24,6 +24,9 @@ import PlaybackEngine from './PlaybackEngine.js';
 
 var ENTER_KEY = 13;
 var SPACE_KEY = 32;
+var PLAYMARK_KEY = 99;
+var OFFSET = 23.5;
+var MARKER_KEY = 115;
 
 export const PIXELS_PER_BEAT = 40;
 
@@ -59,7 +62,8 @@ class App extends Component {
     this.state = {
       midiTracks: {},
       playState: "initial",
-      notesByTrackId: {}
+      notesByTrackId: {},
+      marker: false
     };
   }
 
@@ -142,22 +146,37 @@ class App extends Component {
 
   onKeyPress(e) {
     e = e || window.event;
-    if (e.keyCode !== SPACE_KEY) {
+    if (!(e.keyCode !== SPACE_KEY || e.keyCode !== MARKER_KEY && e.keyCode !== PLAYMARK_KEY)) {
       return;
     }
     console.log("enter pressed - onKeyPress Called");
     e.preventDefault();
+    this.getMeasureBar();
     this.getOriginalPosition();
-    if(this.state.playState === "play") {
-      this.playbackEngine.stop(false);
-      window.requestAnimationFrame(this.updateSeekHead.bind(this));
-      this.state.playState = "paused";
-    } else if(this.state.playState === "paused" || this.state.playState === "initial") {
+    if(e.keyCode === SPACE_KEY) {
+      if(this.state.playState === "play") {
+        this.playbackEngine.stop(false);
+        window.requestAnimationFrame(this.updateSeekHead.bind(this));
+        this.state.playState = "paused";
+      } else if(this.state.playState === "paused" || this.state.playState === "initial") {
+        this.playbackEngine.play();
+        window.requestAnimationFrame(this.updateSeekHead.bind(this));
+        this.state.playState = "play";
+      }
+    } else if(e.keyCode === MARKER_KEY) {
+      console.log("MARK IT");
+      this.markedposition = this.seekbar.getBoundingClientRect().left - OFFSET;
+      this.setState({marker:true});
+    } else if(e.keyCode === PLAYMARK_KEY && this.state.marker) {
+      console.log("MARK PLAYMARK");
+      //this.seekbar.getBoundingClientRect().left;
+      this.seekbar.style.left = this.markedposition + 'px';
+      this.seekhead.style.left = this.markedposition - OFFSET + 'px';
+      this.playbackEngine.seek(this.getMeasureBarOffsetForEventX(this.seekbar.getBoundingClientRect().left)/PIXELS_PER_BEAT);
       this.playbackEngine.play();
       window.requestAnimationFrame(this.updateSeekHead.bind(this));
       this.state.playState = "play";
     }
-    // use e.keyCode
   }
 
   //initial
@@ -226,13 +245,21 @@ class App extends Component {
     this.getMeasureBar();
     this.getOriginalPosition();
     this.seekbar.style.left = event.pageX + 'px';
-    this.seekhead.style.left =  event.pageX - 23.5 + 'px';
+    this.seekhead.style.left =  event.pageX - OFFSET + 'px';
     this.playbackEngine.seek(this.getMeasureBarOffsetForEventX(event.pageX)/PIXELS_PER_BEAT);
   }
 
   getOffsetForEventX(x) {
     var rect = this.seekdiv.getBoundingClientRect();
     return x - rect.left;
+  }
+
+  getStyle() {
+    return {
+      left:this.markedposition+"px",
+      position: 'fixed',
+      transition: 'none'
+    };
   }
 
   render() {
@@ -276,6 +303,20 @@ class App extends Component {
       );
     });
 
+    var marker;
+
+    if(this.state.marker) {
+      console.log("MARKER IS TRUE");
+      marker = (
+        <FontIcon
+          id="markerhead"
+          className="material-icons floating-seek-icon"
+          style={this.getStyle()}>
+          arrow_drop_down
+        </FontIcon>
+      );
+    }
+
     return (
       <MuiThemeProvider muiTheme={this.muiTheme}>
         <div className="App">
@@ -286,6 +327,8 @@ class App extends Component {
           handlePlayPress={this.handlePlayPress}
           handleStopPress={this.handleStopPress}
           handleMeasureBarClick={this.handleMeasureBarClick}/>
+
+          {marker}
 
           <FontIcon
             id="seekhead"
@@ -299,7 +342,6 @@ class App extends Component {
             className="floating-seek-bar"
             style={{pointerEvents: 'none'}}>
           </div>
-
 
           <div className="body-padding"></div>
 
