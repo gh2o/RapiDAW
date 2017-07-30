@@ -9,8 +9,13 @@ class Track extends Component {
       <div className="track-container">
         <div className="track-info">
           <p>{this.props.track.name}</p>
-          <p><a onClick={() => this.props.trackDeleteClicked(this.props.track)}>DELETE</a></p>
+          <a className="close-link" onClick={() => this.props.trackDeleteClicked(this.props.track)}>x</a>
       	</div>
+        <div className="piano-container">
+            {for (int i=0; i<88; i++) {
+                return(<div className="piano-row">);
+            }}
+        </div>
       </div>
     );
   }

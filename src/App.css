@@ -20,10 +20,11 @@
 .header-addtrack {
   margin: 0rem 0rem 1rem 1rem;
   padding: 0.5rem 0.5rem 0rem 1rem;
+  width: 10rem;
 }
 
-.header-addtrack-button {
-  width: 1rem;
+.header-addtrack-input {
+  width: 8rem !important;
 }
 
 .header-trackcontrol {
