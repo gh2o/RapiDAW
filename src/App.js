@@ -218,15 +218,22 @@ class App extends Component {
     }
   }
 
-  moveSeekHeadBar(px) {
-    px += this.getMeasureBarX();
-    document.getElementById(this.seekHeadElem.props.id).style.left = (px - OFFSET) + 'px';
-    this.seekBarDiv.style.left = px + 'px';
-  }
-
   updateSeekHeadPosition() {
-    var currPlayPos = this.playbackEngine.currentPosition();
-    this.moveSeekHeadBar(currPlayPos * PIXELS_PER_BEAT - this.state.scrollPos);
+    let seekHeadDiv = document.getElementById(this.seekHeadElem.props.id);
+    let {seekBarDiv} = this;
+    let currPlayPos = this.playbackEngine.currentPosition();
+    let epx = currPlayPos * PIXELS_PER_BEAT - this.state.scrollPos;
+    if (epx >= 0) {
+      let px = this.getMeasureBarX() + epx;
+      seekHeadDiv.style.display = 'block';
+      seekHeadDiv.style.left = (px - OFFSET) + 'px';
+      seekBarDiv.style.display = 'block';
+      seekBarDiv.style.left = px + 'px';
+    } else {
+      // seek head is off to the left of the screen, hide it
+      seekHeadDiv.style.display = 'none';
+      seekBarDiv.style.display = 'none';
+    }
   }
 
   updateSeekHeadPeriodic() {
