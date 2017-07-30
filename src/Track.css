@@ -74,6 +74,12 @@
 
 .piano-container {
   width: 100%;
+  overflow: hidden;
+}
+
+.piano-sub {
+  position: relative;
+  width: 4000px;
 }
 
 .track-row-container {

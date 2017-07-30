@@ -8,7 +8,7 @@ function beatsToToneTime(beats) {
 }
 
 function pitchNumToFrequency(num) {
-    return 440 * Math.pow(2, (num - 69) / 12);
+    return 440 * Math.pow(2, (num - 57) / 12);
 }
 
 function isSameInstrument(spc1, spc2) {
@@ -21,7 +21,7 @@ class Instrument {
 class Lead1 extends Instrument {
     constructor() {
         super();
-        this.synth = new Tone.PolySynth(7, Tone.Synth,
+        this.synth = new Tone.PolySynth(10, Tone.Synth,
             {oscillator: {type: 'fatsawtooth'}});
         this.output = this.synth;
     }
@@ -30,6 +30,34 @@ class Lead1 extends Instrument {
     }
     play(freq, dur, time) {
         this.synth.triggerAttackRelease(freq, dur, time);
+    }
+}
+
+class Lead2 extends Instrument {
+    constructor() {
+        super();
+        this.combiner = new Tone.Gain(1);
+
+        this.synth1 = new Tone.PolySynth(10, Tone.Synth,
+            {oscillator: {type:'triangle'},
+             envelope: {decay:0.18,sustain:0,release:0.02}});
+        this.synth1.connect(this.combiner);
+
+        this.synth2 = new Tone.PolySynth(10, Tone.Synth,
+            {oscillator: {type:'square'},
+             envelope: {decay:0.18,sustain:0,release:0.02}});
+        this.synth2.connect(this.combiner);
+
+        this.output = this.combiner;
+    }
+    destroy() {
+        this.combiner.dispose();
+        this.synth1.dispose();
+        this.synth2.dispose();
+    }
+    play(freq, dur, time) {
+        this.synth1.triggerAttackRelease(freq, dur, time);
+        this.synth2.triggerAttackRelease(freq, dur, time);
     }
 }
 
@@ -256,6 +284,9 @@ class PlaybackEngine {
             case "lead1":
             default:
                 instr = new Lead1();
+                break;
+            case "lead2":
+                instr = new Lead2();
                 break;
             case "kick":
                 instr = new Kick();
