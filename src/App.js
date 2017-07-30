@@ -138,7 +138,7 @@ class App extends Component {
                 this.MIDIDatastoreClient.removeTrack(track);
                 this.updateOrRemoveStateTrack(track, true);
             }}
-            noteAddedCallback={(track, note) => {
+            noteAddedOrUpdatedCallback={(track, note) => {
               this.MIDIDatastoreClient.addOrUpdateNote(track, note);
               this.setState({
                 notesByTrackId: update(this.state.notesByTrackId,

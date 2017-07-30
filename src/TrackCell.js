@@ -47,14 +47,26 @@ class TrackCell extends Component {
     this.setState({ resizeMousePx: evt.pageX - rect.left });
   }
 
-  getStyle() {
-    let duration;
+  resizeFinish() {
+    this.setState({ resizeMousePx: null });
+  }
+
+  getResizeDuration() {
     if (this.state.resizeMousePx === null) {
-      duration = this.props.duration;
+      return -1;
     } else {
       let endbeat = TrackRow.prototype.roundBeat(
         this.state.resizeMousePx / PIXELS_PER_BEAT);
-      duration = Math.max(endbeat - this.props.beat, 1 / BEAT_SUBDIVISION);
+      return Math.max(endbeat - this.props.beat, 1 / BEAT_SUBDIVISION);
+    }
+  }
+
+  getStyle() {
+    let duration;
+    if (this.state.resizeMousePx === null) {
+      duration = this.props.note.duration;
+    } else {
+      duration = this.getResizeDuration();
     }
     return {
       left:(this.props.beat * PIXELS_PER_BEAT)+"px",

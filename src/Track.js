@@ -15,7 +15,10 @@ import './Track.css';
 class Track extends Component {
   constructor() {
     super();
+
     console.log("track constructor called");
+
+    this.finishDragOrResize = this.finishDragOrResize.bind(this);
 
     this.pianoElements = [false, true, false,
       false, true, false, true, false,
@@ -52,6 +55,20 @@ class Track extends Component {
 
   handleChange = (event, index, instrument) => this.setState({instrument});
 
+  finishDragOrResize() {
+    if (this.state.resizedNote) {
+      let new_duration = this.state.resizedCell.getResizeDuration();
+      this.state.resizedCell.resizeFinish();
+      let res_note = this.state.resizedNote;
+      res_note.duration = new_duration;
+      this.props.noteAddedOrUpdatedCallback(this.props.track, res_note);
+    }
+    this.setState({
+      mouseActive: false,
+      resizedNote: null,
+      resizedCell: null
+    });
+  }
 
   render() {
     var notesByPitch = {};
@@ -70,7 +87,7 @@ class Track extends Component {
         pitch={pitch}
         notes={notesByPitch[pitch] || []}
         mouseActive={this.state.mouseActive}
-        noteAdded={note => this.props.noteAddedCallback(this.props.track, note)}
+        noteAdded={note => this.props.noteAddedOrUpdatedCallback(this.props.track, note)}
         noteDeleted={note => this.props.noteDeletedCallback(this.props.track, note)}
         noteDragStarted={note => {
           this.props.noteDeletedCallback(this.props.track, note);
@@ -88,8 +105,8 @@ class Track extends Component {
       <div className="track-container"
            onContextMenu={evt => evt.preventDefault()}
            onMouseDown={evt => evt.button !== 2 && this.setState({mouseActive: true})}
-           onMouseUp={() => this.setState({mouseActive: false, resizedNote: null, resizedCell: null})}
-           onMouseLeave={() => this.setState({mouseActive: false, resizedNote: null, resizedCell: null})}
+           onMouseUp={this.finishDragOrResize}
+           onMouseLeave={this.finishDragOrResize}
            onMouseMove={evt => {
              if (this.state.resizedNote) {
                this.state.resizedCell.resizeUpdate(evt, this.pianoConDiv.getBoundingClientRect());
