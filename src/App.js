@@ -48,14 +48,6 @@ class App extends Component {
     this.setState({newTrackName: event.target.value});
   }
 
-  // handleNewNoteCallback(track, note) {
-  //   var id = generateID();
-  //   var newTrack = new MIDINote(id,trackName);
-  //
-  //   this.MIDIDatastoreClient.addOrUpdateNote(newTrack);
-  //   this.setState();
-  // }
-
   handleCreateTrack(event) {
     if (event.keyCode !== ENTER_KEY) {
       return;
@@ -100,7 +92,6 @@ class App extends Component {
         <Track
             key={track.id}
             track={track}
-            midiNoteCallback={this.handleNewNoteCallback}
             trackDeleteClicked={track => {
                 this.MIDIDatastoreClient.removeTrack(track);
                 delete this.state.midiTracks[track.id];

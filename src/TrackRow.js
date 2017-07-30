@@ -1,3 +1,5 @@
+// vim: ts=2 sw=2
+
 import React, { Component } from 'react';
 import { TrackCell } from './TrackCell.js';
 import './Track.css';
@@ -5,24 +7,36 @@ import './Track.css';
 class TrackRow extends Component {
   constructor() {
     super();
-    this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.handleMouseDownOrMove = this.handleMouseDownOrMove.bind(this);
     this.handleMouseUp = this.handleMouseUp.bind(this);
     this.state = {
-      pressed: false,
-      released: false,
-      cells: []
+      notes: [],
+      mouseX: 0,
+      mouseY: 0,
+      mouseIn: false
     };
   }
 
-  handleMouseDown(event) {
-    console.log("pageX :" + event.pageX);
-    console.log("pageY :" + event.pageY);
-    this.setState({pressed: !this.state.pressed});
-    console.log(this.state.pressed);
+  getOffsetForEventX(x) {
+    var rect = this.rowDiv.getBoundingClientRect();
+    return x - rect.left;
   }
 
-  handleMouseUp(event) {
-    var rect = this.rowDiv.getBoundingClientRect()
+  handleMouseDownOrMove(evt) {
+    console.log("pageX :" + evt.pageX);
+    console.log("pageY :" + evt.pageY);
+    this.setState({
+      mouseX: evt.pageX,
+      mouseY: evt.pageY,
+      mouseIn: true
+    });
+  }
+
+  handleMouseUp(evt) {
+    var offsetPx = this.getOffsetForEventX(evt.pageX);
+    console.log('add note', offsetPx);
+
+    /*
     console.log(rect.top, rect.right, rect.bottom, rect.left);
 
     this.setState({
@@ -32,10 +46,7 @@ class TrackRow extends Component {
     });
 
     console.log(this.state.pressed);
-  }
-
-  handleDrag(event) {
-    console.log(event);
+    */
   }
 
   render() {
@@ -45,15 +56,22 @@ class TrackRow extends Component {
           position={this.state.position}/>
       );
     }
+    var cells = [];
+    for (let note in this.state.notes) {
+      //....
+    }
+    if (this.state.mouseIn && this.props.mouseActive) {
+      cells.push(<TrackCell position={this.getOffsetForEventX(this.state.mouseX)}/>);
+    }
     return (
       <div
         className="track-row-container"
-        onDrag={this.handleDrag}
-        onMouseDown={this.handleMouseDown}
+        onMouseDown={this.handleMouseDownOrMove}
+        onMouseMove={this.handleMouseDownOrMove}
         onMouseUp={this.handleMouseUp}
-        ref={(div) => { this.rowDiv = div; }}
-        >
-        {this.state.cells}
+        onMouseLeave={() => {this.setState({mouseIn: false})}}
+        ref={(div) => { this.rowDiv = div; }}>
+        {cells}
       </div>
     );
   }
