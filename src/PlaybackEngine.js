@@ -86,6 +86,28 @@ class Wow1 extends Instrument {
     }
 }
 
+class Bell1 extends Instrument {
+    constructor() {
+        super();
+        this.synth = new Tone.MetalSynth({
+            "harmonicity" : 12,
+            "resonance" : 800,
+            "modulationIndex" : 20,
+            "envelope" : {
+                "decay" : 0.4,
+            },
+            "volume" : -15
+        });
+        this.output = this.synth;
+    }
+    destroy() {
+        this.synth.dispose();
+    }
+    play(freq, dur, time) {
+        this.synth.triggerAttackRelease(freq, dur, time);
+    }
+}
+
 class Kick extends Instrument {
     constructor() {
         super();
@@ -315,6 +337,9 @@ class PlaybackEngine {
                 break;
             case "wow1":
                 instr = new Wow1();
+                break;
+            case "bell1":
+                instr = new Bell1();
                 break;
             case "kick":
                 instr = new Kick();

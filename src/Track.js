@@ -128,13 +128,9 @@ class Track extends Component {
           >
             <MenuItem value="lead1" primaryText="Lead 1" />
             <MenuItem value="lead2" primaryText="Lead 2" />
-            <MenuItem value="lead3" primaryText="Lead 3" />
-            <MenuItem value="bass1" primaryText="Bass 1" />
-            <MenuItem value="bass2" primaryText="Bass 2" />
-            <MenuItem value="bass3" primaryText="Bass 3" />
             <MenuItem value="wow1" primaryText="Wow 1" />
+            <MenuItem value="bell1" primaryText="Bell 1" />
             <MenuItem value="kick" primaryText="Kick" />
-            <MenuItem value="snare" primaryText="Snare" />
             <MenuItem value="hihat" primaryText="Hi-Hat" />
           </DropDownMenu>
           <Slider value={this.props.track.volume} className="track-info-slider" onChange={this.handleVolumeChange}/>
