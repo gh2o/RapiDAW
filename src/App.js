@@ -251,7 +251,7 @@ class App extends Component {
       this.setState({
         seekActive: false,
         seekAtEnd: true
-      }, () => this.playbackEngine.looping && this.handlePlayPress());
+      }, () => this.handlePlayPress());
     }
   }
 
