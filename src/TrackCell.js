@@ -6,6 +6,7 @@ class TrackCell extends Component {
   render() {
     return (
       <div className="track-cell-container">
+        NOTE.
       </div>
     );
   }

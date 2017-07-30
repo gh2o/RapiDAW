@@ -3,8 +3,29 @@ import { TrackCell } from './TrackCell.js';
 import './Track.css';
 
 class TrackRow extends Component {
-  handleKeyDown(event) {
-    console.log(event);
+  constructor() {
+    super();
+    this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.handleMouseUp = this.handleMouseUp.bind(this);
+    this.state = {
+      pressed: false,
+      released: false,
+      cells: []
+    };
+  }
+
+  handleMouseDown(event) {
+
+    console.log("pageX :" + event.pageX);
+    console.log("pageY :" + event.pageY);
+
+    this.setState({pressed: !this.state.pressed});
+    console.log(this.state.pressed);
+  }
+
+  handleMouseUp(event) {
+    this.setState({pressed: !this.state.pressed, released: !this.state.released});
+    console.log(this.state.pressed);
   }
 
   handleDrag(event) {
@@ -12,12 +33,16 @@ class TrackRow extends Component {
   }
 
   render() {
+    if(!this.state.pressed && this.state.released) {
+      this.state.cells.push(<TrackCell/>);
+    }
     return (
       <div
         className="track-row-container"
         onDrag={this.handleDrag}
-        onClick={this.handleKeyDown} >
-        DUH HELLO
+        onMouseDown={this.handleMouseDown}
+        onMouseUp={this.handleMouseUp} >
+        {this.state.cells}
       </div>
     );
   }

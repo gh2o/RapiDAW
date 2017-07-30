@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
 
 import { MIDINote, MIDITrack, MIDIDatastore } from './MIDIDatastore.js';
 import { TrackRow } from './TrackRow.js';
@@ -6,9 +6,10 @@ import { generateID } from './Utils.js';
 
 import './Track.css';
 
-class Track extends Component {
+class Track extends PureComponent {
   constructor() {
     super();
+    console.log("track constructor called");
 
     var MIDIroll = new Array(88);
 
@@ -16,14 +17,19 @@ class Track extends Component {
       MIDIroll[i] = <TrackRow name="THIS IS A TEST"/>;
     }
 
+    var piano = [];
+    for (var i=0; i < 88; i++) {
+        piano.push((<div className="piano-key">piano</div>));
+    }
+
     this.state = {
+      piano: piano,
       midiRow: MIDIroll
     }
   }
 
   render() {
     var midiBody;
-
     if (this.state.midiRow.length) {
       midiBody = (
         <div className="piano-container">
@@ -38,8 +44,14 @@ class Track extends Component {
           <p>{this.props.track.name}</p>
           <a className="close-link" onClick={() => this.props.trackDeleteClicked(this.props.track)}>x</a>
       	</div>
-        {midiBody}
-      </div>
+
+        <div className="pianoroll-container">
+          <div className="piano">
+            {this.state.piano}
+          </div>
+          {midiBody}
+        </div>
+    </div>
     );
   }
 }
