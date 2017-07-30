@@ -19,7 +19,7 @@
 
 .header-addtrack {
   margin: 0rem 0rem 1rem 1rem;
-  padding: 0.5rem 0.5rem 0.5rem 1rem;
+  padding: 0.5rem 0.5rem 0rem 1rem;
 }
 
 .header-addtrack-button {
@@ -30,7 +30,7 @@
   text-align: left !important;
   width: 50%;
   margin: 0rem 0rem 1rem 1rem;
-  padding: 0.5rem;
+  padding: 0.5rem 0.5rem 0rem 0.5rem;
 }
 
 .header-trackcontrol-icon {
@@ -38,13 +38,22 @@
   font-size: 250% !important;
 }
 
+.header-avatar {
+  margin-right: 1rem;
+}
+
 /*BODY*/
 
-.body-container {
-  padding-top: 9rem;
+.body-padding {
+  height: 8.5rem;
+  width: 100%;
   background-color: #F5F5F5;
+}
+
+.body-container {
   height: 100vh;
   width: 100%;
+  background-color: #F5F5F5;
 }
 
 .button-addtrack {
