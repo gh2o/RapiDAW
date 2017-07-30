@@ -39,7 +39,7 @@ function getObjFromMIDINote(note) {
 }
 
 class RapidWrapper {
-    constructor(/*MIDIDatastore*/ datastore, /*String*/ proj_id) {
+    constructor(/*MIDIDatastore*/ datastore, /*String*/ proj_id, loaded_cb) {
         proj_id = 'BEST_PROJECT_ID_EVER';
 
         // TODO
@@ -51,6 +51,7 @@ class RapidWrapper {
         }
 
         this.proj_id = proj_id;
+        this.loaded_cb = loaded_cb;
 
         this.rp_user = generateID();
         this.rp_client = Rapid.createClient('NDA1OWE0MWo1b3AzYzc0LnJhcGlkLmlv');
@@ -135,6 +136,9 @@ class RapidWrapper {
 
     /*void*/ rpProjValueCallback(doc) {
         console.log('rpProjValueCallback', doc);
+        if (this.loaded_cb) {
+            this.loaded_cb();
+        }
     }
 
     /*void*/ rpProjErrorCallback(/*Object*/ error) {

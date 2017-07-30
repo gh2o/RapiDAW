@@ -60,7 +60,7 @@ class App extends Component {
     this.MIDIDatastoreClient = this.MIDIDatastore.getClient("MainClient");
     this.MIDIDatastoreClient.registerCallback(this.datastoreCallback);
 
-    this.rapidWrapper   = new RapidWrapper(this.MIDIDatastore);
+    this.rapidWrapper   = new RapidWrapper(this.MIDIDatastore, () => this.setState({loaded: true}));
     this.playbackEngine = new PlaybackEngine(this.MIDIDatastore);
 
     this.state = {
@@ -77,9 +77,6 @@ class App extends Component {
   }
 
   updateOrRemoveStateTrack(track, remove) {
-    if (!this.state.loaded) {
-      this.setState({loaded: true});
-    }
     if (remove) {
       var unset = {$unset: [track.id]};
       this.setState({
