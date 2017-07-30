@@ -7,12 +7,15 @@ import { generateID } from './Utils.js';
 import './Track.css';
 
 export const PIXELS_PER_BEAT = 40;
+export const BEAT_SUBDIVISION = 2;
 
 class TrackRow extends Component {
   constructor() {
     super();
     this.handleMouseDownOrMove = this.handleMouseDownOrMove.bind(this);
     this.handleMouseUp = this.handleMouseUp.bind(this);
+    this.noteDragStarted = this.noteDragStarted.bind(this);
+    this.noteResizeStarted = this.noteResizeStarted.bind(this);
     this.noteDeleteClicked = this.noteDeleteClicked.bind(this);
     this.state = {
       notes: [],
@@ -28,7 +31,7 @@ class TrackRow extends Component {
   }
 
   roundBeat(beat) {
-    return Math.floor(beat * 2) / 2;
+    return Math.floor(beat * BEAT_SUBDIVISION) / BEAT_SUBDIVISION;
   }
 
   handleMouseDownOrMove(evt) {
@@ -49,6 +52,14 @@ class TrackRow extends Component {
     }
   }
 
+  noteDragStarted(note) {
+    this.props.noteDragStarted(note);
+  }
+
+  noteResizeStarted(note, cell) {
+    this.props.noteResizeStarted(note, cell);
+  }
+
   noteDeleteClicked(note) {
     this.props.noteDeleted(note);
   }
@@ -60,6 +71,8 @@ class TrackRow extends Component {
         key={note.id}
         beat={note.beat}
         note={note}
+        noteDragStarted={this.noteDragStarted}
+        noteResizeStarted={this.noteResizeStarted}
         noteDeleteClicked={this.noteDeleteClicked}/>);
     }
     if (this.state.mouseIn && this.props.mouseActive) {
@@ -76,7 +89,7 @@ class TrackRow extends Component {
         onMouseMove={this.handleMouseDownOrMove}
         onMouseUp={this.handleMouseUp}
         onMouseLeave={() => {this.setState({mouseIn: false})}}
-        ref={(div) => { this.rowDiv = div; }}>
+        ref={div => { this.rowDiv = div; }}>
         {cells}
       </div>
     );

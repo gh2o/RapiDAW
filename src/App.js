@@ -12,17 +12,20 @@ import { generateID } from './Utils.js';
 
 // MATERIAL UI COMPONENTS
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import ContentAdd from 'material-ui/svg-icons/content/add';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import FontIcon from 'material-ui/FontIcon';
 
 // UI COMPONENTS
 import Header from './Header.js';
+import TrackHead from './TrackHead.js';
 import Track from './Track.js';
 
 // PLAYBACK
 import PlaybackEngine from './PlaybackEngine.js';
 
 var ENTER_KEY = 13;
+export const PIXELS_PER_BEAT = 40;
 
 class App extends Component {
 
@@ -39,6 +42,9 @@ class App extends Component {
 
     this.handleCreateTrack = this.handleCreateTrack.bind(this);
     this.datastoreCallback = this.datastoreCallback.bind(this);
+    this.handlePlayPress = this.handlePlayPress.bind(this);
+    this.handleStopPress = this.handleStopPress.bind(this);
+
 
     this.MIDIDatastore = new MIDIDatastore();
     this.MIDIDatastoreClient = this.MIDIDatastore.getClient("MainClient");
@@ -49,8 +55,8 @@ class App extends Component {
 
     this.state = {
       midiTracks: {},
-      notesByTrackId: {},
-      seekpos: {left: '-16rem'}
+      playState: "initial",
+      notesByTrackId: {}
     };
   }
 
@@ -124,6 +130,59 @@ class App extends Component {
     }
   }
 
+  handlePlayPress() {
+    console.log("handlePlayPress");
+    if(this.state.playState === "initial") {
+      this.seekhead = document.getElementById("seekhead");
+      this.seekbar = document.getElementById("seekbar");
+      this.origBarPos = this.seekbar.getBoundingClientRect().left;
+      this.origHeadPos = this.seekhead.getBoundingClientRect().left;
+    } else if(this.state.playState === "finish") {
+      this.seekbar.style.left = this.origBarPos+'px';
+      this.seekhead.style.left = this.origHeadPos+'px';
+      this.playbackEngine.seek(0.0);
+    }
+    this.setState({playState: "play"})
+    this.playbackEngine.play();
+    window.requestAnimationFrame(this.updateSeekHead.bind(this));
+  }
+
+  handleStopPress() {
+    console.log("handleStopPress");
+    if(this.state.playState === "play") {
+      this.setState({playState: "paused"});
+      this.playbackEngine.stop(false);
+    } else {
+      this.seekbar.style.left = this.origBarPos+'px';
+      this.seekhead.style.left = this.origHeadPos+'px';
+      this.playbackEngine.stop(true);
+      this.setState({playState: "initial"});
+    }
+  }
+
+  updateSeekHead() {
+    var currPlayPos = this.playbackEngine.currentPosition();
+
+    console.log("updateSeekHead before", currPlayPos);
+
+    this.seekbar.style.left = (this.origBarPos+currPlayPos*PIXELS_PER_BEAT)+'px';
+    this.seekhead.style.left = (this.origHeadPos+currPlayPos*PIXELS_PER_BEAT)+'px';
+
+    console.log("updateSeekHead after", currPlayPos);
+
+    if(this.playbackEngine.isPlaying()) {
+      window.requestAnimationFrame(this.updateSeekHead.bind(this));
+    } else {
+      this.playbackEngine.stop(true);
+      this.setState({playState: "finish"});
+    }
+  }
+
+  getOffsetForEventX(x) {
+    var rect = this.seekdiv.getBoundingClientRect();
+    return x - rect.left;
+  }
+
   render() {
 
     var tracks = this.MIDIDatastoreClient.getTracks();
@@ -138,7 +197,7 @@ class App extends Component {
               this.MIDIDatastoreClient.removeTrack(track);
               this.updateOrRemoveStateTrack(track, true);
             }}
-            noteAddedCallback={(track, note) => {
+            noteAddedOrUpdatedCallback={(track, note) => {
               this.MIDIDatastoreClient.addOrUpdateNote(track, note);
               this.setState({
                 notesByTrackId: update(this.state.notesByTrackId,
@@ -164,12 +223,23 @@ class App extends Component {
       <MuiThemeProvider muiTheme={this.muiTheme}>
         <div className="App">
 
-          <Header create={{
-            onKeyDown: this.handleCreateTrack
-          }} songname="THE DOPEST SONG"/>
+          <Header
+          create={{ onKeyDown: this.handleCreateTrack }}
+          songname="THE DOPEST SONG"
+          handlePlayPress={this.handlePlayPress}
+          handleStopPress={this.handleStopPress}/>
 
-          <FontIcon className="material-icons floating-seek-icon">arrow_drop_down</FontIcon>
-          <div className="floating-seek-bar"></div>
+          <FontIcon
+            id="seekhead"
+            className="material-icons floating-seek-icon">
+            arrow_drop_down
+          </FontIcon>
+
+          <div
+            id="seekbar"
+            className="floating-seek-bar">
+          </div>
+
 
           <div className="body-padding"></div>
 
@@ -186,5 +256,6 @@ class App extends Component {
     );
   }
 }
+/*ref={(div) => { this.seekdiv = div; }}*/
 
 export default App;

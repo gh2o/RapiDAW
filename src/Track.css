@@ -1,3 +1,5 @@
+/* vim: sw=2 ts=2 */
+
 .track-container {
   background-color: #E0E0E0;
   width: 100%;
@@ -92,4 +94,15 @@
   height: 20px;
   width: 40px;
   position: absolute;
+  cursor: move;
+}
+
+.track-cell-handle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: calc(100% - 4px);
+  background-color: #6D4E43;
+  cursor: ew-resize;
 }
