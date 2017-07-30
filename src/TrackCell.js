@@ -68,7 +68,7 @@ class TrackCell extends Component {
     } else if (this.props.note) {
       duration = this.props.note.duration;
     } else {
-      duration = 1;
+      duration = this.props.duration;
     }
     return {
       left:(this.props.beat * PIXELS_PER_BEAT)+"px",

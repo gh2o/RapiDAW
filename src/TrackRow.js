@@ -47,7 +47,7 @@ class TrackRow extends Component {
       var offsetPx = this.getOffsetForEventX(evt.pageX);
       var beat = offsetPx / PIXELS_PER_BEAT;
       beat = this.roundBeat(beat);
-      var note = new MIDINote(generateID(), beat, 1, this.props.pitch);
+      var note = new MIDINote(generateID(), beat, this.props.moveDuration || 1, this.props.pitch);
       this.props.noteAdded(note);
     }
   }
@@ -80,7 +80,8 @@ class TrackRow extends Component {
       beat = this.roundBeat(beat);
       cells.push(<TrackCell
         key="TEMP"
-        beat={beat}/>);
+        beat={beat}
+        duration={this.props.moveDuration || 1}/>);
     }
     return (
       <div
