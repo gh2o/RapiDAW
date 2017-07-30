@@ -1,4 +1,5 @@
 import Tone from 'tone';
+import {MIDINote} from 'MIDIDatastore';
 
 function beatsToToneTime(beats) {
     if (beats < 0 || isNaN(beats) || beats > 1e10) {
@@ -28,12 +29,31 @@ class PlaybackEngine {
         // add all known notes into BST
         let ppq = Tone.Transport.PPQ;
         this.note_timeline = new Tone.Timeline();
+        /*
         for (let track of this.ds_client.getTracks()) {
             for (let note of this.ds_client.getNotes(track)) {
                 let ticks = note.beats * ppq;
                 if (ticks >= Tone.Transport.ticks) {
                     this.note_timeline.add({time: ticks, track, note});
                 }
+            }
+        }
+        */
+
+        let notes = [
+            new MIDINote('1', 0, 1, 69);
+            new MIDINote('2', 1, 1, 71);
+            new MIDINote('3', 2, 1, 73);
+            new MIDINote('4', 3, 1, 74);
+            new MIDINote('5', 4, 1, 76);
+            new MIDINote('6', 5, 1, 78);
+            new MIDINote('7', 6, 1, 80);
+            new MIDINote('8', 7, 1, 81);
+        ];
+        for (let note of notes) {
+            let ticks = note.beats * ppq;
+            if (ticks >= Tone.Transport.ticks) {
+                this.note_timeline.add({time: ticks, track, note});
             }
         }
 
