@@ -55,6 +55,8 @@ class App extends Component {
     var newTrack = new MIDITrack(id,trackName);
 
     this.MIDIDatastoreClient.addOrUpdateTrack(newTrack);
+    this.state.midiTracks[newTrack.id] = newTrack;
+    this.setState(this.state);
   }
 
   datastoreCallback(/*String*/ eventName, /*Object*/ eventParams) {
