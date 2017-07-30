@@ -13,7 +13,7 @@ class Header extends Component {
     return (
       <Paper className="header-container" zDepth={3}>
         <Toolbar className="header-toolbar">
-          <ToolbarTitle text="SONGNAME" />
+          <ToolbarTitle text={this.props.songname} />
         </Toolbar>
 
         <div className="header-subcontainer">

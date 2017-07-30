@@ -57,10 +57,10 @@ class App extends Component {
     this.setState({newTrackName: ""});
   }
 
-  addTrack(event) {
-    console.log("addTrack called");
-    this.setState({newTrackName: ""});
-  }
+  // addTrack(event) {
+  //   console.log("addTrack called");
+  //   this.setState({newTrackName: ""});
+  // }
 
   render() {
 
@@ -69,7 +69,10 @@ class App extends Component {
 
     var trackItems = tracks.map(function (track) {
       return (
-        <Track/>
+        <Track
+          track={track}
+          name={track.name}
+        />
       );
     }, this);
 
@@ -85,11 +88,12 @@ class App extends Component {
       <MuiThemeProvider>
         <div className="App">
 
-          <Header />
-
-          <p> WHERE AM I </p>
+          <Header
+            songname="Test Name"
+          />
 
           <Track/>
+
           <input id="input"
                  placeholder="Create Track"
                  value={this.state.newTrackName}
