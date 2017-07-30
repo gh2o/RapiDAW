@@ -89,11 +89,11 @@ class App extends Component {
     var tracksBody;
     var tracks = this.MIDIDatastoreClient.getTracks();
 
-    var trackItems = tracks.map(function (track) {
+    var trackItems = tracks.map(track => {
       return (
-        <Track/>
+        <Track key={track.id} track={track}/>
       );
-    }, this);
+    });
 
     if (tracks.length) {
       tracksBody = (
@@ -111,7 +111,6 @@ class App extends Component {
 
           <p> WHERE AM I </p>
 
-          <Track/>
           <input id="input"
                  placeholder="Create Track"
                  value={this.state.newTrackName}
