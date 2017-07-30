@@ -4,7 +4,7 @@ class TrackCell extends Component {
 
   render() {
     return (
-      <div className="cell-container">
+      <div className="track-cell-container">
       		<p>{this.props.name}</p>
       </div>
     );

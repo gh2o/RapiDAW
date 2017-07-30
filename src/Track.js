@@ -32,7 +32,7 @@ class Track extends Component {
 
     if (this.state.midiRow.length) {
       midiBody = (
-        <div className="midi-container">
+        <div className="piano-container">
           {this.state.midiRow}
         </div>
       );
