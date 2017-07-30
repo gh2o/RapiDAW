@@ -6,7 +6,7 @@ class Track extends Component {
     return (
       <div className="track-container">
       	<div className="track-info">
-      		<p>TRACKNAME</p>
+      		<p>{this.props.track.name}</p>
       	</div>
       </div>
     );
