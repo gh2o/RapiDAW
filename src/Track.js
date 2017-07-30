@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 
 import { TrackRow } from './TrackRow.js';
+import { pitchToName } from './Utils.js';
 
 // MATERIAL UI
 import FontIcon from 'material-ui/FontIcon';
@@ -13,6 +14,7 @@ import Slider from 'material-ui/Slider';
 import './Track.css';
 
 export const PIANO_MIDI_OFFSET = 9; // typical piano starts at MIDI note 9 for A0
+export const PIANO_NUM_KEYS = 88;
 
 class Track extends Component {
   constructor() {
@@ -22,30 +24,11 @@ class Track extends Component {
 
     this.finishDragOrResize = this.finishDragOrResize.bind(this);
 
-    this.pianoElements = [false, true, false,
-      false, true, false, true, false,
-      false, true, false, true, false, true, false,
-      false, true, false, true, false,
-      false, true, false, true, false, true, false,
-      false, true, false, true, false,
-      false, true, false, true, false, true, false,
-      false, true, false, true, false,
-      false, true, false, true, false, true, false,
-      false, true, false, true, false,
-      false, true, false, true, false, true, false,
-      false, true, false, true, false,
-      false, true, false, true, false, true, false,
-      false, true, false, true, false,
-      false, true, false, true, false, true, false,
-      false
-    ];
-    for (var i=0; i < this.pianoElements.length; i++) {
+    this.pianoElements = [];
+    for (var i = 0; i < PIANO_NUM_KEYS; i++) {
         var pitch = i + PIANO_MIDI_OFFSET;
-        if (this.pianoElements[i]) {
-          this.pianoElements[i] = (<div className="piano-key black" key={i}>{pitch}</div>);
-        } else {
-          this.pianoElements[i] = (<div className="piano-key white" key={i}>{pitch}</div>);
-        }
+        var name = pitchToName(pitch);
+        this.pianoElements.push(<div className={"piano-key " + (name[1] === '#' ? "black" : "white")} key={i}>{name}</div>);
     }
     this.pianoElements.reverse();
 
@@ -91,7 +74,7 @@ class Track extends Component {
     }
 
     var trackRows = [];
-    for (var i = 0; i < 88; i++) {
+    for (var i = 0; i < PIANO_NUM_KEYS; i++) {
       let pitch = PIANO_MIDI_OFFSET + 87 - i;
       trackRows.push(<TrackRow
         key={pitch}
