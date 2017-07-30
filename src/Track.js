@@ -64,7 +64,6 @@ class Track extends Component {
   }
 
   render() {
-    console.log(this.props.track);
     var notesByPitch = {};
     for (let note of Object.values(this.props.notes)) {
       if (!(note.pitch in notesByPitch)) {

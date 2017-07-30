@@ -96,11 +96,9 @@ class App extends Component {
   }
 
   datastoreCallback(/*String*/ eventName, /*Object*/ eventParams) {
-    console.log(eventName);
     switch (eventName) {
       case 'trackAddedOrUpdated':
       {
-        console.log("TRACK ADDED");
         let {track} = eventParams;
         this.updateOrRemoveStateTrack(track, false);
         break;
@@ -228,7 +226,6 @@ class App extends Component {
               this.updateOrRemoveStateTrack(track, false);
             }}
             trackVolumeUpdated={(track,volume) => {
-              console.log("VOLUME UPDATE", volume);
               track.volume = volume;
               this.MIDIDatastoreClient.addOrUpdateTrack(track);
               this.updateOrRemoveStateTrack(track, false);
