@@ -1,8 +1,10 @@
+// vim: ts=2 sw=2
+
 import React, { Component } from 'react';
 import './App.css';
 
 // MODEL
-// import RapidWrapper from './RapidWrapper.js';
+import RapidWrapper from './RapidWrapper.js';
 import { MIDINote, MIDITrack, MIDIDatastore } from './MIDIDatastore.js';
 import { generateID } from './Utils.js';
 
@@ -22,18 +24,19 @@ class App extends Component {
   constructor() {
     super();
 
-    this.MIDIDatastore = new MIDIDatastore();
-    this.MIDIDatastoreClient = this.MIDIDatastore.getClient("MainClient");
-
-    // this.rapidWrapper = new RapidWrapper(this.MIDIDatastore);
-
     this.handleCreateTrack = this.handleCreateTrack.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.datastoreCallback = this.datastoreCallback.bind(this);
 
-    this.MIDIDatastoreClient.registerCallback(this.addTrack);
+    this.MIDIDatastore = new MIDIDatastore();
+    this.MIDIDatastoreClient = this.MIDIDatastore.getClient("MainClient");
+    this.MIDIDatastoreClient.registerCallback(this.datastoreCallback);
+
+    this.rapidWrapper = new RapidWrapper(this.MIDIDatastore);
 
     this.state = {
-      newTrackName: ""
+      newTrackName: "",
+      midiTracks: {}
     };
   }
 
@@ -55,6 +58,25 @@ class App extends Component {
 
     this.MIDIDatastoreClient.addOrUpdateTrack(newTrack);
     this.setState({newTrackName: ""});
+  }
+
+  datastoreCallback(/*String*/ eventName, /*Object*/ eventParams) {
+    switch (eventName) {
+      case 'trackAddedOrUpdated':
+      {
+        let {track} = eventParams;
+        this.state.midiTracks[track.id] = track;
+        this.setState(this.state);
+        break;
+      }
+      case 'trackRemoved':
+      {
+        let {track} = eventParams;
+        delete this.midiTracks[track.id];
+        this.setState(this.state);
+        break;
+      }
+    }
   }
 
   addTrack(event) {

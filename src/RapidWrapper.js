@@ -1,5 +1,5 @@
 import Rapid from 'rapid-io';
-import { MIDINote, MIDITrack, MIDIDatastore } from './MIDIDatastore.js';
+import { MIDINote, MIDITrack } from './MIDIDatastore.js';
 import { generateID } from './Utils.js';
 
 const NOTE_KEY_PREFIX = 'nt$';
