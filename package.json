@@ -9,7 +9,8 @@
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-scripts": "1.0.10",
-    "react-tap-event-plugin": "*"
+    "react-tap-event-plugin": "*",
+    "tone": "^0.10.0"
   },
   "scripts": {
     "start": "react-scripts start",
