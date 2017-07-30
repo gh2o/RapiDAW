@@ -51,6 +51,7 @@ class App extends Component {
     this.handlePlayPress = this.handlePlayPress.bind(this);
     this.handleStopPress = this.handleStopPress.bind(this);
     this.handleMeasureBarClick = this.handleMeasureBarClick.bind(this);
+    this.handleMeasureScroll = this.handleMeasureScroll.bind(this);
 
     this.MIDIDatastore = new MIDIDatastore();
     this.MIDIDatastoreClient = this.MIDIDatastore.getClient("MainClient");
@@ -63,7 +64,8 @@ class App extends Component {
       midiTracks: {},
       playState: "initial",
       notesByTrackId: {},
-      marker: false
+      marker: false,
+      scrollPos: 0
     };
   }
 
@@ -249,6 +251,10 @@ class App extends Component {
     this.playbackEngine.seek(this.getMeasureBarOffsetForEventX(event.pageX)/PIXELS_PER_BEAT);
   }
 
+  handleMeasureScroll(pos) {
+    this.setState({scrollPos: pos});
+  }
+
   getOffsetForEventX(x) {
     var rect = this.seekdiv.getBoundingClientRect();
     return x - rect.left;
@@ -324,9 +330,11 @@ class App extends Component {
           <Header
           create={{ onKeyDown: this.handleCreateTrack }}
           songname="THE DOPEST SONG"
+          scrollPos={this.state.scrollPos}
           handlePlayPress={this.handlePlayPress}
           handleStopPress={this.handleStopPress}
-          handleMeasureBarClick={this.handleMeasureBarClick}/>
+          handleMeasureBarClick={this.handleMeasureBarClick}
+          handleMeasureScroll={this.handleMeasureScroll}/>
 
           {marker}
 

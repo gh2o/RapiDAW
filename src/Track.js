@@ -144,7 +144,9 @@ class Track extends Component {
             {this.pianoElements}
           </div>
           <div className="piano-container" ref={div => { this.pianoConDiv = div; }}>
-            {trackRows}
+            <div className="piano-sub">
+              {trackRows}
+            </div>
           </div>
         </div>
     </div>

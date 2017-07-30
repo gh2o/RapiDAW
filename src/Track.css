@@ -76,6 +76,11 @@
   width: 100%;
 }
 
+.piano-sub {
+  position: relative;
+  width: 16000px;
+}
+
 .track-row-container {
   box-sizing: border-box;
   height: 20px;

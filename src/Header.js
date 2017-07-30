@@ -28,6 +28,12 @@ class Header extends Component {
     }
   }
 
+  componentDidUpdate() {
+    if (this.mbarSubDiv.scrollLeft !== this.props.scrollPos) {
+      this.mbarSubDiv.scrollLeft = this.props.scrollPos;
+    }
+  }
+
   render() {
     return (
       <Paper className="header-container" zDepth={2}>
@@ -74,7 +80,9 @@ class Header extends Component {
             id="measureBar"
             className="header-track-measure"
             onClick={this.props.handleMeasureBarClick}>
-            <div id="measureBarSub">
+            <div id="measureBarSub"
+                onScroll={evt => this.props.handleMeasureScroll(evt.target.scrollLeft)}
+                ref={div => { this.mbarSubDiv = div; }}>
               {this.measure}
             </div>
           </div>
