@@ -146,6 +146,10 @@ class App extends Component {
   }
 
   onKeyPress(evt) {
+    if (document.activeElement && document.activeElement.tagName &&
+      document.activeElement.tagName.toLowerCase() === 'input') {
+      return;
+    }
     if ([SPACE_KEY, MARKER_KEY, PLAYMARK_KEY].indexOf(evt.keyCode) < 0) {
       return;
     }
