@@ -1,3 +1,5 @@
+// vim: ts=2 sw=2
+
 import React, { Component } from 'react';
 
 import { TrackRow } from './TrackRow.js';
@@ -38,7 +40,8 @@ class Track extends Component {
     this.pianoElements.reverse();
 
     this.state = {
-      mouseActive: false
+      mouseActive: false,
+      activeNote: null,
     }
   }
 
@@ -64,7 +67,8 @@ class Track extends Component {
 
     return (
       <div className="track-container"
-           onMouseDown={() => this.setState({mouseActive: true})}
+           onContextMenu={evt => evt.preventDefault()}
+           onMouseDown={evt => evt.button !== 2 && this.setState({mouseActive: true})}
            onMouseUp={() => this.setState({mouseActive: false})}
            onMouseLeave={() => this.setState({mouseActive: false})}>
         <div className="track-info">
