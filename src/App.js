@@ -23,12 +23,17 @@ import Track from './Track.js';
 import PlaybackEngine from './PlaybackEngine.js';
 
 var ENTER_KEY = 13;
+var SPACE_KEY = 32;
+
 export const PIXELS_PER_BEAT = 40;
 
 class App extends Component {
 
   constructor() {
     super();
+    console.log("ONKEYPRESS");
+    document.onkeypress = this.onKeyPress.bind(this);
+
     injectTapEventPlugin();
 
     this.muiTheme = getMuiTheme({
@@ -133,6 +138,26 @@ class App extends Component {
       this.origBarPos = this.seekbar.getBoundingClientRect().left;
       this.origHeadPos = this.seekhead.getBoundingClientRect().left;
     }
+  }
+
+  onKeyPress(e) {
+    e = e || window.event;
+    if (e.keyCode !== SPACE_KEY) {
+      return;
+    }
+    console.log("enter pressed - onKeyPress Called");
+    e.preventDefault();
+    this.getOriginalPosition();
+    if(this.state.playState === "play") {
+      this.playbackEngine.stop(false);
+      window.requestAnimationFrame(this.updateSeekHead.bind(this));
+      this.state.playState = "paused";
+    } else if(this.state.playState === "paused" || this.state.playState === "initial") {
+      this.playbackEngine.play();
+      window.requestAnimationFrame(this.updateSeekHead.bind(this));
+      this.state.playState = "play";
+    }
+    // use e.keyCode
   }
 
   //initial
