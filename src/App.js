@@ -61,7 +61,7 @@ class App extends Component {
     this.MIDIDatastoreClient = this.MIDIDatastore.getClient("MainClient");
     this.MIDIDatastoreClient.registerCallback(this.datastoreCallback);
 
-    this.rapidWrapper   = new RapidWrapper(this.MIDIDatastore, () => this.setState({loaded: true}));
+    this.rapidWrapper   = new RapidWrapper(this.MIDIDatastore, '', () => this.setState({loaded: true}));
     this.playbackEngine = new PlaybackEngine(this.MIDIDatastore);
 
     this.state = {
