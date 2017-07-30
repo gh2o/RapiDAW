@@ -1,0 +1,37 @@
+.loader {
+  width: 100%;
+  height: 100%;
+  background-color: #F5F5F5;
+  z-index: 10;
+  position: fixed;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.loader svg {
+  overflow: hidden;
+}
+
+.loader p {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: lighter;
+}
+
+#wave {
+  stroke-dasharray: 0 16 101 16;
+  animation: moveTheWave 2400ms linear infinite;  
+}
+
+@keyframes moveTheWave {
+  0% { 
+    stroke-dashoffset: 0; 
+    transform: translate3d(0, 0, 0);
+  }
+  100% { 
+    stroke-dashoffset: -133;
+    transform: translate3d(-90px, 0, 0);
+  }
+}

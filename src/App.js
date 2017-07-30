@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import update from 'immutability-helper';
 import './App.css';
+import './loader.css';
 
 // MODEL
 import RapidWrapper from './RapidWrapper.js';
@@ -72,7 +73,7 @@ class App extends Component {
       seekActive: false,
       seekAtEnd: false,
       loaded: false,
-      markerPos: null,
+      markerPos: null
     };
   }
 
@@ -284,6 +285,75 @@ class App extends Component {
     this.setState({scrollPos: pos}, () => this.updateSeekHeadPosition());
   }
 
+  animateLoader() {
+    const path = document.querySelector('#wave');
+    const animation = document.querySelector('#moveTheWave');
+    const m = 0.512286623256592433;
+
+    function buildWave(w, h) {
+      const a = h / 4;
+      const y = h / 2;
+      
+      const pathData = [
+        'M', w * 0, y + a / 2, 
+        'c', 
+          a * m, 0,
+          -(1 - a) * m, -a, 
+          a, -a,
+        's', 
+          -(1 - a) * m, a,
+          a, a,
+        's', 
+          -(1 - a) * m, -a,
+          a, -a,
+        's', 
+          -(1 - a) * m, a,
+          a, a,
+        's', 
+          -(1 - a) * m, -a,
+          a, -a,
+        
+        's', 
+          -(1 - a) * m, a,
+          a, a,
+        's', 
+          -(1 - a) * m, -a,
+          a, -a,
+        's', 
+          -(1 - a) * m, a,
+          a, a,
+        's', 
+          -(1 - a) * m, -a,
+          a, -a,
+        's', 
+          -(1 - a) * m, a,
+          a, a,
+        's', 
+          -(1 - a) * m, -a,
+          a, -a,
+        's', 
+          -(1 - a) * m, a,
+          a, a,
+        's', 
+          -(1 - a) * m, -a,
+          a, -a,
+        's', 
+          -(1 - a) * m, a,
+          a, a,
+        's', 
+          -(1 - a) * m, -a,
+          a, -a
+        ].join(' ');
+      
+        path.setAttribute('d', pathData);
+      }
+      buildWave(90, 60);
+    }
+
+  componentDidMount() {
+    this.animateLoader();
+  }
+
   render() {
 
     var tracks = this.MIDIDatastoreClient.getTracks();
@@ -327,7 +397,6 @@ class App extends Component {
     });
 
     var marker;
-
     if (this.state.markerPos !== null) {
       var epx = this.state.markerPos * PIXELS_PER_BEAT - this.state.scrollPos;
       if (epx >= 0) {
@@ -347,9 +416,26 @@ class App extends Component {
       }
     }
 
+    var loader = (          
+      <div className="loader" >
+        <svg xmlns="http://www.w3.org/2000/svg" 
+           width="200px" height="150px"
+           viewBox="5 0 80 60">
+          <path id="wave" 
+              fill="none" 
+              stroke="#262626" 
+              stroke-width="6"
+              stroke-linecap="round">
+          </path>
+        </svg>
+        <p>Rapid.DAW</p>
+      </div>);
+
     return (
       <MuiThemeProvider muiTheme={this.muiTheme}>
         <div className="App">
+
+          {!this.state.loaded ? loader : null}
 
           <Header
           create={{ onKeyDown: this.handleCreateTrack }}
