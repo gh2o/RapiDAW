@@ -34,9 +34,8 @@ class App extends Component {
 
   constructor() {
     super();
-    console.log("ONKEYPRESS");
-    document.onkeypress = this.onKeyPress.bind(this);
 
+    document.onkeypress = this.onKeyPress.bind(this);
     injectTapEventPlugin();
 
     this.muiTheme = getMuiTheme({
@@ -50,8 +49,10 @@ class App extends Component {
     this.datastoreCallback = this.datastoreCallback.bind(this);
     this.handlePlayPress = this.handlePlayPress.bind(this);
     this.handleStopPress = this.handleStopPress.bind(this);
+    this.handleRewindPress = this.handleRewindPress.bind(this);
     this.handleMeasureBarClick = this.handleMeasureBarClick.bind(this);
     this.handleMeasureScroll = this.handleMeasureScroll.bind(this);
+    this.updateSeekHeadPeriodic = this.updateSeekHeadPeriodic.bind(this);
 
     this.MIDIDatastore = new MIDIDatastore();
     this.MIDIDatastoreClient = this.MIDIDatastore.getClient("MainClient");
@@ -65,7 +66,10 @@ class App extends Component {
       playState: "initial",
       notesByTrackId: {},
       marker: false,
-      scrollPos: 0
+      scrollPos: 0,
+      seekPos: 0,
+      seekActive: false,
+      seekAtEnd: false
     };
   }
 
@@ -137,16 +141,9 @@ class App extends Component {
     }
   }
 
-  getOriginalPosition() {
-    if(this.origBarPos == null) {
-      this.seekhead = document.getElementById("seekhead");
-      this.seekbar = document.getElementById("seekbar");
-      this.origBarPos = this.seekbar.getBoundingClientRect().left;
-      this.origHeadPos = this.seekhead.getBoundingClientRect().left;
-    }
-  }
-
   onKeyPress(e) {
+    return;
+    /*
     e = e || window.event;
     if ([SPACE_KEY, MARKER_KEY, PLAYMARK_KEY].indexOf(e.keyCode) < 0) {
       return;
@@ -179,6 +176,7 @@ class App extends Component {
       window.requestAnimationFrame(this.updateSeekHead.bind(this));
       this.setState({playState: 'play'});
     }
+    */
   }
 
   //initial
@@ -187,59 +185,72 @@ class App extends Component {
   //finish
   handlePlayPress() {
     console.log("handlePlayPress - playstate: " + this.state.playState);
-    if(this.state.playState === "initial") {
-      this.getOriginalPosition()
-      this.position = 0.0;
-    } else if(this.state.playState === "finish") {
-      this.seekbar.style.left = this.origBarPos+'px';
-      this.seekhead.style.left = this.origHeadPos+'px';
-      this.playbackEngine.seek(0.0);
+    if (!this.state.seekActive) {
+      if (this.state.seekAtEnd) {
+        this.playbackEngine.seek(0);
+      } else {
+        this.playbackEngine.seek(this.state.seekPos);
+      }
+      this.playbackEngine.play();
+      this.setState({seekActive: true});
+      window.requestAnimationFrame(this.updateSeekHeadPeriodic);
     }
-    this.playbackEngine.play();
-    this.setState({playState: "play"})
-    window.requestAnimationFrame(this.updateSeekHead.bind(this));
   }
 
   handleStopPress() {
     console.log("handleStopPress Start - playState:" + this.state.playState);
-    if(this.state.playState === "initial") {
-      this.getOriginalPosition()
-    } else if(this.state.playState === "play") {
+    if (this.state.seekActive) {
       this.playbackEngine.stop(false);
-      this.position = this.playbackEngine.currentPosition();
-      this.setState({playState: "paused"});
-    } else if(this.state.playState === "paused") {
-      this.seekbar.style.left = this.origBarPos+'px';
-      this.seekhead.style.left = this.origHeadPos+'px';
-      this.playbackEngine.stop(true);
+      this.setState({
+        seekActive: false,
+        seekPos: this.playbackEngine.currentPosition()
+      });
+      this.updateSeekHeadPosition();
+    } else {
       this.playbackEngine.seek(0);
-      this.setState({playState: "initial"});
+      this.setState({seekPos: 0});
+      this.updateSeekHeadPosition();
     }
-    console.log("handleStopPress End - playState:" + this.state.playState);
   }
 
-  updateSeekHead() {
+  handleRewindPress() {
+    this.handleStopPress(); // TODO
+  }
+
+  moveSeekHeadBar(px) {
+    px += this.getMeasureBarX();
+    document.getElementById(this.seekHeadElem.props.id).style.left = (px - OFFSET) + 'px';
+    this.seekBarDiv.style.left = px + 'px';
+  }
+
+  updateSeekHeadPosition() {
     var currPlayPos = this.playbackEngine.currentPosition();
+    this.moveSeekHeadBar(currPlayPos * PIXELS_PER_BEAT);
+  }
 
-    this.seekbar.style.left = (this.origBarPos+currPlayPos*PIXELS_PER_BEAT)+'px';
-    this.seekhead.style.left = (this.origHeadPos+currPlayPos*PIXELS_PER_BEAT)+'px';
+  updateSeekHeadPeriodic() {
+    if (!this.state.seekActive) {
+      return;
+    }
 
-    if(this.playbackEngine.isPlaying()) {
-      window.requestAnimationFrame(this.updateSeekHead.bind(this));
-    } else if(this.state.playState === "play") {
-      this.playbackEngine.seek(0);
+    this.updateSeekHeadPosition();
+
+    if (this.playbackEngine.isPlaying()) {
+      window.requestAnimationFrame(this.updateSeekHeadPeriodic);
+    } else {
+      this.setState({
+        seekActive: false,
+        seekPos: this.playbackEngine.currentPosition(),
+        seekAtEnd: true
+      });
     }
   }
 
-  getMeasureBarOffsetForEventX(x) {
-    var rect = this.measureBar.getBoundingClientRect();
-    return x - rect.left;
-  }
-
-  getMeasureBar() {
-    if(this.measureBar == null) {
+  getMeasureBarX() {
+    if (!this.measureBar) {
       this.measureBar = document.getElementById("measureBar");
     }
+    return this.measureBar.getBoundingClientRect().left;
   }
 
   handleMeasureBarClick(event) {
@@ -253,11 +264,6 @@ class App extends Component {
 
   handleMeasureScroll(pos) {
     this.setState({scrollPos: pos});
-  }
-
-  getOffsetForEventX(x) {
-    var rect = this.seekdiv.getBoundingClientRect();
-    return x - rect.left;
   }
 
   getStyle() {
@@ -334,12 +340,14 @@ class App extends Component {
           scrollPos={this.state.scrollPos}
           handlePlayPress={this.handlePlayPress}
           handleStopPress={this.handleStopPress}
+          handleRewindPress={this.handleRewindPress}
           handleMeasureBarClick={this.handleMeasureBarClick}
           handleMeasureScroll={this.handleMeasureScroll}/>
 
           {marker}
 
           <FontIcon
+            ref={elem => { this.seekHeadElem = elem; }}
             id="seekhead"
             className="material-icons floating-seek-icon"
             style={{position: 'fixed', transition: 'none'}}>
@@ -347,6 +355,7 @@ class App extends Component {
           </FontIcon>
 
           <div
+            ref={div => { this.seekBarDiv = div; }}
             id="seekbar"
             className="floating-seek-bar"
             style={{pointerEvents: 'none'}}>

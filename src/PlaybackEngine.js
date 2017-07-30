@@ -2,7 +2,7 @@ import Tone from 'tone';
 
 function beatsToToneTime(beats) {
     if (beats < 0 || isNaN(beats) || beats > 1e10) {
-        throw new Error("bad beats");
+        throw new Error("bad beats " + beats);
     }
     return `0:${beats}:0`;
 }
