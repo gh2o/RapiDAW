@@ -158,7 +158,7 @@ SECONDARY TEAL: #009688;
 .floating-seek-bar {
   z-index: 2;
   box-sizing: border-box;
-  position: absolute;
+  position: fixed;
   width: 2px;
   height: 100%;
   left: 16rem;
