@@ -65,20 +65,20 @@ SECONDARY TEAL: #009688;
 }
 
 .header-avatar {
-  transform: translateY(-15px);
+  /*transform: translate(-10px,-5px);*/
 }
 
 .badge {
-  transform: translateY(10px);
-  padding-bottom: 0px !important;
-  padding-left: 0px !important;
+  /*transform: translateY(10px);*/
+  /*padding-bottom: 0px !important;
+  padding-left: 0px !important;*/
 }
 
 .badge span {
-  top: 10px !important;
+  top: 22px !important;
   right: 20px !important;
-  width: 12px !important;
-  height: 12px !important;
+  width: 10px !important;
+  height: 10px !important;
 }
 
 .online span {
@@ -182,6 +182,11 @@ SECONDARY TEAL: #009688;
   height: 100%;
   left: 16rem;
   background-color: #5D4037;
+}
+
+.tooltip-icon-button {
+  position: relative;
+  transform: translate(-40px,-15px);
 }
 
 #markerhead {
