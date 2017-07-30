@@ -205,12 +205,11 @@ class App extends Component {
         seekActive: false,
         seekPos: this.playbackEngine.currentPosition()
       });
-      this.updateSeekHeadPosition();
     } else {
       this.playbackEngine.seek(0);
       this.setState({seekPos: 0});
-      this.updateSeekHeadPosition();
     }
+    this.updateSeekHeadPosition();
   }
 
   handleRewindPress() {
@@ -255,11 +254,17 @@ class App extends Component {
 
   handleMeasureBarClick(event) {
     console.log("handleMeasureBarClick", event.pageX);
-    this.getMeasureBar();
-    this.getOriginalPosition();
-    this.seekbar.style.left = event.pageX + 'px';
-    this.seekhead.style.left =  event.pageX - OFFSET + 'px';
-    this.playbackEngine.seek(this.getMeasureBarOffsetForEventX(event.pageX)/PIXELS_PER_BEAT);
+    let px = event.pageX - this.getMeasureBarX();
+    let beats = px / PIXELS_PER_BEAT;
+
+    if (this.state.seekActive) {
+      // TODO
+    } else {
+      this.playbackEngine.seek(beats);
+      this.setState({seekPos: beats});
+      this.updateSeekHeadPosition();
+
+    }
   }
 
   handleMeasureScroll(pos) {
