@@ -123,7 +123,12 @@ class Track extends Component {
           <FontIcon className="material-icons close-link"  onClick={() => this.props.trackDeleteClicked(this.props.track)}>close</FontIcon>
           <br />
           <p>{this.props.track.name}</p>
-          <DropDownMenu value={this.props.track.instrument} onChange={this.handleChange}>
+          <DropDownMenu 
+            value={this.props.track.instrument} 
+            onChange={this.handleChange}
+            iconStyle={{fill: '#8D6E63'}}
+            underlineStyle={{borderColor: '#8D6E63'}}
+          >
             <MenuItem value={0} primaryText="RAW" />
             <MenuItem value={1} primaryText="Instrument1" />
             <MenuItem value={2} primaryText="Instrument2" />

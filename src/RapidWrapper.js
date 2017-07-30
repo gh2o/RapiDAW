@@ -9,6 +9,7 @@ function getMIDITrackFromDoc(doc) {
     let track  = new MIDITrack();
     track.id   = doc.id;
     track.name = doc.body.name;
+    track.instrument = doc.body.instrument;
     return track;
 }
 
