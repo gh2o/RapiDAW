@@ -1,5 +1,5 @@
 import Tone from 'tone';
-import {MIDINote} from 'MIDIDatastore';
+import {MIDITrack, MIDINote} from './MIDIDatastore.js';
 
 function beatsToToneTime(beats) {
     if (beats < 0 || isNaN(beats) || beats > 1e10) {
@@ -32,7 +32,7 @@ class PlaybackEngine {
         /*
         for (let track of this.ds_client.getTracks()) {
             for (let note of this.ds_client.getNotes(track)) {
-                let ticks = note.beats * ppq;
+                let ticks = note.beat * ppq;
                 if (ticks >= Tone.Transport.ticks) {
                     this.note_timeline.add({time: ticks, track, note});
                 }
@@ -40,18 +40,21 @@ class PlaybackEngine {
         }
         */
 
+        let track = [
+            new MIDITrack('k', 'blah'),
+        ];
         let notes = [
-            new MIDINote('1', 0, 1, 69);
-            new MIDINote('2', 1, 1, 71);
-            new MIDINote('3', 2, 1, 73);
-            new MIDINote('4', 3, 1, 74);
-            new MIDINote('5', 4, 1, 76);
-            new MIDINote('6', 5, 1, 78);
-            new MIDINote('7', 6, 1, 80);
-            new MIDINote('8', 7, 1, 81);
+            new MIDINote('1', 0, 1, 69),
+            new MIDINote('2', 1, 1, 71),
+            new MIDINote('3', 2, 1, 73),
+            new MIDINote('4', 3, 1, 74),
+            new MIDINote('5', 4, 1, 76),
+            new MIDINote('6', 5, 1, 78),
+            new MIDINote('7', 6, 1, 80),
+            new MIDINote('8', 7, 1, 81),
         ];
         for (let note of notes) {
-            let ticks = note.beats * ppq;
+            let ticks = note.beat * ppq;
             if (ticks >= Tone.Transport.ticks) {
                 this.note_timeline.add({time: ticks, track, note});
             }
@@ -61,6 +64,7 @@ class PlaybackEngine {
         Tone.Transport.start();
 
         // schedule note transport
+        this.transport_evt = true; // force start
         this.transportCallback(void 0, Tone.Transport.ticks);
     }
 
@@ -99,6 +103,7 @@ class PlaybackEngine {
     }
 
     transportCallback(real_time, cur_ticks) {
+        console.log('tc entry', cur_ticks, 'ticks');
         if (this.transport_evt === null) {
             return;
         } else {
@@ -108,6 +113,7 @@ class PlaybackEngine {
         let item;
         while (true) {
             item = this.note_timeline.peek();
+            console.log('peek got', item);
             if (!item) {
                 this.stop(false);
                 return;
@@ -115,11 +121,12 @@ class PlaybackEngine {
             if (item.time > cur_ticks) {
                 break;
             }
-            console.log('play note', item.note);
             this.note_timeline.shift();
         }
 
-        this.transport_evt = Tone.Transport.scheduleOnce(t => this.transportCallback(t, item.time), item.time);
+        this.transport_evt = Tone.Transport.scheduleOnce(
+            t => this.transportCallback(t, item.time),
+            new Tone.Time(item.time, "i"));
     }
 
     datastoreCallback(/*String*/ eventName, /*Object*/ eventParams) {
