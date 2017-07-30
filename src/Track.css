@@ -90,6 +90,7 @@
 .track-cell-container {
   box-sizing: border-box;
   background: #8D6E63;
+  opacity: 0.8;
   height: 20px;
   width: 40px;
   position: absolute;

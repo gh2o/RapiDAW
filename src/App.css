@@ -3,8 +3,6 @@ PRIMARY BROWN: #8D6E63;
 SECONDARY TEAL: #009688;
 */
 
-
-
 /*HEAD*/
 .header-container {
   z-index: 5;
@@ -104,7 +102,7 @@ SECONDARY TEAL: #009688;
   color: #5D4037 !important;
   font-size: 50px !important;
   background-color: rgba(255, 255, 255, 0) !important;
-  position: absolute;
+  position: fixed !important;
   left: 14.5rem;
   top: 7rem !important;
 }
@@ -112,7 +110,8 @@ SECONDARY TEAL: #009688;
 .floating-seek-bar {
   z-index: 2;
   box-sizing: border-box;
-  position: absolute;
+  position: fixed;
+  left: 16rem;
   width: 2px;
   height: 100%;
   left: 16rem;

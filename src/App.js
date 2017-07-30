@@ -89,7 +89,7 @@ class App extends Component {
     var trackName = event.target.value.trim();
     event.target.value = '';
     var id = generateID();
-    var track = new MIDITrack(id,trackName);
+    var track = new MIDITrack(id,trackName,0);
 
     this.MIDIDatastoreClient.addOrUpdateTrack(track);
     this.updateOrRemoveStateTrack(track, false);
@@ -194,8 +194,8 @@ class App extends Component {
             track={track}
             notes={this.state.notesByTrackId[track.id] || {}}
             trackDeleteClicked={track => {
-                this.MIDIDatastoreClient.removeTrack(track);
-                this.updateOrRemoveStateTrack(track, true);
+              this.MIDIDatastoreClient.removeTrack(track);
+              this.updateOrRemoveStateTrack(track, true);
             }}
             noteAddedOrUpdatedCallback={(track, note) => {
               this.MIDIDatastoreClient.addOrUpdateNote(track, note);
@@ -210,7 +210,12 @@ class App extends Component {
                 notesByTrackId: update(this.state.notesByTrackId,
                   {[track.id]: {$unset: [note.id]}})
               });
-            }}/>
+            }}
+            trackInstrumentUpdated={(track,instrument) => {
+              track.instrument = instrument;
+              this.MIDIDatastoreClient.addOrUpdateTrack(track);
+            }}
+        />
       );
     });
 

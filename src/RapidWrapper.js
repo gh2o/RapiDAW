@@ -70,6 +70,7 @@ class RapidWrapper {
                 doc.execute(doc => {
                     let data = doc ? doc.body : {};
                     data.name = track.name;
+                    data.instrument = track.instrument;
                     data.proj_id = this.proj_id;
                     this.updateTrackRev(data, track);
                     return data;
