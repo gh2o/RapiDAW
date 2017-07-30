@@ -43,7 +43,6 @@ class App extends Component {
     this.handlePlayPress = this.handlePlayPress.bind(this);
     this.handleStopPress = this.handleStopPress.bind(this);
 
-
     this.MIDIDatastore = new MIDIDatastore();
     this.MIDIDatastoreClient = this.MIDIDatastore.getClient("MainClient");
     this.MIDIDatastoreClient.registerCallback(this.datastoreCallback);

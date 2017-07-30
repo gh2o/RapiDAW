@@ -158,6 +158,8 @@ class PlaybackEngine {
             case 'trackRemoved':
             {
                 let {track} = eventParams;
+                let instr = this.instr_by_track_id[track.id];
+                instr && instr.dispose();
                 delete this.instr_by_track_id[track.id];
                 break;
             }
