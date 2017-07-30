@@ -1,8 +1,6 @@
-import React, { Component, PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 
-import { MIDINote, MIDITrack, MIDIDatastore } from './MIDIDatastore.js';
 import { TrackRow } from './TrackRow.js';
-import { generateID } from './Utils.js';
 
 import FontIcon from 'material-ui/FontIcon';
 
@@ -32,9 +30,9 @@ class Track extends PureComponent {
     ];
     for (var i=0; i < this.pianoElements.length; i++) {
         if (this.pianoElements[i]) {
-          this.pianoElements[i] = (<div className="piano-key black"></div>);
+          this.pianoElements[i] = (<div className="piano-key black" key={i}></div>);
         } else {
-          this.pianoElements[i] = (<div className="piano-key white"></div>);
+          this.pianoElements[i] = (<div className="piano-key white" key={i}></div>);
         }
     }
     this.pianoElements.reverse();

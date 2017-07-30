@@ -6,13 +6,11 @@ import './App.css';
 
 // MODEL
 import RapidWrapper from './RapidWrapper.js';
-import { MIDINote, MIDITrack, MIDIDatastore } from './MIDIDatastore.js';
+import { MIDITrack, MIDIDatastore } from './MIDIDatastore.js';
 import { generateID } from './Utils.js';
 
 // MATERIAL UI COMPONENTS
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
 import FontIcon from 'material-ui/FontIcon';
 
 // UI COMPONENTS
@@ -108,7 +106,6 @@ class App extends Component {
 
   render() {
 
-    var tracksBody;
     var tracks = this.MIDIDatastoreClient.getTracks();
 
     var trackItems = tracks.reverse().map(track => {
@@ -130,14 +127,6 @@ class App extends Component {
       );
     });
 
-    if (tracks.length) {
-      tracksBody = (
-        <div className="body-container">
-          {trackItems}
-        </div>
-      );
-    }
-
     return (
       <MuiThemeProvider>
         <div className="App">
@@ -151,7 +140,9 @@ class App extends Component {
 
           <div className="body-padding"></div>
 
-          {tracksBody}
+          <div className="body-container">
+            {trackItems}
+          </div>
 
           {/*<FloatingActionButton className="button-addtrack">
             <ContentAdd />

@@ -1,5 +1,4 @@
 import Tone from 'tone';
-import {MIDITrack, MIDINote} from './MIDIDatastore.js';
 
 function beatsToToneTime(beats) {
     if (beats < 0 || isNaN(beats) || beats > 1e10) {
@@ -157,6 +156,10 @@ class PlaybackEngine {
                 break;
             }
             case 'trackRemoved':
+            {
+                break;
+            }
+            default:
             {
                 break;
             }
