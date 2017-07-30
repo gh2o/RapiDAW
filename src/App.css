@@ -3,6 +3,8 @@ PRIMARY BROWN: #8D6E63;
 SECONDARY TEAL: #009688;
 */
 
+
+
 /*HEAD*/
 .header-container {
   z-index: 5;
@@ -36,7 +38,7 @@ SECONDARY TEAL: #009688;
 
 .header-trackcontrol {
   text-align: left !important;
-  /*flex: 1;*/
+  flex: 1;
   margin: 0rem 1rem 1rem 1rem;
   padding: 0.5rem 0.5rem 0rem 0.5rem;
 }
@@ -51,8 +53,32 @@ SECONDARY TEAL: #009688;
   cursor: pointer;
 }
 
+.header-trackcontrol-icon:active {
+  color: #BCAAA4 !important;
+}
+
 .header-avatar {
-  margin-left: 1rem;
+  transform: translateY(-15px);
+}
+
+.badge {
+  transform: translateY(25px);
+  padding-left: 0px !important;
+}
+
+.badge span {
+  top: 10px !important;
+  right: 20px !important;
+  width: 12px !important;
+  height: 12px !important;
+}
+
+.online span {
+  background-color: #76FF03 !important;
+}
+
+.offline span {
+  background-color: #D50000 !important;
 }
 
 .header-track-measure {
@@ -77,18 +103,17 @@ SECONDARY TEAL: #009688;
 }
 
 
+
 /*BODY*/
 
 .body-padding {
   height: 9.5rem;
   width: 100%;
-  background-color: #F5F5F5;
 }
 
 .body-container {
   height: 100%;
   width: 100%;
-  background-color: #F5F5F5;
 }
 
 .button-addtrack {
@@ -102,7 +127,7 @@ SECONDARY TEAL: #009688;
   color: #5D4037 !important;
   font-size: 50px !important;
   background-color: rgba(255, 255, 255, 0) !important;
-  position: fixed !important;
+  position: absolute;
   left: 14.5rem;
   transition: none !important;
   top: 7rem !important;
@@ -111,8 +136,7 @@ SECONDARY TEAL: #009688;
 .floating-seek-bar {
   z-index: 2;
   box-sizing: border-box;
-  position: fixed;
-  left: 16rem;
+  position: absolute;
   width: 2px;
   height: 100%;
   left: 16rem;
