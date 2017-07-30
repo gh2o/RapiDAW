@@ -8,6 +8,10 @@ function beatsToToneTime(beats) {
     return `0:${beats}:0`;
 }
 
+function pitchNumToFrequency(num) {
+    return 440 * Math.pow(2, (num - 69) / 12);
+}
+
 class PlaybackEngine {
     constructor(/*MIDIDatastore*/ datastore) {
         this.datastoreCallback = this.datastoreCallback.bind(this);
@@ -18,7 +22,10 @@ class PlaybackEngine {
         this.transport_evt = null;
         this.note_timeline = null;
 
+        this.main_instrument = new Tone.PolySynth(6, Tone.Synth).toMaster();
+
         window.peng = this;
+        window.mins = this.main_instrument;
     }
 
     play() {
@@ -55,8 +62,13 @@ class PlaybackEngine {
         ];
         for (let note of notes) {
             let ticks = note.beat * ppq;
+            console.log('cmp', ticks, Tone.Transport.ticks);
             if (ticks >= Tone.Transport.ticks) {
-                this.note_timeline.add({time: ticks, track, note});
+                this.note_timeline.add({
+                    time: ticks,
+                    duration: note.duration * ppq,
+                    track,
+                    note});
             }
         }
 
@@ -121,6 +133,10 @@ class PlaybackEngine {
             if (item.time > cur_ticks) {
                 break;
             }
+            this.main_instrument.triggerAttackRelease(
+                pitchNumToFrequency(item.note.pitch),
+                new Tone.Time(item.duration, "i").toSeconds(),
+                real_time);
             this.note_timeline.shift();
         }
 
