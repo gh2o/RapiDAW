@@ -169,6 +169,8 @@ class App extends Component {
           this.instantBarSeek(this.state.markerPos);
         }
         break;
+      default:
+        break;
     }
   }
 
