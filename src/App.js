@@ -84,14 +84,11 @@ class App extends Component {
     var tracksBody;
     var tracks = this.MIDIDatastoreClient.getTracks();
 
-    var trackItems = tracks.map(function (track) {
+    var trackItems = tracks.map(track => {
       return (
-        <Track
-          track={track}
-          name={track.name}
-        />
+        <Track key={track.id} track={track}/>
       );
-    }, this);
+    });
 
     if (tracks.length) {
       tracksBody = (
@@ -105,25 +102,19 @@ class App extends Component {
       <MuiThemeProvider>
         <div className="App">
 
-          <Header
-            songname="Test Name"
-          />
+          <Header create={{
+            value: this.state.newTrackName,
+            onKeyDown: this.handleCreateTrack,
+            onChange: this.handleChange
+          }}/>
 
-          <Track/>
-
-          <input id="input"
-                 placeholder="Create Track"
-                 value={this.state.newTrackName}
-                 onKeyDown={this.handleCreateTrack}
-                 onChange={this.handleChange}
-                 autoFocus={true}
-          />
+          <div className="body-padding"></div>
 
           {tracksBody}
 
-          <FloatingActionButton className="button-addtrack">
+          {/*<FloatingActionButton className="button-addtrack">
             <ContentAdd />
-          </FloatingActionButton>
+          </FloatingActionButton>*/}
 
         </div>
       </MuiThemeProvider>

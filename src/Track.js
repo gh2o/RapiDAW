@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import { MIDINote, MIDITrack, MIDIDatastore } from './MIDIDatastore.js';
+import { TrackCell } from './TrackCell.js';
 import { generateID } from './Utils.js';
 
 import './Track.css';
@@ -28,15 +29,17 @@ class Track extends Component {
 
   render() {
     var midiBody;
-    console.log("STATE " + this.state);
-    console.log("PROPS " + this.props);
-    var cells = this.state.MIDIroll.map(function (track) {
+
+    var cells = this.state.MIDIroll.map(track => {
       return(
-        <MIDINote
+        <TrackCell
           name={this.props.name}
         />
       )
     })
+
+    console.log("LENGTH " + cells.length);
+
     if (cells.length) {
       midiBody = (
         <div className="midi-container">
@@ -44,10 +47,11 @@ class Track extends Component {
         </div>
       );
     }
+
     return (
       <div className="track-container">
       	<div className="track-info">
-      		<p>{this.props.name}</p>
+      		<p>{this.props.track.name}</p>
       	</div>
         {midiBody}
       </div>
