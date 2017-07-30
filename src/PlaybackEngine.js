@@ -33,6 +33,23 @@ class Lead1 extends Instrument {
     }
 }
 
+class Kick extends Instrument {
+    constructor() {
+        super();
+        this.ready = false;
+        this.player = new Tone.Player('/kick.wav', () => {this.ready = true;});
+        this.output = this.player;
+    }
+    destroy() {
+        this.player.dispose();
+    }
+    play(freq, dur, time) {
+        if (this.ready) {
+            this.player.start(time);
+        }
+    }
+}
+
 class HiHat extends Instrument {
     constructor() {
         super();
@@ -226,6 +243,9 @@ class PlaybackEngine {
             case "lead1":
             default:
                 instr = new Lead1();
+                break;
+            case "kick":
+                instr = new Kick();
                 break;
             case "hihat":
                 instr = new HiHat();
