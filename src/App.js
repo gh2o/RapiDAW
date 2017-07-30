@@ -65,6 +65,11 @@ class App extends Component {
       this.setState({
         midiTracks: update(this.state.midiTracks, {[track.id]: {$set: track}})
       });
+      if (!(track.id in this.state.notesByTrackId)) {
+        this.setState({
+          notesByTrackId: update(this.state.notesByTrackId, {[track.id]: {$set: {}}})
+        });
+      }
     }
   }
 
@@ -103,8 +108,13 @@ class App extends Component {
       case 'notesRefreshed':
       {
         let {track, notes} = eventParams;
+        let notesObj = {};
+        for (let note of notes) {
+          notesObj[note.id] = note;
+        }
         this.setState({
-          notesByTrackId: update(this.state.notesByTrackId, {[track.id]: {$set: notes}})
+          notesByTrackId: update(this.state.notesByTrackId,
+            {[track.id]: {$set: notesObj}})
         });
         break;
       }
@@ -123,7 +133,7 @@ class App extends Component {
         <Track
             key={track.id}
             track={track}
-            notes={this.MIDIDatastoreClient.getNotes(track) || []}
+            notes={this.state.notesByTrackId[track.id] || {}}
             trackDeleteClicked={track => {
                 this.MIDIDatastoreClient.removeTrack(track);
                 this.updateOrRemoveStateTrack(track, true);
@@ -131,7 +141,15 @@ class App extends Component {
             noteAddedCallback={(track, note) => {
               this.MIDIDatastoreClient.addOrUpdateNote(track, note);
               this.setState({
-                notesByTrackId: update(this.state.notesByTrackId, {[track.id]: {$push: [note]}})
+                notesByTrackId: update(this.state.notesByTrackId,
+                  {[track.id]: {[note.id]: {$set: note}}})
+              });
+            }}
+            noteDeletedCallback={(track, note) => {
+              this.MIDIDatastoreClient.removeNote(track, note);
+              this.setState({
+                notesByTrackId: update(this.state.notesByTrackId,
+                  {[track.id]: {$unset: [note.id]}})
               });
             }}/>
       );

@@ -1,3 +1,5 @@
+// vim: ts=2 sw=2
+
 import React, { Component } from 'react';
 
 import { TrackRow } from './TrackRow.js';
@@ -43,7 +45,8 @@ class Track extends Component {
 
     this.state = {
       mouseActive: false,
-      instrument: 2
+      instrument: 2,
+      activeNote: null
     }
   }
 
@@ -52,7 +55,7 @@ class Track extends Component {
 
   render() {
     var notesByPitch = {};
-    for (let note of this.props.notes) {
+    for (let note of Object.values(this.props.notes)) {
       if (!(note.pitch in notesByPitch)) {
         notesByPitch[note.pitch] = [];
       }
@@ -67,12 +70,14 @@ class Track extends Component {
         pitch={pitch}
         notes={notesByPitch[pitch] || []}
         mouseActive={this.state.mouseActive}
-        noteAdded={note => this.props.noteAddedCallback(this.props.track, note)}/>);
+        noteAdded={note => this.props.noteAddedCallback(this.props.track, note)}
+        noteDeleted={note => this.props.noteDeletedCallback(this.props.track, note)}/>);
     }
 
     return (
       <div className="track-container"
-           onMouseDown={() => this.setState({mouseActive: true})}
+           onContextMenu={evt => evt.preventDefault()}
+           onMouseDown={evt => evt.button !== 2 && this.setState({mouseActive: true})}
            onMouseUp={() => this.setState({mouseActive: false})}
            onMouseLeave={() => this.setState({mouseActive: false})}>
 
