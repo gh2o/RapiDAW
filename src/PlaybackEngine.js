@@ -2,7 +2,7 @@ import Tone from 'tone';
 
 function beatsToToneTime(beats) {
     if (beats < 0 || isNaN(beats) || beats > 1e10) {
-        throw new Error("bad beats");
+        throw new Error("bad beats " + beats);
     }
     return `0:${beats}:0`;
 }
@@ -58,6 +58,53 @@ class Lead2 extends Instrument {
     play(freq, dur, time) {
         this.synth1.triggerAttackRelease(freq, dur, time);
         this.synth2.triggerAttackRelease(freq, dur, time);
+    }
+}
+
+class Wow1 extends Instrument {
+    constructor() {
+        super();
+        this.synth = new Tone.PolySynth(10, Tone.MonoSynth,
+            {oscillator: {type:'square'},
+             envelope: {attack:1,decay:1,sustain:0,release:0.02},
+             filterEnvelope: {
+                 attack:1,
+                 decay:1,
+                 sustain:0,
+                 release:0.03,
+                 attackCurve:'cosine',
+                 releaseCurve:'cosine',
+                 octaves:4,
+             }});
+        this.output = this.synth;
+    }
+    destroy() {
+        this.synth.dispose();
+    }
+    play(freq, dur, time) {
+        this.synth.triggerAttackRelease(freq, dur, time);
+    }
+}
+
+class Bell1 extends Instrument {
+    constructor() {
+        super();
+        this.synth = new Tone.MetalSynth({
+            "harmonicity" : 12,
+            "resonance" : 800,
+            "modulationIndex" : 20,
+            "envelope" : {
+                "decay" : 0.4,
+            },
+            "volume" : -15
+        });
+        this.output = this.synth;
+    }
+    destroy() {
+        this.synth.dispose();
+    }
+    play(freq, dur, time) {
+        this.synth.triggerAttackRelease(freq, dur, time);
     }
 }
 
@@ -287,6 +334,12 @@ class PlaybackEngine {
                 break;
             case "lead2":
                 instr = new Lead2();
+                break;
+            case "wow1":
+                instr = new Wow1();
+                break;
+            case "bell1":
+                instr = new Bell1();
                 break;
             case "kick":
                 instr = new Kick();
