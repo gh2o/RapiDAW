@@ -192,7 +192,7 @@ class App extends Component {
         this.playbackEngine.seek(this.state.seekPos);
       }
       this.playbackEngine.play();
-      this.setState({seekActive: true});
+      this.setState({seekActive: true, seekAtEnd: false});
       window.requestAnimationFrame(this.updateSeekHeadPeriodic);
     }
   }
@@ -213,7 +213,14 @@ class App extends Component {
   }
 
   handleRewindPress() {
-    this.handleStopPress(); // TODO
+    if (this.state.seekActive) {
+      this.playbackEngine.stop(true);
+      this.playbackEngine.seek(0);
+      this.handleStopPress();
+      setTimeout(() => this.handlePlayPress(), 0);
+    } else {
+      this.handleStopPress();
+    }
   }
 
   moveSeekHeadBar(px) {
