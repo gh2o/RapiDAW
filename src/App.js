@@ -226,7 +226,7 @@ class App extends Component {
 
   updateSeekHeadPosition() {
     var currPlayPos = this.playbackEngine.currentPosition();
-    this.moveSeekHeadBar(currPlayPos * PIXELS_PER_BEAT);
+    this.moveSeekHeadBar(currPlayPos * PIXELS_PER_BEAT - this.state.scrollPos);
   }
 
   updateSeekHeadPeriodic() {
@@ -255,7 +255,7 @@ class App extends Component {
 
   handleMeasureBarClick(event) {
     console.log("handleMeasureBarClick", event.pageX);
-    let px = event.pageX - this.getMeasureBarX();
+    let px = event.pageX - this.getMeasureBarX() + this.state.scrollPos;
     let beats = px / PIXELS_PER_BEAT;
 
     if (this.state.seekActive) {
@@ -268,7 +268,7 @@ class App extends Component {
   }
 
   handleMeasureScroll(pos) {
-    this.setState({scrollPos: pos});
+    this.setState({scrollPos: pos}, () => this.updateSeekHeadPosition());
   }
 
   getStyle() {
