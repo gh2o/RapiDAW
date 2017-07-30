@@ -1,6 +1,6 @@
 class MIDINote {
-    constructor(/*string*/ id, /*int*/ measure, /*float*/ beat, /*float*/ duration, /*int*/ pitch) {
-        Object.assign(this, {id, measure, beat, duration, pitch});
+    constructor(/*string*/ id, /*float*/ beat, /*float*/ duration, /*int*/ pitch) {
+        Object.assign(this, {id, beat, duration, pitch});
     }
 }
 
@@ -48,12 +48,12 @@ class MIDIDatastoreClient {
     }
 
     /*void*/ addOrUpdateNote(/*MIDITrack*/ track, /*MIDINote*/ note) {
-        this.notesByTrackId[track.id][note.id] = note;
+        this.datastore.notesByTrackId[track.id][note.id] = note;
         this.datastore.fireEvent(this, 'noteAddedOrUpdated', {track, note});
     }
 
     /*void*/ removeNote(/*MIDITrack*/ track, /*MIDINote*/ note) {
-        delete this.notesByTrackId[track.id][note.id];
+        delete this.datastore.notesByTrackId[track.id][note.id];
         this.datastore.fireEvent(this, 'noteRemoved', {track, note});
     }
 
@@ -62,7 +62,7 @@ class MIDIDatastoreClient {
         for (let note of notes) {
             newNotes[note.id] = note;
         }
-        this.notesByTrackId[track.id] = newNotes;
+        this.datastore.notesByTrackId[track.id] = newNotes;
         this.datastore.fireEvent(this, 'notesRefreshed', {track, notes: Object.values(newNotes)});
     }
 

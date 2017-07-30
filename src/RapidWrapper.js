@@ -1,5 +1,5 @@
 import Rapid from 'rapid-io';
-import { MIDINote, MIDITrack, MIDIDatastore } from './MIDIDatastore.js';
+import { MIDINote, MIDITrack } from './MIDIDatastore.js';
 import { generateID } from './Utils.js';
 
 const NOTE_KEY_PREFIX = 'nt$';
@@ -20,7 +20,6 @@ function getMIDINotesFromDoc(doc) {
         if (!val) continue;
         let note = new MIDINote();
         note.id       = key.substring(NOTE_KEY_PFXLEN);
-        note.measure  = val.measure
         note.beat     = val.beat;
         note.duration = val.duration;
         note.pitch    = val.pitch;
@@ -31,7 +30,6 @@ function getMIDINotesFromDoc(doc) {
 
 function getObjFromMIDINote(note) {
     return {
-        measure:  note.measure,
         beat:     note.beat,
         duration: note.duration,
         pitch:    note.pitch,
@@ -40,7 +38,7 @@ function getObjFromMIDINote(note) {
 
 class RapidWrapper {
     constructor(/*MIDIDatastore*/ datastore, /*String*/ proj_id) {
-        proj_id = 'BEST_PROJECT_ID_EVER' // TODO
+        this.proj_id = proj_id = 'BEST_PROJECT_ID_EVER' // TODO
 
         this.rp_user = generateID();
         this.rp_client = Rapid.createClient('NDA1OWE0MWo1b3AzYzc0LnJhcGlkLmlv');
@@ -72,6 +70,7 @@ class RapidWrapper {
                 doc.execute(doc => {
                     let data = doc ? doc.body : {};
                     data.name = track.name;
+                    data.proj_id = this.proj_id;
                     this.updateTrackRev(data, track);
                     return data;
                 });
