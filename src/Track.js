@@ -112,7 +112,12 @@ class Track extends Component {
            }}>
 
         <div className="track-info">
-          <FontIcon className="material-icons close-link"  onClick={() => this.props.trackDeleteClicked(this.props.track)}>close</FontIcon>
+          <FontIcon
+            className="material-icons close-link"
+            style={{cursor: 'pointer'}}
+            onClick={() => this.props.trackDeleteClicked(this.props.track)}>
+              close
+          </FontIcon>
           <br />
           <p>{this.props.track.name}</p>
           <DropDownMenu 
@@ -135,16 +140,26 @@ class Track extends Component {
         </div>
 
         <div className="pianoroll-container">
-          <div className="piano">
+          <div className="piano" ref={div => { this.pianoKeysDiv = div; }}>
             {this.pianoElements}
           </div>
-          <div className="piano-container" ref={div => { this.pianoConDiv = div; }}>
-            {trackRows}
+          <div className="piano-container"
+              ref={div => { this.pianoConDiv = div; }}
+              onScroll={evt => { this.pianoKeysDiv.scrollTop = evt.target.scrollTop; }}>
+            <div className="piano-sub">
+              {trackRows}
+            </div>
           </div>
         </div>
     </div>
     </FadeIn>
     );
+  }
+
+  componentDidUpdate() {
+    if (this.pianoConDiv.scrollLeft !== this.props.scrollPos) {
+      this.pianoConDiv.scrollLeft = this.props.scrollPos;
+    }
   }
 }
 

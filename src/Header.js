@@ -11,6 +11,7 @@ import FontIcon from 'material-ui/FontIcon';
 import TextField from 'material-ui/TextField';
 import Avatar from 'material-ui/Avatar';
 import Badge from 'material-ui/Badge';
+import Slider from 'material-ui/Slider';  
 
 class Header extends Component {
   constructor() {
@@ -24,6 +25,12 @@ class Header extends Component {
         this.measure.push((<div key={i} className="measure-cell">{count}</div>));
       }
       count++;
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.mbarSubDiv.scrollLeft !== this.props.scrollPos) {
+      this.mbarSubDiv.scrollLeft = this.props.scrollPos;
     }
   }
 
@@ -73,7 +80,11 @@ class Header extends Component {
             id="measureBar"
             className="header-track-measure"
             onClick={this.props.handleMeasureBarClick}>
-            {this.measure}
+            <div id="measureBarSub"
+                onScroll={evt => this.props.handleMeasureScroll(evt.target.scrollLeft)}
+                ref={div => { this.mbarSubDiv = div; }}>
+              {this.measure}
+            </div>
           </div>
         </div>
 

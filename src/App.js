@@ -51,6 +51,7 @@ class App extends Component {
     this.handlePlayPress = this.handlePlayPress.bind(this);
     this.handleStopPress = this.handleStopPress.bind(this);
     this.handleMeasureBarClick = this.handleMeasureBarClick.bind(this);
+    this.handleMeasureScroll = this.handleMeasureScroll.bind(this);
 
     this.MIDIDatastore = new MIDIDatastore();
     this.MIDIDatastoreClient = this.MIDIDatastore.getClient("MainClient");
@@ -63,7 +64,8 @@ class App extends Component {
       midiTracks: {},
       playState: "initial",
       notesByTrackId: {},
-      marker: false
+      marker: false,
+      scrollPos: 0
     };
   }
 
@@ -146,7 +148,7 @@ class App extends Component {
 
   onKeyPress(e) {
     e = e || window.event;
-    if (!(e.keyCode !== SPACE_KEY || e.keyCode !== MARKER_KEY && e.keyCode !== PLAYMARK_KEY)) {
+    if ([SPACE_KEY, MARKER_KEY, PLAYMARK_KEY].indexOf(e.keyCode) < 0) {
       return;
     }
     console.log("enter pressed - onKeyPress Called");
@@ -157,11 +159,11 @@ class App extends Component {
       if(this.state.playState === "play") {
         this.playbackEngine.stop(false);
         window.requestAnimationFrame(this.updateSeekHead.bind(this));
-        this.state.playState = "paused";
+        this.setState({playState: 'paused'});
       } else if(this.state.playState === "paused" || this.state.playState === "initial") {
         this.playbackEngine.play();
         window.requestAnimationFrame(this.updateSeekHead.bind(this));
-        this.state.playState = "play";
+        this.setState({playState: 'play'});
       }
     } else if(e.keyCode === MARKER_KEY) {
       console.log("MARK IT");
@@ -175,7 +177,7 @@ class App extends Component {
       this.playbackEngine.seek(this.getMeasureBarOffsetForEventX(this.seekbar.getBoundingClientRect().left)/PIXELS_PER_BEAT);
       this.playbackEngine.play();
       window.requestAnimationFrame(this.updateSeekHead.bind(this));
-      this.state.playState = "play";
+      this.setState({playState: 'play'});
     }
   }
 
@@ -249,6 +251,10 @@ class App extends Component {
     this.playbackEngine.seek(this.getMeasureBarOffsetForEventX(event.pageX)/PIXELS_PER_BEAT);
   }
 
+  handleMeasureScroll(pos) {
+    this.setState({scrollPos: pos});
+  }
+
   getOffsetForEventX(x) {
     var rect = this.seekdiv.getBoundingClientRect();
     return x - rect.left;
@@ -262,78 +268,6 @@ class App extends Component {
     };
   }
 
-  animateStroke() {
-    const path = document.querySelector('#wave');
-    const animation = document.querySelector('#moveTheWave');
-    const m = 0.512286623256592433;
-
-    function buildWave(w, h) {
-      
-      const a = h / 4;
-      const y = h / 2;
-      
-      const pathData = [
-        'M', w * 0, y + a / 2, 
-        'c', 
-          a * m, 0,
-          -(1 - a) * m, -a, 
-          a, -a,
-        's', 
-          -(1 - a) * m, a,
-          a, a,
-        's', 
-          -(1 - a) * m, -a,
-          a, -a,
-        's', 
-          -(1 - a) * m, a,
-          a, a,
-        's', 
-          -(1 - a) * m, -a,
-          a, -a,
-        
-        's', 
-          -(1 - a) * m, a,
-          a, a,
-        's', 
-          -(1 - a) * m, -a,
-          a, -a,
-        's', 
-          -(1 - a) * m, a,
-          a, a,
-        's', 
-          -(1 - a) * m, -a,
-          a, -a,
-        's', 
-          -(1 - a) * m, a,
-          a, a,
-        's', 
-          -(1 - a) * m, -a,
-          a, -a,
-        's', 
-          -(1 - a) * m, a,
-          a, a,
-        's', 
-          -(1 - a) * m, -a,
-          a, -a,
-        's', 
-          -(1 - a) * m, a,
-          a, a,
-        's', 
-          -(1 - a) * m, -a,
-          a, -a
-      ].join(' ');
-      
-      path.setAttribute('d', pathData);
-    }
-
-    buildWave(90, 60);
-
-  }
-
-  componentDidMount() {
-    this.animateStroke();
-  }
-
   render() {
 
     var tracks = this.MIDIDatastoreClient.getTracks();
@@ -343,6 +277,7 @@ class App extends Component {
             key={track.id}
             track={track}
             notes={this.state.notesByTrackId[track.id] || {}}
+            scrollPos={this.state.scrollPos}
             trackDeleteClicked={track => {
               this.MIDIDatastoreClient.removeTrack(track);
               this.updateOrRemoveStateTrack(track, true);
@@ -393,24 +328,14 @@ class App extends Component {
       <MuiThemeProvider muiTheme={this.muiTheme}>
         <div className="App">
 
-          <div className="loader">
-            <svg xmlns="http://www.w3.org/2000/svg" 
-               width="80px" height="60px"
-               viewBox="5 0 80 60">
-              <path id="wave" 
-                  fill="none" 
-                  stroke="#262626" 
-                  stroke-width="4"
-                  stroke-linecap="round">
-              </path>
-            </svg>
-          </div>
           <Header
           create={{ onKeyDown: this.handleCreateTrack }}
           songname="THE DOPEST SONG"
+          scrollPos={this.state.scrollPos}
           handlePlayPress={this.handlePlayPress}
           handleStopPress={this.handleStopPress}
-          handleMeasureBarClick={this.handleMeasureBarClick}/>
+          handleMeasureBarClick={this.handleMeasureBarClick}
+          handleMeasureScroll={this.handleMeasureScroll}/>
 
           {marker}
 
