@@ -1,17 +1,16 @@
 // vim: ts=2 sw=2
 
 import React, { Component } from 'react';
+import update from 'immutability-helper';
 import './App.css';
 
 // MODEL
 import RapidWrapper from './RapidWrapper.js';
-import { MIDINote, MIDITrack, MIDIDatastore } from './MIDIDatastore.js';
+import { MIDITrack, MIDIDatastore } from './MIDIDatastore.js';
 import { generateID } from './Utils.js';
 
 // MATERIAL UI COMPONENTS
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
 import FontIcon from 'material-ui/FontIcon';
 
 // UI COMPONENTS
@@ -40,8 +39,23 @@ class App extends Component {
 
     this.state = {
       midiTracks: {},
+      notesByTrackId: {},
       seekpos: {left: '-16rem'}
     };
+  }
+
+  updateOrRemoveStateTrack(track, remove) {
+    if (remove) {
+      var unset = {$unset: [track.id]};
+      this.setState({
+        midiTracks: update(this.state.midiTracks, unset),
+        notesByTrackId: update(this.state.notesByTrackId, unset)
+      });
+    } else {
+      this.setState({
+        midiTracks: update(this.state.midiTracks, {[track.id]: {$set: track}})
+      });
+    }
   }
 
   handleCreateTrack(event) {
@@ -57,8 +71,7 @@ class App extends Component {
     var track = new MIDITrack(id,trackName);
 
     this.MIDIDatastoreClient.addOrUpdateTrack(track);
-    this.state.midiTracks[track.id] = track;
-    this.setState();
+    this.updateOrRemoveStateTrack(track, false);
   }
 
   datastoreCallback(/*String*/ eventName, /*Object*/ eventParams) {
@@ -68,20 +81,21 @@ class App extends Component {
       {
         console.log("TRACK ADDED");
         let {track} = eventParams;
-        this.state.midiTracks[track.id] = track;
-        this.setState(this.state);
+        this.updateOrRemoveStateTrack(track, false);
         break;
       }
       case 'trackRemoved':
       {
         let {track} = eventParams;
-        delete this.state.midiTracks[track.id];
-        this.setState(this.state);
+        this.updateOrRemoveStateTrack(track, true);
         break;
       }
       case 'notesRefreshed':
       {
-        this.setState(this.state);
+        let {track, notes} = eventParams;
+        this.setState({
+          notesByTrackId: update(this.state.notesByTrackId, {[track.id]: {$set: notes}})
+        });
         break;
       }
       default:
@@ -92,32 +106,26 @@ class App extends Component {
 
   render() {
 
-    var tracksBody;
     var tracks = this.MIDIDatastoreClient.getTracks();
 
     var trackItems = tracks.reverse().map(track => {
       return (
         <Track
             key={track.id}
-            datastoreClient={this.MIDIDatastoreClient}
             track={track}
             notes={this.MIDIDatastoreClient.getNotes(track) || []}
             trackDeleteClicked={track => {
                 this.MIDIDatastoreClient.removeTrack(track);
-                delete this.state.midiTracks[track.id];
-                this.setState(this.state);
+                this.updateOrRemoveStateTrack(track, true);
             }}
-            noteAddedCallback={() => this.setState(this.state)}/>
+            noteAddedCallback={(track, note) => {
+              this.MIDIDatastoreClient.addOrUpdateNote(track, note);
+              this.setState({
+                notesByTrackId: update(this.state.notesByTrackId, {[track.id]: {$push: [note]}})
+              });
+            }}/>
       );
     });
-
-    if (tracks.length) {
-      tracksBody = (
-        <div className="body-container">
-          {trackItems}
-        </div>
-      );
-    }
 
     return (
       <MuiThemeProvider>
@@ -132,7 +140,9 @@ class App extends Component {
 
           <div className="body-padding"></div>
 
-          {tracksBody}
+          <div className="body-container">
+            {trackItems}
+          </div>
 
           {/*<FloatingActionButton className="button-addtrack">
             <ContentAdd />

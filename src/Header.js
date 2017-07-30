@@ -16,7 +16,7 @@ class Header extends Component {
       if (i%4 == 0 && i != 0) {
         this.measure.push((<div className="measure-cell thick"></div>));
       } else {
-        this.measure.push((<div className="measure-cell"></div>));
+        this.measure.push((<div key={i} className="measure-cell"></div>));
       }
     }
   }
@@ -36,6 +36,7 @@ class Header extends Component {
         <div className="header-subcontainer">
           <Paper className="header-addtrack" zDepth={2}>
             <TextField
+              id="header-addtrack-input"
               className="header-addtrack-input"
               placeholder="create new track"
               onKeyDown={this.props.create.onKeyDown}
