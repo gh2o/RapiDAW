@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 
 import { TrackRow } from './TrackRow.js';
 
@@ -6,7 +6,7 @@ import FontIcon from 'material-ui/FontIcon';
 
 import './Track.css';
 
-class Track extends PureComponent {
+class Track extends Component {
   constructor() {
     super();
     console.log("track constructor called");
