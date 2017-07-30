@@ -21,10 +21,9 @@ class PlaybackEngine {
         this.transport_evt = null;
         this.note_timeline = null;
 
-        this.main_instrument = new Tone.PolySynth(6, Tone.Synth).toMaster();
+        this.instr_by_track_id = {};
 
         window.peng = this;
-        window.mins = this.main_instrument;
     }
 
     play() {
@@ -119,7 +118,6 @@ class PlaybackEngine {
     }
 
     transportCallback(real_time, cur_ticks) {
-        console.log('tc entry', cur_ticks, 'ticks');
         if (this.transport_evt === null) {
             return;
         } else {
@@ -129,7 +127,6 @@ class PlaybackEngine {
         let item;
         while (true) {
             item = this.note_timeline.peek();
-            console.log('peek got', item);
             if (!item) {
                 this.stop(false);
                 return;
@@ -137,10 +134,11 @@ class PlaybackEngine {
             if (item.time > cur_ticks) {
                 break;
             }
-            this.main_instrument.triggerAttackRelease(
-                pitchNumToFrequency(item.note.pitch),
-                new Tone.Time(item.duration, "i").toSeconds(),
-                real_time);
+            this.instr_by_track_id[item.track.id]
+                .triggerAttackRelease(
+                    pitchNumToFrequency(item.note.pitch),
+                    new Tone.Time(item.duration, "i").toSeconds(),
+                    real_time);
             this.note_timeline.shift();
         }
 
@@ -153,16 +151,28 @@ class PlaybackEngine {
         switch (eventName) {
             case 'trackAddedOrUpdated':
             {
+                let {track} = eventParams;
+                this.instr_by_track_id[track.id] = this.createInstrumentForTrack(track);
                 break;
             }
             case 'trackRemoved':
             {
+                let {track} = eventParams;
+                delete this.instr_by_track_id[track.id];
                 break;
             }
             default:
             {
                 break;
             }
+        }
+    }
+
+    /*Tone*/ createInstrumentForTrack(/*MIDITrack*/ track) {
+        switch (track.instrument) {
+            case "lead1":
+            default:
+                return new Tone.PolySynth(6, Tone.Synth).toMaster();
         }
     }
 }
