@@ -1,6 +1,7 @@
 // vim: ts=2 sw=2
 
 import React, { Component } from 'react';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 import update from 'immutability-helper';
 import './App.css';
 
@@ -11,6 +12,7 @@ import { generateID } from './Utils.js';
 
 // MATERIAL UI COMPONENTS
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import FontIcon from 'material-ui/FontIcon';
 
 // UI COMPONENTS
@@ -26,6 +28,14 @@ class App extends Component {
 
   constructor() {
     super();
+    injectTapEventPlugin();
+
+    this.muiTheme = getMuiTheme({
+      palette: {
+        primary1Color: '#8D6E63',
+        accent1Color: '#009688'
+      }
+    });
 
     this.handleCreateTrack = this.handleCreateTrack.bind(this);
     this.datastoreCallback = this.datastoreCallback.bind(this);
@@ -146,7 +156,7 @@ class App extends Component {
     });
 
     return (
-      <MuiThemeProvider>
+      <MuiThemeProvider muiTheme={this.muiTheme}>
         <div className="App">
 
           <Header create={{
