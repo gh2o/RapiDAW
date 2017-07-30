@@ -44,7 +44,7 @@ class App extends Component {
     this.datastoreCallback = this.datastoreCallback.bind(this);
     this.handlePlayPress = this.handlePlayPress.bind(this);
     this.handleStopPress = this.handleStopPress.bind(this);
-
+    this.handleMeasureBarClick = this.handleMeasureBarClick.bind(this);
 
     this.MIDIDatastore = new MIDIDatastore();
     this.MIDIDatastoreClient = this.MIDIDatastore.getClient("MainClient");
@@ -187,6 +187,26 @@ class App extends Component {
     }
   }
 
+  getMeasureBarOffsetForEventX(x) {
+    var rect = this.measureBar.getBoundingClientRect();
+    return x - rect.left;
+  }
+
+  getMeasureBar() {
+    if(this.measureBar == null) {
+      this.measureBar = document.getElementById("measureBar");
+    }
+  }
+
+  handleMeasureBarClick(event) {
+    console.log("handleMeasureBarClick", event.pageX);
+    this.getMeasureBar();
+    this.getOriginalPosition();
+    this.seekbar.style.left = event.pageX + 'px';
+    this.seekhead.style.left =  event.pageX - 23.5 + 'px';
+    this.playbackEngine.seek(this.getMeasureBarOffsetForEventX(event.pageX)/PIXELS_PER_BEAT);
+  }
+
   getOffsetForEventX(x) {
     var rect = this.seekdiv.getBoundingClientRect();
     return x - rect.left;
@@ -241,7 +261,8 @@ class App extends Component {
           create={{ onKeyDown: this.handleCreateTrack }}
           songname="THE DOPEST SONG"
           handlePlayPress={this.handlePlayPress}
-          handleStopPress={this.handleStopPress}/>
+          handleStopPress={this.handleStopPress}
+          handleMeasureBarClick={this.handleMeasureBarClick}/>
 
           <FontIcon
             id="seekhead"

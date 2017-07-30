@@ -66,7 +66,10 @@ class Header extends Component {
           </Paper>
         </div>
 
-        <div className="header-track-measure">
+        <div
+          id="measureBar"
+          className="header-track-measure"
+          onClick={this.props.handleMeasureBarClick}>
           {this.measure}
         </div>
 
