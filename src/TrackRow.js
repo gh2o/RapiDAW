@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class TrackCell extends Component {
+class TrackRow extends Component {
 
   render() {
     return (
@@ -11,4 +11,4 @@ class TrackCell extends Component {
   }
 }
 
-export {TrackCell};
+export {TrackRow};

@@ -1,8 +1,7 @@
-// vim: sw=2 ts=2
-
 import React, { Component } from 'react';
 
 import { MIDINote, MIDITrack, MIDIDatastore } from './MIDIDatastore.js';
+import { TrackRow } from './TrackRow.js';
 import { TrackCell } from './TrackCell.js';
 import { generateID } from './Utils.js';
 
@@ -16,36 +15,25 @@ class Track extends Component {
     var MIDIroll = new Array(88);
 
     for (var i = 0; i < MIDIroll.length; i++) {
-      MIDIroll[i] = new Array(120);
-      for(var j = 0; j < MIDIroll[i].length; j++) {
-        var id = generateID();
-        MIDIroll[i][j] = new MIDINote(id,j,1,i);
-      }
+      MIDIroll[i] = <TrackRow name="THIS IS A TEST"/>;
+      // MIDIroll[i] = new Array(120);
+      // for(var j = 0; j < MIDIroll[i].length; j++) {
+      //   var id = generateID();
+      //   MIDIroll[i][j] = <TrackCell name="test"/>;
+      // }
     }
-
     this.state = {
-      MIDIroll: MIDIroll
+      midiRow: MIDIroll
     }
-
   }
 
   render() {
     var midiBody;
 
-    var cells = this.state.MIDIroll.map(track => {
-      return(
-        <TrackCell
-          name={this.props.name}
-        />
-      )
-    })
-
-    console.log("LENGTH " + cells.length);
-
-    if (cells.length) {
+    if (this.state.midiRow.length) {
       midiBody = (
         <div className="midi-container">
-          {cells}
+          {this.state.midiRow}
         </div>
       );
     }
