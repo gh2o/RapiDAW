@@ -23,14 +23,41 @@
   left: 0px;
 }
 
-.piano-container {
+.pianoroll-container {
   overflow: scroll;
   width: 100%;
   overflow-x: hidden;
+  display: flex;
+}
+
+.piano {
+  width: 5rem;
+  height: 100%;
+}
+
+.piano-key {
+  height: 19px;
+  border-bottom: 1px solid black;
+  background-color: grey;
+}
+
+.piano-container {
+  width: 100%;
 }
 
 .piano-row {
   height: 1rem;
   width: 100%;
   background-color: red;
+}
+
+.track-row-container {
+  height: 19px;
+  border-bottom: 1px solid black;
+  margin: 0px;
+  padding: 0px;
+}
+
+.track-cell-container {
+  
 }
