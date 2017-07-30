@@ -103,6 +103,13 @@ SECONDARY TEAL: #009688;
   overflow: hidden;
 }
 
+.header-track-measure, .measure-cell, .floating-seek-icon {
+  cursor: default;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
+
 .measure-cell {
   box-sizing: border-box;
   font-size: 0.8rem;
