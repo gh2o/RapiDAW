@@ -57,10 +57,12 @@
   border-bottom: 1px solid black;
   margin: 0px;
   padding: 0px;
+  position: relative;
 }
 
 .track-cell-container {
   background: blue;
-  height: 18px;
+  height: 20px;
   width: 50px;
+  position: absolute;
 }

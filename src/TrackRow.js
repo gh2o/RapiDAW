@@ -24,7 +24,11 @@ class TrackRow extends Component {
   }
 
   handleMouseUp(event) {
-    this.setState({pressed: !this.state.pressed, released: !this.state.released});
+    this.setState({
+      pressed: !this.state.pressed,
+      released: !this.state.released,
+      position: event.pageX
+    });
     console.log(this.state.pressed);
   }
 
@@ -34,7 +38,10 @@ class TrackRow extends Component {
 
   render() {
     if(!this.state.pressed && this.state.released) {
-      this.state.cells.push(<TrackCell/>);
+      this.state.cells.push(
+        <TrackCell
+          position={this.state.position}/>
+      );
     }
     return (
       <div

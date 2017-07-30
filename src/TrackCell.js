@@ -5,10 +5,19 @@ class TrackCell extends Component {
 
   render() {
     return (
-      <div className="track-cell-container">
+      <div className="track-cell-container"
+        style={this.getStyle()}>
         NOTE.
       </div>
     );
+  }
+
+  getStyle() {
+    var x = {
+      left:(this.props.position)+"px"
+    };
+    console.log('getStyle', x);
+    return x;
   }
 }
 
