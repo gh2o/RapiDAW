@@ -106,6 +106,7 @@ SECONDARY TEAL: #009688;
   background-color: rgba(255, 255, 255, 0) !important;
   position: absolute;
   left: 14.5rem;
+  transition: none !important;
   top: 7rem !important;
 }
 
