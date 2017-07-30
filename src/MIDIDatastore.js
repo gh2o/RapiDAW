@@ -5,8 +5,8 @@ class MIDINote {
 }
 
 class MIDITrack {
-    constructor(/*string*/ id, /*string*/ name) {
-        Object.assign(this, {id, name});
+    constructor(/*string*/ id, /*string*/ name, /*string*/ instrument) {
+        Object.assign(this, {id, name, instrument});
     }
 }
 
