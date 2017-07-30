@@ -19,7 +19,7 @@ class Track extends PureComponent {
       TrackRows[i] = <TrackRow/>;
     }
 
-    var piano = [false, true, false,
+    this.piano = [false, true, false,
       false, true, false, true, false,
       false, true, false, true, false, true, false,
       false, true, false, true, false,
@@ -36,17 +36,16 @@ class Track extends PureComponent {
       false, true, false, true, false, true, false,
       false
     ];
-    for (var i=0; i < piano.length; i++) {
-        if (piano[i]) {
-          piano[i] = (<div className="piano-key black"></div>);
+    for (var i=0; i < this.piano.length; i++) {
+        if (this.piano[i]) {
+          this.piano[i] = (<div className="piano-key black"></div>);
         } else {
-          piano[i] = (<div className="piano-key white"></div>);
+          this.piano[i] = (<div className="piano-key white"></div>);
         }
     }
-    piano.reverse();
+    this.piano.reverse();
 
     this.state = {
-      piano: piano,
       trackRows: TrackRows
     }
   }
@@ -71,7 +70,7 @@ class Track extends PureComponent {
 
         <div className="pianoroll-container">
           <div className="piano">
-            {this.state.piano}
+            {this.piano}
           </div>
           {midiBody}
         </div>

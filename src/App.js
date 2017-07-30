@@ -12,6 +12,7 @@ import { generateID } from './Utils.js';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import FontIcon from 'material-ui/FontIcon';
 
 // UI COMPONENTS
 import Header from './Header.js';
@@ -28,7 +29,6 @@ class App extends Component {
     super();
 
     this.handleCreateTrack = this.handleCreateTrack.bind(this);
-    this.handleChange = this.handleChange.bind(this);
     this.datastoreCallback = this.datastoreCallback.bind(this);
 
     this.MIDIDatastore = new MIDIDatastore();
@@ -39,22 +39,10 @@ class App extends Component {
     this.playbackEngine = new PlaybackEngine(this.MIDIDatastore);
 
     this.state = {
-      newTrackName: "",
-      midiTracks: {}
+      midiTracks: {},
+      seekpos: {left: '-16rem'}
     };
   }
-
-  handleChange(event) {
-    this.setState({newTrackName: event.target.value});
-  }
-
-  // handleNewNoteCallback(track, note) {
-  //   var id = generateID();
-  //   var newTrack = new MIDINote(id,trackName);
-  //
-  //   this.MIDIDatastoreClient.addOrUpdateNote(newTrack);
-  //   this.setState();
-  // }
 
   handleCreateTrack(event) {
     if (event.keyCode !== ENTER_KEY) {
@@ -63,18 +51,22 @@ class App extends Component {
     console.log("enter pressed - handleCreateTrack Called");
     event.preventDefault();
 
-    var trackName = this.state.newTrackName.trim();
+    // var trackName = this.state.newTrackName.trim();
+    var trackName = event.target.value.trim();
     var id = generateID();
-    var newTrack = new MIDITrack(id,trackName);
+    var track = new MIDITrack(id,trackName);
 
-    this.MIDIDatastoreClient.addOrUpdateTrack(newTrack);
-    this.setState({newTrackName: ""});
+    this.MIDIDatastoreClient.addOrUpdateTrack(track);
+    this.state.midiTracks[track.id] = track;
+    this.setState();
   }
 
   datastoreCallback(/*String*/ eventName, /*Object*/ eventParams) {
+    console.log(eventName);
     switch (eventName) {
       case 'trackAddedOrUpdated':
       {
+        console.log("TRACK ADDED");
         let {track} = eventParams;
         this.state.midiTracks[track.id] = track;
         this.setState(this.state);
@@ -100,7 +92,6 @@ class App extends Component {
         <Track
             key={track.id}
             track={track}
-            midiNoteCallback={this.handleNewNoteCallback}
             trackDeleteClicked={track => {
                 this.MIDIDatastoreClient.removeTrack(track);
                 delete this.state.midiTracks[track.id];
@@ -122,10 +113,11 @@ class App extends Component {
         <div className="App">
 
           <Header create={{
-            value: this.state.newTrackName,
-            onKeyDown: this.handleCreateTrack,
-            onChange: this.handleChange
-          }}/>
+            onKeyDown: this.handleCreateTrack
+          }} songname="THE DOPEST SONG"/>
+
+          <FontIcon className="material-icons floating-seek-icon">arrow_drop_down</FontIcon>
+          <div className="floating-seek-bar"></div>
 
           <div className="body-padding"></div>
 

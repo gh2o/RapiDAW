@@ -9,6 +9,18 @@ import TextField from 'material-ui/TextField';
 import Avatar from 'material-ui/Avatar';
 
 class Header extends Component {
+  constructor() {
+    super();
+    this.measure = [];
+    for (var i=0; i < 100; i++) {
+      if (i%3 == 0 && i != 0) {
+        this.measure.push((<div className="measure-cell thick"></div>));
+      } else {
+        this.measure.push((<div className="measure-cell"></div>));
+      }
+    }
+  }
+
   render() {
     return (
       <Paper className="header-container" zDepth={3}>
@@ -39,6 +51,10 @@ class Header extends Component {
               {/* track seeker here*/}
             </div>
           </Paper>
+        </div>
+
+        <div className="header-track-measure">
+          {this.measure}
         </div>
 
       </Paper>
