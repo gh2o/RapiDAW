@@ -15,20 +15,22 @@ class TrackRow extends Component {
   }
 
   handleMouseDown(event) {
-
     console.log("pageX :" + event.pageX);
     console.log("pageY :" + event.pageY);
-
     this.setState({pressed: !this.state.pressed});
     console.log(this.state.pressed);
   }
 
   handleMouseUp(event) {
+    var rect = this.rowDiv.getBoundingClientRect()
+    console.log(rect.top, rect.right, rect.bottom, rect.left);
+
     this.setState({
       pressed: !this.state.pressed,
       released: !this.state.released,
-      position: event.pageX
+      position: event.pageX - rect.left
     });
+
     console.log(this.state.pressed);
   }
 
@@ -48,7 +50,9 @@ class TrackRow extends Component {
         className="track-row-container"
         onDrag={this.handleDrag}
         onMouseDown={this.handleMouseDown}
-        onMouseUp={this.handleMouseUp} >
+        onMouseUp={this.handleMouseUp}
+        ref={(div) => { this.rowDiv = div; }}
+        >
         {this.state.cells}
       </div>
     );

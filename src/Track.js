@@ -11,10 +11,10 @@ class Track extends PureComponent {
     super();
     console.log("track constructor called");
 
-    var MIDIroll = new Array(88);
+    var TrackRows = new Array(88);
 
-    for (var i = 0; i < MIDIroll.length; i++) {
-      MIDIroll[i] = <TrackRow name="THIS IS A TEST"/>;
+    for (var i = 0; i < TrackRows.length; i++) {
+      TrackRows[i] = <TrackRow/>;
     }
 
     var piano = [];
@@ -24,16 +24,16 @@ class Track extends PureComponent {
 
     this.state = {
       piano: piano,
-      midiRow: MIDIroll
+      trackRows: TrackRows
     }
   }
 
   render() {
     var midiBody;
-    if (this.state.midiRow.length) {
+    if (this.state.trackRows.length) {
       midiBody = (
         <div className="piano-container">
-          {this.state.midiRow}
+          {this.state.trackRows}
         </div>
       );
     }
