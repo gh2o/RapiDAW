@@ -93,6 +93,7 @@ SECONDARY TEAL: #009688;
   align-items: flex-end;
   display: flex;
   height: 1rem;
+  margin-top: 1rem;
 }
 
 .header-addtrack-input {
@@ -147,7 +148,7 @@ SECONDARY TEAL: #009688;
 
 /*BODY*/
 .body-padding {
-  height: 6.5rem;
+  height: 7.5rem;
   width: 100%;
 }
 
