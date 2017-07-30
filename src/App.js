@@ -72,7 +72,7 @@ class App extends Component {
       case 'trackRemoved':
       {
         let {track} = eventParams;
-        delete this.midiTracks[track.id];
+        delete this.state.midiTracks[track.id];
         this.setState(this.state);
         break;
       }
@@ -86,7 +86,14 @@ class App extends Component {
 
     var trackItems = tracks.map(track => {
       return (
-        <Track key={track.id} track={track}/>
+        <Track
+            key={track.id}
+            track={track}
+            trackDeleteClicked={track => {
+                this.MIDIDatastoreClient.removeTrack(track);
+                delete this.state.midiTracks[track.id];
+                this.setState(this.state);
+            }}/>
       );
     });
 

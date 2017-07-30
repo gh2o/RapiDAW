@@ -1,3 +1,5 @@
+// vim: sw=2 ts=2
+
 import React, { Component } from 'react';
 
 import { MIDINote, MIDITrack, MIDIDatastore } from './MIDIDatastore.js';
@@ -50,8 +52,9 @@ class Track extends Component {
 
     return (
       <div className="track-container">
-      	<div className="track-info">
-      		<p>{this.props.track.name}</p>
+        <div className="track-info">
+          <p>{this.props.track.name}</p>
+          <p><a onClick={() => this.props.trackDeleteClicked(this.props.track)}>DELETE</a></p>
       	</div>
         {midiBody}
       </div>
