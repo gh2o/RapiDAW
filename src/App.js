@@ -163,12 +163,8 @@ class App extends Component {
   updateSeekHead() {
     var currPlayPos = this.playbackEngine.currentPosition();
 
-    console.log("updateSeekHead before", currPlayPos);
-
     this.seekbar.style.left = (this.origBarPos+currPlayPos*PIXELS_PER_BEAT)+'px';
     this.seekhead.style.left = (this.origHeadPos+currPlayPos*PIXELS_PER_BEAT)+'px';
-
-    console.log("updateSeekHead after", currPlayPos);
 
     if(this.playbackEngine.isPlaying()) {
       window.requestAnimationFrame(this.updateSeekHead.bind(this));
@@ -238,7 +234,8 @@ class App extends Component {
 
           <div
             id="seekbar"
-            className="floating-seek-bar">
+            className="floating-seek-bar"
+            style={{pointerEvents: 'none'}}>
           </div>
 
 
