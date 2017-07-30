@@ -16,6 +16,8 @@ class TrackCell extends Component {
             this.props.noteDeleteClicked(this.props.note);
           }
         }}>
+        <div className="track-cell-handle">
+        </div>
       </div>
     );
   }
