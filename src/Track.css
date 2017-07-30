@@ -32,9 +32,10 @@
 .piano-row {
   height: 1rem;
   width: 100%;
-  background-color: red;
+  background-color: blue;
 }
 
-.track-cell-container {
-  
+.track-row-container {
+  height: 1rem;
+  background: red;
 }
