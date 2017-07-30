@@ -36,17 +36,21 @@ class PlaybackEngine {
         // add all known notes into BST
         let ppq = Tone.Transport.PPQ;
         this.note_timeline = new Tone.Timeline();
-        /*
+
         for (let track of this.ds_client.getTracks()) {
             for (let note of this.ds_client.getNotes(track)) {
                 let ticks = note.beat * ppq;
                 if (ticks >= Tone.Transport.ticks) {
-                    this.note_timeline.add({time: ticks, track, note});
+                    this.note_timeline.add({
+                        time: ticks,
+                        duration: note.duration * ppq,
+                        track,
+                        note});
                 }
             }
         }
-        */
 
+        /*
         let track = [
             new MIDITrack('k', 'blah'),
         ];
@@ -71,6 +75,7 @@ class PlaybackEngine {
                     note});
             }
         }
+        */
 
         // start the transport
         Tone.Transport.start();
