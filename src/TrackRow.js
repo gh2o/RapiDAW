@@ -55,18 +55,12 @@ class TrackRow extends Component {
   }
 
   render() {
-    if(!this.state.pressed && this.state.released) {
-      this.state.cells.push(
-        <TrackCell
-          position={this.state.position}/>
-      );
-    }
     var cells = [];
-    for (let note in this.props.notes) {
-      cells.push(<TrackCell position={note.beat * PIXELS_PER_BEAT}/>);
+    for (let note of this.props.notes) {
+      cells.push(<TrackCell key={note.id} position={note.beat * PIXELS_PER_BEAT}/>);
     }
     if (this.state.mouseIn && this.props.mouseActive) {
-      cells.push(<TrackCell position={this.getOffsetForEventX(this.state.mouseX)}/>);
+      cells.push(<TrackCell key="TEMP" position={this.getOffsetForEventX(this.state.mouseX)}/>);
     }
     return (
       <div

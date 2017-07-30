@@ -64,7 +64,7 @@ class Track extends PureComponent {
       trackRows.push(<TrackRow
         key={pitch}
         pitch={pitch}
-        notes={notesByPitch[pitch]}
+        notes={notesByPitch[pitch] || []}
         mouseActive={this.state.mouseActive}
         noteAdded={this.noteAddedCallback.bind(this)}/>);
     }
