@@ -2,7 +2,11 @@
 
 import React, { Component } from 'react';
 import { TrackCell } from './TrackCell.js';
+import { MIDINote } from './MIDIDatastore.js';
+import { generateID } from './Utils.js';
 import './Track.css';
+
+const PIXELS_PER_BEAT = 40;
 
 class TrackRow extends Component {
   constructor() {
@@ -23,8 +27,6 @@ class TrackRow extends Component {
   }
 
   handleMouseDownOrMove(evt) {
-    console.log("pageX :" + evt.pageX);
-    console.log("pageY :" + evt.pageY);
     this.setState({
       mouseX: evt.pageX,
       mouseY: evt.pageY,
@@ -34,7 +36,10 @@ class TrackRow extends Component {
 
   handleMouseUp(evt) {
     var offsetPx = this.getOffsetForEventX(evt.pageX);
-    console.log('add note', offsetPx);
+    var beat = offsetPx / PIXELS_PER_BEAT;
+    beat = Math.round(beat * 2) / 2;
+    var note = new MIDINote(generateID(), beat, 1, this.props.pitch);
+    this.props.noteAdded(note);
 
     /*
     console.log(rect.top, rect.right, rect.bottom, rect.left);
@@ -57,8 +62,8 @@ class TrackRow extends Component {
       );
     }
     var cells = [];
-    for (let note in this.state.notes) {
-      //....
+    for (let note in this.props.notes) {
+      cells.push(<TrackCell position={note.beat * PIXELS_PER_BEAT}/>);
     }
     if (this.state.mouseIn && this.props.mouseActive) {
       cells.push(<TrackCell position={this.getOffsetForEventX(this.state.mouseX)}/>);

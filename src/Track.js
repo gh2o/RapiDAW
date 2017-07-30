@@ -45,6 +45,12 @@ class Track extends PureComponent {
     }
   }
 
+  noteAddedCallback(note) {
+    this.props.datastoreClient.addOrUpdateNote(this.props.track, note);
+    this.state.notes[note.id] = note;
+    console.log('nac', note);
+  }
+
   render() {
     var trackRows = [];
     for (var i = 0; i < 88; i++) {
@@ -54,7 +60,8 @@ class Track extends PureComponent {
         key={pitch}
         pitch={pitch}
         notes={notes}
-        mouseActive={this.state.mouseActive}/>);
+        mouseActive={this.state.mouseActive}
+        noteAdded={this.noteAddedCallback.bind(this)}/>);
     }
 
     return (

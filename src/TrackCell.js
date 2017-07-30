@@ -13,11 +13,9 @@ class TrackCell extends Component {
   }
 
   getStyle() {
-    var x = {
+    return {
       left:(this.props.position)+"px"
     };
-    console.log('getStyle', x);
-    return x;
   }
 }
 

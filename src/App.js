@@ -91,6 +91,7 @@ class App extends Component {
       return (
         <Track
             key={track.id}
+            datastoreClient={this.MIDIDatastoreClient}
             track={track}
             trackDeleteClicked={track => {
                 this.MIDIDatastoreClient.removeTrack(track);
