@@ -157,11 +157,11 @@ class App extends Component {
       if(this.state.playState === "play") {
         this.playbackEngine.stop(false);
         window.requestAnimationFrame(this.updateSeekHead.bind(this));
-        this.state.playState = "paused";
+        this.setState({playState: 'paused'});
       } else if(this.state.playState === "paused" || this.state.playState === "initial") {
         this.playbackEngine.play();
         window.requestAnimationFrame(this.updateSeekHead.bind(this));
-        this.state.playState = "play";
+        this.setState({playState: 'play'});
       }
     } else if(e.keyCode === MARKER_KEY) {
       console.log("MARK IT");
@@ -175,7 +175,7 @@ class App extends Component {
       this.playbackEngine.seek(this.getMeasureBarOffsetForEventX(this.seekbar.getBoundingClientRect().left)/PIXELS_PER_BEAT);
       this.playbackEngine.play();
       window.requestAnimationFrame(this.updateSeekHead.bind(this));
-      this.state.playState = "play";
+      this.setState({playState: 'play'});
     }
   }
 
