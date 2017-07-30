@@ -55,6 +55,11 @@ class App extends Component {
       this.setState({
         midiTracks: update(this.state.midiTracks, {[track.id]: {$set: track}})
       });
+      if (!(track.id in this.state.notesByTrackId)) {
+        this.setState({
+          notesByTrackId: update(this.state.notesByTrackId, {[track.id]: {$set: {}}})
+        });
+      }
     }
   }
 
