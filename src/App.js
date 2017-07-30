@@ -186,7 +186,6 @@ class App extends Component {
   render() {
 
     var tracks = this.MIDIDatastoreClient.getTracks();
-
     var trackItems = tracks.reverse().map(track => {
       return (
         <Track
@@ -214,6 +213,7 @@ class App extends Component {
             trackInstrumentUpdated={(track,instrument) => {
               track.instrument = instrument;
               this.MIDIDatastoreClient.addOrUpdateTrack(track);
+              this.updateOrRemoveStateTrack(track, false);
             }}
         />
       );
@@ -246,10 +246,6 @@ class App extends Component {
           <div className="body-container">
             {trackItems}
           </div>
-
-          {/*<FloatingActionButton className="button-addtrack">
-            <ContentAdd />
-          </FloatingActionButton>*/}
 
         </div>
       </MuiThemeProvider>
