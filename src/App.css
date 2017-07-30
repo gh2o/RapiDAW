@@ -13,7 +13,6 @@ SECONDARY TEAL: #009688;
   left: 0px;
   display: inline-block;
   width: 100%;
-  margin-bottom: 1rem;
   background-color: #EEEEEE !important;
   min-width: 350px;
 }
@@ -22,29 +21,25 @@ SECONDARY TEAL: #009688;
   display: flex;
 }
 
-.header-toolbar {
-  background-color: #EEEEEE !important;
-}
-
-.header-addtrack {
-  margin: 0rem 0rem 1rem 1rem;
-  padding: 0.5rem 0.5rem 0rem 1rem;
-  width: 10rem;
-}
-
-.header-addtrack-input {
-  width: 8rem !important;
+.header-subcontainer p {
+  margin-left: 1rem;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1.5rem;
+  font-weight: lighter;
+  color: #9E9E9E;
 }
 
 .header-trackcontrol {
+  align-content: center;
   text-align: left !important;
-  flex: 1;
-  margin: 0rem 1rem 1rem 1rem;
-  padding: 0.5rem 0.5rem 0rem 0.5rem;
+  margin: 0.5rem auto 0rem auto;
+  padding: 0rem 0rem 0rem 0rem;
+  height: 3.5rem;
 }
 
 .header-trackcontrol-icon {
-  color: #616161 !important;
+  transform: translateY(0.7rem);
+  color: #757575 !important;
   font-size: 250% !important;
 }
 
@@ -62,7 +57,8 @@ SECONDARY TEAL: #009688;
 }
 
 .badge {
-  transform: translateY(25px);
+  transform: translateY(10px);
+  padding-bottom: 0px !important;
   padding-left: 0px !important;
 }
 
@@ -81,9 +77,26 @@ SECONDARY TEAL: #009688;
   background-color: #D50000 !important;
 }
 
+.header-bottombar {
+  align-items: flex-end;
+  display: flex;
+  height: 1rem;
+}
+
+.header-addtrack-input {
+  margin: 0rem 1rem 0rem 1rem;
+  min-width: 14rem;
+  transform: translateY(0.5rem);
+}
+
+#header-addtrack-input::placeholder {
+  font-size: 12px !important;
+  font-family: 'Open Sans', sans-serif; 
+}
+
 .header-track-measure {
-  margin-left: 16rem;
-  margin-right: 10rem;
+  border-top-left-radius: 1rem !important;
+  /*margin-left: 16rem;*/
   width: 100%;
   height: 1rem;
   background-color: #E0E0E0;
@@ -92,6 +105,7 @@ SECONDARY TEAL: #009688;
 
 .measure-cell {
   box-sizing: border-box;
+  color: #BCAAA4;
   border-right: 1px solid #BCAAA4;
   width: 40px;
   height: 100%;
@@ -105,9 +119,8 @@ SECONDARY TEAL: #009688;
 
 
 /*BODY*/
-
 .body-padding {
-  height: 9.5rem;
+  height: 6.5rem;
   width: 100%;
 }
 
@@ -130,7 +143,7 @@ SECONDARY TEAL: #009688;
   position: absolute;
   left: 14.5rem;
   transition: none !important;
-  top: 7rem !important;
+  top: 4.1rem !important;
 }
 
 .floating-seek-bar {
