@@ -12,6 +12,8 @@ import Slider from 'material-ui/Slider';
 
 import './Track.css';
 
+export const PIANO_MIDI_OFFSET = 9; // typical piano starts at MIDI note 9 for A0
+
 class Track extends Component {
   constructor() {
     super();
@@ -38,10 +40,11 @@ class Track extends Component {
       false
     ];
     for (var i=0; i < this.pianoElements.length; i++) {
+        var pitch = i + PIANO_MIDI_OFFSET;
         if (this.pianoElements[i]) {
-          this.pianoElements[i] = (<div className="piano-key black" key={i}></div>);
+          this.pianoElements[i] = (<div className="piano-key black" key={i}>{pitch}</div>);
         } else {
-          this.pianoElements[i] = (<div className="piano-key white" key={i}></div>);
+          this.pianoElements[i] = (<div className="piano-key white" key={i}>{pitch}</div>);
         }
     }
     this.pianoElements.reverse();
@@ -86,7 +89,7 @@ class Track extends Component {
 
     var trackRows = [];
     for (var i = 0; i < 88; i++) {
-      let pitch = 87 - i;
+      let pitch = PIANO_MIDI_OFFSET + 87 - i;
       trackRows.push(<TrackRow
         key={pitch}
         pitch={pitch}
