@@ -130,34 +130,51 @@ class App extends Component {
     }
   }
 
-  handlePlayPress() {
-    console.log("handlePlayPress");
-    if(this.state.playState === "initial") {
+  getOriginalPosition() {
+    if(this.origBarPos == null) {
       this.seekhead = document.getElementById("seekhead");
       this.seekbar = document.getElementById("seekbar");
       this.origBarPos = this.seekbar.getBoundingClientRect().left;
       this.origHeadPos = this.seekhead.getBoundingClientRect().left;
+    }
+  }
+
+
+  //initial
+  //play
+  //stop
+  //finish
+  handlePlayPress() {
+    console.log("handlePlayPress - playstate: " + this.state.playState);
+    if(this.state.playState === "initial") {
+      this.getOriginalPosition()
+      this.position = 0.0;
     } else if(this.state.playState === "finish") {
       this.seekbar.style.left = this.origBarPos+'px';
       this.seekhead.style.left = this.origHeadPos+'px';
       this.playbackEngine.seek(0.0);
     }
-    this.setState({playState: "play"})
     this.playbackEngine.play();
+    this.setState({playState: "play"})
     window.requestAnimationFrame(this.updateSeekHead.bind(this));
   }
 
   handleStopPress() {
-    console.log("handleStopPress");
-    if(this.state.playState === "play") {
-      this.setState({playState: "paused"});
+    console.log("handleStopPress Start - playState:" + this.state.playState);
+    if(this.state.playState === "initial") {
+      this.getOriginalPosition()
+    } else if(this.state.playState === "play") {
       this.playbackEngine.stop(false);
-    } else {
+      this.position = this.playbackEngine.currentPosition();
+      this.setState({playState: "paused"});
+    } else if(this.state.playState === "paused") {
       this.seekbar.style.left = this.origBarPos+'px';
       this.seekhead.style.left = this.origHeadPos+'px';
       this.playbackEngine.stop(true);
+      this.playbackEngine.seek(0);
       this.setState({playState: "initial"});
     }
+    console.log("handleStopPress End - playState:" + this.state.playState);
   }
 
   updateSeekHead() {
@@ -168,9 +185,8 @@ class App extends Component {
 
     if(this.playbackEngine.isPlaying()) {
       window.requestAnimationFrame(this.updateSeekHead.bind(this));
-    } else {
-      this.playbackEngine.stop(true);
-      this.setState({playState: "finish"});
+    } else if(this.state.playState === "play") {
+      this.playbackEngine.seek(0);
     }
   }
 
