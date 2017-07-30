@@ -61,6 +61,31 @@ class Lead2 extends Instrument {
     }
 }
 
+class Wow1 extends Instrument {
+    constructor() {
+        super();
+        this.synth = new Tone.PolySynth(10, Tone.MonoSynth,
+            {oscillator: {type:'square'},
+             envelope: {attack:1,decay:1,sustain:0,release:0.02},
+             filterEnvelope: {
+                 attack:1,
+                 decay:1,
+                 sustain:0,
+                 release:0.03,
+                 attackCurve:'cosine',
+                 releaseCurve:'cosine',
+                 octaves:4,
+             }});
+        this.output = this.synth;
+    }
+    destroy() {
+        this.synth.dispose();
+    }
+    play(freq, dur, time) {
+        this.synth.triggerAttackRelease(freq, dur, time);
+    }
+}
+
 class Kick extends Instrument {
     constructor() {
         super();
@@ -287,6 +312,9 @@ class PlaybackEngine {
                 break;
             case "lead2":
                 instr = new Lead2();
+                break;
+            case "wow1":
+                instr = new Wow1();
                 break;
             case "kick":
                 instr = new Kick();

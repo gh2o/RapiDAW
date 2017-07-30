@@ -132,6 +132,7 @@ class Track extends Component {
             <MenuItem value="bass1" primaryText="Bass 1" />
             <MenuItem value="bass2" primaryText="Bass 2" />
             <MenuItem value="bass3" primaryText="Bass 3" />
+            <MenuItem value="wow1" primaryText="Wow 1" />
             <MenuItem value="kick" primaryText="Kick" />
             <MenuItem value="snare" primaryText="Snare" />
             <MenuItem value="hihat" primaryText="Hi-Hat" />
