@@ -63,10 +63,12 @@ class TrackCell extends Component {
 
   getStyle() {
     let duration;
-    if (this.state.resizeMousePx === null) {
+    if (this.state.resizeMousePx !== null) {
+      duration = this.getResizeDuration();
+    } else if (this.props.note) {
       duration = this.props.note.duration;
     } else {
-      duration = this.getResizeDuration();
+      duration = 1;
     }
     return {
       left:(this.props.beat * PIXELS_PER_BEAT)+"px",
