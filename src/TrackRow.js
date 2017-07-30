@@ -6,7 +6,7 @@ import { MIDINote } from './MIDIDatastore.js';
 import { generateID } from './Utils.js';
 import './Track.css';
 
-const PIXELS_PER_BEAT = 40;
+export const PIXELS_PER_BEAT = 40;
 
 class TrackRow extends Component {
   constructor() {
@@ -26,6 +26,10 @@ class TrackRow extends Component {
     return x - rect.left;
   }
 
+  roundBeat(beat) {
+    return Math.round(beat * 2) / 2;
+  }
+
   handleMouseDownOrMove(evt) {
     this.setState({
       mouseX: evt.pageX,
@@ -37,30 +41,20 @@ class TrackRow extends Component {
   handleMouseUp(evt) {
     var offsetPx = this.getOffsetForEventX(evt.pageX);
     var beat = offsetPx / PIXELS_PER_BEAT;
-    beat = Math.round(beat * 2) / 2;
+    beat = this.roundBeat(beat);
     var note = new MIDINote(generateID(), beat, 1, this.props.pitch);
     this.props.noteAdded(note);
-
-    /*
-    console.log(rect.top, rect.right, rect.bottom, rect.left);
-
-    this.setState({
-      pressed: !this.state.pressed,
-      released: !this.state.released,
-      position: event.pageX - rect.left
-    });
-
-    console.log(this.state.pressed);
-    */
   }
 
   render() {
     var cells = [];
     for (let note of this.props.notes) {
-      cells.push(<TrackCell key={note.id} position={note.beat * PIXELS_PER_BEAT}/>);
+      cells.push(<TrackCell key={note.id} beat={note.beat}/>);
     }
     if (this.state.mouseIn && this.props.mouseActive) {
-      cells.push(<TrackCell key="TEMP" position={this.getOffsetForEventX(this.state.mouseX)}/>);
+      let beat = this.getOffsetForEventX(this.state.mouseX) / PIXELS_PER_BEAT;
+      beat = this.roundBeat(beat);
+      cells.push(<TrackCell key="TEMP" beat={beat}/>);
     }
     return (
       <div

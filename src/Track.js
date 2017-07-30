@@ -1,14 +1,12 @@
-import React, { Component, PureComponent } from 'react';
+import React, { Component } from 'react';
 
-import { MIDINote, MIDITrack, MIDIDatastore } from './MIDIDatastore.js';
 import { TrackRow } from './TrackRow.js';
-import { generateID } from './Utils.js';
 
 import FontIcon from 'material-ui/FontIcon';
 
 import './Track.css';
 
-class Track extends PureComponent {
+class Track extends Component {
   constructor() {
     super();
     console.log("track constructor called");
@@ -32,9 +30,9 @@ class Track extends PureComponent {
     ];
     for (var i=0; i < this.pianoElements.length; i++) {
         if (this.pianoElements[i]) {
-          this.pianoElements[i] = (<div className="piano-key black"></div>);
+          this.pianoElements[i] = (<div className="piano-key black" key={i}></div>);
         } else {
-          this.pianoElements[i] = (<div className="piano-key white"></div>);
+          this.pianoElements[i] = (<div className="piano-key white" key={i}></div>);
         }
     }
     this.pianoElements.reverse();
@@ -42,11 +40,6 @@ class Track extends PureComponent {
     this.state = {
       mouseActive: false
     }
-  }
-
-  noteAddedCallback(note) {
-    this.props.datastoreClient.addOrUpdateNote(this.props.track, note);
-    this.props.noteAddedCallback();
   }
 
   render() {
@@ -66,7 +59,7 @@ class Track extends PureComponent {
         pitch={pitch}
         notes={notesByPitch[pitch] || []}
         mouseActive={this.state.mouseActive}
-        noteAdded={this.noteAddedCallback.bind(this)}/>);
+        noteAdded={note => this.props.noteAddedCallback(this.props.track, note)}/>);
     }
 
     return (
