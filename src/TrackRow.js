@@ -1,27 +1,55 @@
 import React, { Component } from 'react';
 import { TrackCell } from './TrackCell.js';
-
 import './Track.css';
 
 class TrackRow extends Component {
-
   constructor() {
     super();
-    var cells = new Array(120);
-    for(var i = 0; i < cells.length; i++) {
-      cells[i] = <TrackCell/>;
-    }
+    this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.handleMouseUp = this.handleMouseUp.bind(this);
     this.state = {
-      trackcells: cells
-    }
+      pressed: false,
+      released: false,
+      cells: []
+    };
+  }
+
+  handleMouseDown(event) {
+
+    console.log("pageX :" + event.pageX);
+    console.log("pageY :" + event.pageY);
+
+    this.setState({pressed: !this.state.pressed});
+    console.log(this.state.pressed);
+  }
+
+  handleMouseUp(event) {
+    this.setState({
+      pressed: !this.state.pressed,
+      released: !this.state.released,
+      position: event.pageX
+    });
+    console.log(this.state.pressed);
+  }
+
+  handleDrag(event) {
+    console.log(event);
   }
 
   render() {
-    console.log("LENGTH: " + this.state.trackcells);
+    if(!this.state.pressed && this.state.released) {
+      this.state.cells.push(
+        <TrackCell
+          position={this.state.position}/>
+      );
+    }
     return (
-      <div className="track-row-container">
-        DUH HELLO
-      	{this.state.trackcells}
+      <div
+        className="track-row-container"
+        onDrag={this.handleDrag}
+        onMouseDown={this.handleMouseDown}
+        onMouseUp={this.handleMouseUp} >
+        {this.state.cells}
       </div>
     );
   }

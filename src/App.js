@@ -45,7 +45,6 @@ class App extends Component {
   }
 
   handleChange(event) {
-    console.log(this.state);
     this.setState({newTrackName: event.target.value});
   }
 

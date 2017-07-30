@@ -48,16 +48,21 @@
 .piano-row {
   height: 1rem;
   width: 100%;
-  background-color: red;
+  background-color: blue;
 }
 
 .track-row-container {
+  background: red;
   height: 19px;
   border-bottom: 1px solid black;
   margin: 0px;
   padding: 0px;
+  position: relative;
 }
 
 .track-cell-container {
-  
+  background: blue;
+  height: 20px;
+  width: 50px;
+  position: absolute;
 }

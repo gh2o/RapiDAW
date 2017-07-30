@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
 
 import { MIDINote, MIDITrack, MIDIDatastore } from './MIDIDatastore.js';
 import { TrackRow } from './TrackRow.js';
@@ -6,9 +6,10 @@ import { generateID } from './Utils.js';
 
 import './Track.css';
 
-class Track extends Component {
+class Track extends PureComponent {
   constructor() {
     super();
+    console.log("track constructor called");
 
     var MIDIroll = new Array(88);
 
