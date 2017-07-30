@@ -68,7 +68,8 @@ class App extends Component {
       marker: false,
       scrollPos: 0,
       seekActive: false,
-      seekAtEnd: false
+      seekAtEnd: false,
+      markerPos: null,
     };
   }
 
@@ -140,42 +141,29 @@ class App extends Component {
     }
   }
 
-  onKeyPress(e) {
-    return;
-    /*
-    e = e || window.event;
-    if ([SPACE_KEY, MARKER_KEY, PLAYMARK_KEY].indexOf(e.keyCode) < 0) {
+  onKeyPress(evt) {
+    if ([SPACE_KEY, MARKER_KEY, PLAYMARK_KEY].indexOf(evt.keyCode) < 0) {
       return;
     }
     console.log("enter pressed - onKeyPress Called");
-    e.preventDefault();
-    this.getMeasureBar();
-    this.getOriginalPosition();
-    if(e.keyCode === SPACE_KEY) {
-      if(this.state.playState === "play") {
-        this.playbackEngine.stop(false);
-        window.requestAnimationFrame(this.updateSeekHead.bind(this));
-        this.setState({playState: 'paused'});
-      } else if(this.state.playState === "paused" || this.state.playState === "initial") {
-        this.playbackEngine.play();
-        window.requestAnimationFrame(this.updateSeekHead.bind(this));
-        this.setState({playState: 'play'});
-      }
-    } else if(e.keyCode === MARKER_KEY) {
-      console.log("MARK IT");
-      this.markedposition = this.seekbar.getBoundingClientRect().left - OFFSET;
-      this.setState({marker:true});
-    } else if(e.keyCode === PLAYMARK_KEY && this.state.marker) {
-      console.log("MARK PLAYMARK");
-      //this.seekbar.getBoundingClientRect().left;
-      this.seekbar.style.left = this.markedposition + 'px';
-      this.seekhead.style.left = this.markedposition - OFFSET + 'px';
-      this.playbackEngine.seek(this.getMeasureBarOffsetForEventX(this.seekbar.getBoundingClientRect().left)/PIXELS_PER_BEAT);
-      this.playbackEngine.play();
-      window.requestAnimationFrame(this.updateSeekHead.bind(this));
-      this.setState({playState: 'play'});
+    evt.preventDefault();
+    switch (evt.keyCode) {
+      case SPACE_KEY:
+        if (!this.state.seekActive) {
+          this.handlePlayPress();
+        } else {
+          this.handleStopPress();
+        }
+        break;
+      case MARKER_KEY:
+        this.setState({markerPos: this.playbackEngine.currentPosition()});
+        break;
+      case PLAYMARK_KEY:
+        if (this.state.markerPos !== null) {
+          this.instantBarSeek(this.state.markerPos);
+        }
+        break;
     }
-    */
   }
 
   //initial
@@ -260,11 +248,7 @@ class App extends Component {
     return this.measureBar.getBoundingClientRect().left;
   }
 
-  handleMeasureBarClick(event) {
-    console.log("handleMeasureBarClick", event.pageX);
-    let px = event.pageX - this.getMeasureBarX() + this.state.scrollPos;
-    let beats = px / PIXELS_PER_BEAT;
-
+  instantBarSeek(beats) {
     if (this.state.seekActive) {
       this.playbackEngine.stop(true);
       this.playbackEngine.seek(beats);
@@ -273,20 +257,18 @@ class App extends Component {
     } else {
       this.playbackEngine.seek(beats);
       this.updateSeekHeadPosition();
-
     }
+  }
+
+  handleMeasureBarClick(event) {
+    console.log("handleMeasureBarClick", event.pageX);
+    let px = event.pageX - this.getMeasureBarX() + this.state.scrollPos;
+    let beats = px / PIXELS_PER_BEAT;
+    this.instantBarSeek(beats);
   }
 
   handleMeasureScroll(pos) {
     this.setState({scrollPos: pos}, () => this.updateSeekHeadPosition());
-  }
-
-  getStyle() {
-    return {
-      left:this.markedposition+"px",
-      position: 'fixed',
-      transition: 'none'
-    };
   }
 
   render() {
@@ -333,16 +315,23 @@ class App extends Component {
 
     var marker;
 
-    if(this.state.marker) {
-      console.log("MARKER IS TRUE");
-      marker = (
-        <FontIcon
-          id="markerhead"
-          className="material-icons floating-seek-icon"
-          style={this.getStyle()}>
-          arrow_drop_down
-        </FontIcon>
-      );
+    if (this.state.markerPos !== null) {
+      var epx = this.state.markerPos * PIXELS_PER_BEAT - this.state.scrollPos;
+      if (epx >= 0) {
+        var px = this.getMeasureBarX() + epx;
+        marker = (
+          <FontIcon
+            id="markerhead"
+            className="material-icons floating-seek-icon"
+            style={{
+              left:(px-OFFSET)+"px",
+              position: 'fixed',
+              transition: 'none'
+            }}>
+            arrow_drop_down
+          </FontIcon>
+        );
+      }
     }
 
     return (
