@@ -209,21 +209,26 @@ class App extends Component {
   }
 
   updateSeekHeadPosition() {
+    let measBarBox = this.getMeasureBarBox();
     let seekHeadDiv = document.getElementById(this.seekHeadElem.props.id);
     let {seekBarDiv} = this;
     let currPlayPos = this.playbackEngine.currentPosition();
     let epx = currPlayPos * PIXELS_PER_BEAT - this.state.scrollPos;
+    let desc;
     if (epx >= 0) {
-      let px = this.getMeasureBarX() + epx;
+      let px = measBarBox.left + epx;
       seekHeadDiv.style.display = 'block';
       seekHeadDiv.style.left = (px - OFFSET) + 'px';
       seekBarDiv.style.display = 'block';
       seekBarDiv.style.left = px + 'px';
+      desc = (epx >= measBarBox.width) ? 'right' : 'in';
     } else {
       // seek head is off to the left of the screen, hide it
       seekHeadDiv.style.display = 'none';
       seekBarDiv.style.display = 'none';
+      desc = 'left';
     }
+    return {desc, epx}; // epx is offset from left of measure bar
   }
 
   updateSeekHeadPeriodic() {
@@ -231,7 +236,10 @@ class App extends Component {
       return;
     }
 
-    this.updateSeekHeadPosition();
+    var {desc, epx} = this.updateSeekHeadPosition();
+    if (desc === 'right') {
+      this.setState({scrollPos: epx - 50});
+    }
 
     if (this.playbackEngine.isPlaying()) {
       window.requestAnimationFrame(this.updateSeekHeadPeriodic);
@@ -239,15 +247,15 @@ class App extends Component {
       this.setState({
         seekActive: false,
         seekAtEnd: true
-      });
+      }, () => this.handlePlayPress());
     }
   }
 
-  getMeasureBarX() {
+  getMeasureBarBox() {
     if (!this.measureBar) {
       this.measureBar = document.getElementById("measureBar");
     }
-    return this.measureBar.getBoundingClientRect().left;
+    return this.measureBar.getBoundingClientRect();
   }
 
   instantBarSeek(beats) {
@@ -264,7 +272,7 @@ class App extends Component {
 
   handleMeasureBarClick(event) {
     console.log("handleMeasureBarClick", event.pageX);
-    let px = event.pageX - this.getMeasureBarX() + this.state.scrollPos;
+    let px = event.pageX - this.getMeasureBarBox().left + this.state.scrollPos;
     let beats = px / PIXELS_PER_BEAT;
     this.instantBarSeek(beats);
   }
@@ -320,7 +328,7 @@ class App extends Component {
     if (this.state.markerPos !== null) {
       var epx = this.state.markerPos * PIXELS_PER_BEAT - this.state.scrollPos;
       if (epx >= 0) {
-        var px = this.getMeasureBarX() + epx;
+        var px = this.getMeasureBarBox().left + epx;
         marker = (
           <FontIcon
             id="markerhead"
