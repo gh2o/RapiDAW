@@ -14,6 +14,8 @@ import { generateID } from './Utils.js';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import FontIcon from 'material-ui/FontIcon';
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 
 // UI COMPONENTS
 import Header from './Header.js';
@@ -65,7 +67,8 @@ class App extends Component {
       playState: "initial",
       notesByTrackId: {},
       marker: false,
-      scrollPos: 0
+      scrollPos: 0,
+
     };
   }
 

@@ -12,6 +12,10 @@ import TextField from 'material-ui/TextField';
 import Avatar from 'material-ui/Avatar';
 import Badge from 'material-ui/Badge';
 import Slider from 'material-ui/Slider';  
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
+
 
 class Header extends Component {
   constructor() {
@@ -26,6 +30,18 @@ class Header extends Component {
       }
       count++;
     }
+
+    this.state = {
+      editNameDialogOpen: false
+    }
+  }
+
+  handleOpen = () => {
+    this.setState({editNameDialogOpen: true});
+  }
+
+  handleClose = () => {
+    this.setState({editNameDialogOpen: false});
   }
 
   componentDidUpdate() {
@@ -35,10 +51,30 @@ class Header extends Component {
   }
 
   render() {
+
     return (
       <Paper className="header-container" zDepth={2}>
         <div className="header-subcontainer">
-          <p>{this.props.songname}</p>
+          <p>{this.props.songname} <FontIcon className="material-icons header-edit-icon" onClick={this.handleOpen}>mode_edit</FontIcon></p>
+          <Dialog className="header-edit-dialog" title="Edit Song Name" modal={false} open={this.state.editNameDialogOpen} onRequestClose={this.handleClose}>  
+            <TextField
+              id="header-editname-input"
+              className="header-editname-input"
+              defaultValue={this.props.songname}
+            />
+            <br />
+            <FlatButton
+              label="Cancel"
+              primary={true}
+              onTouchTap={this.handleClose}
+            />
+            <FlatButton
+              label="Submit"
+              primary={true}
+              keyboardFocused={true}
+              onTouchTap={this.handleClose}
+            />
+          </Dialog>
 
           <div className="header-trackcontrol">
             <FontIcon

@@ -27,6 +27,20 @@ SECONDARY TEAL: #009688;
   color: #9E9E9E;
 }
 
+.header-edit-icon {
+  opacity: 0;
+  color: #757575 !important;
+  cursor: pointer;
+}
+
+.header-edit-dialog {
+  text-align: center;
+}
+
+.header-subcontainer p:hover .header-edit-icon {
+  opacity: 1;
+}
+
 .header-trackcontrol {
   align-content: center;
   text-align: left !important;
@@ -133,7 +147,7 @@ SECONDARY TEAL: #009688;
 
 /*BODY*/
 .body-padding {
-  height: 2.5rem;
+  height: 6.5rem;
   width: 100%;
 }
 
