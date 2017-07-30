@@ -63,13 +63,11 @@
 
 .piano-container {
   width: 100%;
-  background-color: blue;
 }
 
 .track-row-container {
-  background: red;
   height: 19px;
-  width: 1000px;
+  width: 100%;
   border-bottom: 1px solid black;
   margin: 0px;
   padding: 0px;
