@@ -12,6 +12,7 @@
 }
 
 .track-info {
+  min-width: 11rem;
   max-width: 11rem;
   border-right: 1px solid white;
   background-color: #E0E0E0;
@@ -45,10 +46,12 @@
 }
 
 .piano-key {
+  box-sizing: border-box;
   padding-right: 0.5rem;
   text-align: right;
-  height: 19px;
-  border-bottom: 1px solid grey;
+  height: 20px;
+  border-right: 1px solid #BDBDBD;
+  border-bottom: 1px solid #BDBDBD;
   background-color: grey;
 }
 
@@ -66,17 +69,19 @@
 }
 
 .track-row-container {
-  height: 19px;
+  box-sizing: border-box;
+  height: 20px;
   width: 100%;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid #BDBDBD;
   margin: 0px;
   padding: 0px;
   position: relative;
 }
 
 .track-cell-container {
-  background: blue;
+  box-sizing: border-box;
+  background: #8D6E63;
   height: 20px;
-  width: 50px;
+  width: 40px;
   position: absolute;
 }

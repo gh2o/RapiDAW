@@ -12,6 +12,7 @@ import { generateID } from './Utils.js';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import FontIcon from 'material-ui/FontIcon';
 
 // UI COMPONENTS
 import Header from './Header.js';
@@ -38,7 +39,8 @@ class App extends Component {
     this.playbackEngine = new PlaybackEngine(this.MIDIDatastore);
 
     this.state = {
-      midiTracks: {}
+      midiTracks: {},
+      seekpos: {left: '-16rem'}
     };
   }
 
@@ -52,17 +54,19 @@ class App extends Component {
     var trackName = event.target.value.trim();
     event.target.value = '';
     var id = generateID();
-    var newTrack = new MIDITrack(id,trackName);
+    var track = new MIDITrack(id,trackName);
 
-    this.MIDIDatastoreClient.addOrUpdateTrack(newTrack);
-    this.state.midiTracks[newTrack.id] = newTrack;
-    this.setState(this.state);
+    this.MIDIDatastoreClient.addOrUpdateTrack(track);
+    this.state.midiTracks[track.id] = track;
+    this.setState();
   }
 
   datastoreCallback(/*String*/ eventName, /*Object*/ eventParams) {
+    console.log(eventName);
     switch (eventName) {
       case 'trackAddedOrUpdated':
       {
+        console.log("TRACK ADDED");
         let {track} = eventParams;
         this.state.midiTracks[track.id] = track;
         this.setState(this.state);
@@ -120,9 +124,11 @@ class App extends Component {
         <div className="App">
 
           <Header create={{
-            onKeyDown: this.handleCreateTrack,
-            onChange: this.handleChange
-          }}/>
+            onKeyDown: this.handleCreateTrack
+          }} songname="THE DOPEST SONG"/>
+
+          <FontIcon className="material-icons floating-seek-icon">arrow_drop_down</FontIcon>
+          <div className="floating-seek-bar"></div>
 
           <div className="body-padding"></div>
 

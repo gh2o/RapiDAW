@@ -40,7 +40,7 @@ class Track extends PureComponent {
     this.pianoElements.reverse();
 
     this.state = {
-      mouseActive: false,
+      mouseActive: false
     }
   }
 

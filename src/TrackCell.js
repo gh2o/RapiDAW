@@ -7,7 +7,6 @@ class TrackCell extends Component {
     return (
       <div className="track-cell-container"
         style={this.getStyle()}>
-        NOTE.
       </div>
     );
   }
