@@ -40,8 +40,11 @@ class Track extends Component {
     }
   }
 
-  handleChange = (event, index, instrument) => {
+  handleInstrumentChange = (event, index, instrument) => {
       this.props.trackInstrumentUpdated(this.props.track, instrument);
+  }
+  handleVolumeChange = (event, volume) => {
+      this.props.trackVolumeUpdated(this.props.track, volume);
   }
 
   finishDragOrResize() {
@@ -111,9 +114,9 @@ class Track extends Component {
           <p>{this.props.track.name}</p>
           <DropDownMenu 
             value={this.props.track.instrument} 
-            onChange={this.handleChange}
+            onChange={this.handleInstrumentChange}
             iconStyle={{fill: '#8D6E63'}}
-            underlineStyle={{borderColor: '#8D6E63'}}
+            underlineStyle={{display: 'none'}}
           >
             <MenuItem value={0} primaryText="RAW" />
             <MenuItem value={1} primaryText="Instrument1" />
@@ -122,7 +125,7 @@ class Track extends Component {
             <MenuItem value={4} primaryText="Instrument4" />
             <MenuItem value={5} primaryText="Instrument5" />
           </DropDownMenu>
-          <Slider defaultValue={1} className="track-info-slider"/>
+          <Slider value={this.props.track.volume} className="track-info-slider" onChange={this.handleVolumeChange}/>
         </div>
 
         <div className="pianoroll-container">
