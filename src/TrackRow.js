@@ -1,17 +1,27 @@
 import React, { Component } from 'react';
+import { TrackCell } from './TrackCell.js';
 
 import './Track.css';
 
 class TrackRow extends Component {
 
+  constructor() {
+    super();
+    var cells = new Array(120);
+    for(var i = 0; i < cells.length; i++) {
+      cells[i] = <TrackCell/>;
+    }
+    this.state = {
+      trackcells: cells
+    }
+  }
+
   render() {
-  	var piano = [];
-  	for (var i=0; i < 88; i++) {
-  		piano.push((<div className="piano-key">a</div>));
-  	}
+    console.log("LENGTH: " + this.state.trackcells);
     return (
       <div className="track-row-container">
-      		{this.props.name}
+        DUH HELLO
+      	{this.state.trackcells}
       </div>
     );
   }
