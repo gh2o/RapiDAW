@@ -50,10 +50,12 @@ class Track extends Component {
     }
   }
 
-  handleChange = (event, index, instrument) => this.setState({instrument});
-
+  handleChange = (event, index, instrument) => {
+      this.props.trackInstrumentUpdated(this.props.track, instrument);
+  }
 
   render() {
+    console.log(this.props.track);
     var notesByPitch = {};
     for (let note of Object.values(this.props.notes)) {
       if (!(note.pitch in notesByPitch)) {
@@ -85,8 +87,9 @@ class Track extends Component {
           <FontIcon className="material-icons close-link"  onClick={() => this.props.trackDeleteClicked(this.props.track)}>close</FontIcon>
           <br />
           <p>{this.props.track.name}</p>
-          <DropDownMenu value={this.state.instrument} onChange={this.handleChange}>
-            <MenuItem value={1} primaryText="Instrument" />
+          <DropDownMenu value={this.props.track.instrument} onChange={this.handleChange}>
+            <MenuItem value={0} primaryText="RAW" />
+            <MenuItem value={1} primaryText="Instrument1" />
             <MenuItem value={2} primaryText="Instrument2" />
             <MenuItem value={3} primaryText="Instrument3" />
             <MenuItem value={4} primaryText="Instrument4" />
