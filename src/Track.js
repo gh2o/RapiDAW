@@ -22,14 +22,20 @@ class Track extends Component {
       //   MIDIroll[i][j] = <TrackCell name="test"/>;
       // }
     }
+
+    var piano = [];
+    for (var i=0; i < 88; i++) {
+        piano.push((<div className="piano-key">piano</div>));
+    }
+
     this.state = {
+      piano: piano,
       midiRow: MIDIroll
     }
   }
 
   render() {
     var midiBody;
-
     if (this.state.midiRow.length) {
       midiBody = (
         <div className="piano-container">
@@ -44,10 +50,14 @@ class Track extends Component {
           <p>{this.props.track.name}</p>
           <a className="close-link" onClick={() => this.props.trackDeleteClicked(this.props.track)}>x</a>
       	</div>
-        <div className="piano-container">
-            {midiBody}
+
+        <div className="pianoroll-container">
+          <div className="piano">
+            {this.state.piano}
+          </div>
+          {midiBody}
         </div>
-      </div>
+    </div>
     );
   }
 }
