@@ -7,7 +7,7 @@ import { generateID } from './Utils.js';
 import './Track.css';
 
 export const PIXELS_PER_BEAT = 40;
-export const BEAT_SUBDIVISION = 2;
+export const BEAT_SUBDIVISION = 4;
 
 class TrackRow extends Component {
   constructor() {

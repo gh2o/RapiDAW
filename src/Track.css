@@ -81,6 +81,26 @@
   margin: 0px;
   padding: 0px;
   position: relative;
+  background: repeating-linear-gradient(to right,
+    rgba(0,0,0,0)         0px,
+    rgba(0,0,0,0)         39px,
+    rgba(190,190,190,0.5) 39px,
+    rgba(190,190,190,0.5) 40px,
+
+    rgba(0,0,0,0)         40px,
+    rgba(0,0,0,0)         79px,
+    rgba(190,190,190,0.5) 79px,
+    rgba(190,190,190,0.5) 80px,
+
+    rgba(0,0,0,0)         80px,
+    rgba(0,0,0,0)         119px,
+    rgba(190,190,190,0.5) 119px,
+    rgba(190,190,190,0.5) 120px,
+
+    rgba(0,0,0,0)         120px,
+    rgba(0,0,0,0)         158.5px,
+    rgba(190,190,190,0.5) 158.5px,
+    rgba(190,190,190,0.5) 160px);
 }
 
 .track-row-container:hover {
