@@ -144,20 +144,12 @@ class Track extends Component {
             {this.pianoElements}
           </div>
           <div className="piano-container" ref={div => { this.pianoConDiv = div; }}>
-            <div className="piano-sub">
-              {trackRows}
-            </div>
+            {trackRows}
           </div>
         </div>
     </div>
     </FadeIn>
     );
-  }
-
-  componentDidUpdate() {
-    if (this.pianoConDiv.scrollLeft !== this.props.scrollPos) {
-      this.pianoConDiv.scrollLeft = this.props.scrollPos;
-    }
   }
 }
 

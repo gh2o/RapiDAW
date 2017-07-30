@@ -98,7 +98,7 @@ SECONDARY TEAL: #009688;
   border-top-left-radius: 1rem !important;
   /*margin-left: 16rem;*/
   width: 100%;
-  height: 2rem;
+  height: 1rem;
   background-color: #E0E0E0;
   overflow: hidden;
 }
@@ -125,13 +125,7 @@ SECONDARY TEAL: #009688;
   border-right: 2px solid #A1887F;
 }
 
-#measureBarSub {
-    overflow-x: scroll;
-    overflow-y: hidden;
-    height: 100%;
-    position: relative;
-    white-space: nowrap;
-}
+
 
 /*BODY*/
 .body-padding {
