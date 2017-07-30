@@ -36,9 +36,8 @@ class App extends Component {
 
   constructor() {
     super();
-    console.log("ONKEYPRESS");
-    document.onkeypress = this.onKeyPress.bind(this);
 
+    document.onkeypress = this.onKeyPress.bind(this);
     injectTapEventPlugin();
 
     this.muiTheme = getMuiTheme({
@@ -52,8 +51,10 @@ class App extends Component {
     this.datastoreCallback = this.datastoreCallback.bind(this);
     this.handlePlayPress = this.handlePlayPress.bind(this);
     this.handleStopPress = this.handleStopPress.bind(this);
+    this.handleRewindPress = this.handleRewindPress.bind(this);
     this.handleMeasureBarClick = this.handleMeasureBarClick.bind(this);
     this.handleMeasureScroll = this.handleMeasureScroll.bind(this);
+    this.updateSeekHeadPeriodic = this.updateSeekHeadPeriodic.bind(this);
 
     this.MIDIDatastore = new MIDIDatastore();
     this.MIDIDatastoreClient = this.MIDIDatastore.getClient("MainClient");
@@ -68,7 +69,9 @@ class App extends Component {
       notesByTrackId: {},
       marker: false,
       scrollPos: 0,
-
+      seekActive: false,
+      seekAtEnd: false,
+      markerPos: null,
     };
   }
 
@@ -140,47 +143,28 @@ class App extends Component {
     }
   }
 
-  getOriginalPosition() {
-    if(this.origBarPos == null) {
-      this.seekhead = document.getElementById("seekhead");
-      this.seekbar = document.getElementById("seekbar");
-      this.origBarPos = this.seekbar.getBoundingClientRect().left;
-      this.origHeadPos = this.seekhead.getBoundingClientRect().left;
-    }
-  }
-
-  onKeyPress(e) {
-    e = e || window.event;
-    if ([SPACE_KEY, MARKER_KEY, PLAYMARK_KEY].indexOf(e.keyCode) < 0) {
+  onKeyPress(evt) {
+    if ([SPACE_KEY, MARKER_KEY, PLAYMARK_KEY].indexOf(evt.keyCode) < 0) {
       return;
     }
     console.log("enter pressed - onKeyPress Called");
-    e.preventDefault();
-    this.getMeasureBar();
-    this.getOriginalPosition();
-    if(e.keyCode === SPACE_KEY) {
-      if(this.state.playState === "play") {
-        this.playbackEngine.stop(false);
-        window.requestAnimationFrame(this.updateSeekHead.bind(this));
-        this.setState({playState: 'paused'});
-      } else if(this.state.playState === "paused" || this.state.playState === "initial") {
-        this.playbackEngine.play();
-        window.requestAnimationFrame(this.updateSeekHead.bind(this));
-        this.setState({playState: 'play'});
-      }
-    } else if(e.keyCode === MARKER_KEY) {
-      console.log("MARK IT");
-      this.markedposition = this.seekbar.getBoundingClientRect().left - OFFSET;
-      this.setState({marker:true});
-    } else if(e.keyCode === PLAYMARK_KEY && this.state.marker) {
-      console.log("MARK PLAYMARK");
-      //this.seekbar.getBoundingClientRect().left;
-      this.seekbar.style.left = this.markedposition + 'px';
-      this.seekhead.style.left = this.markedposition - OFFSET + 'px';
-      this.playbackEngine.seek(this.getMeasureBarOffsetForEventX(this.seekbar.getBoundingClientRect().left)/PIXELS_PER_BEAT);
-      this.playbackEngine.play();
-      window.requestAnimationFrame(this.updateSeekHead.bind(this));
-      this.setState({playState: 'play'});
+    evt.preventDefault();
+    switch (evt.keyCode) {
+      case SPACE_KEY:
+        if (!this.state.seekActive) {
+          this.handlePlayPress();
+        } else {
+          this.handleStopPress();
+        }
+        break;
+      case MARKER_KEY:
+        this.setState({markerPos: this.playbackEngine.currentPosition()});
+        break;
+      case PLAYMARK_KEY:
+        if (this.state.markerPos !== null) {
+          this.instantBarSeek(this.state.markerPos);
+        }
+        break;
     }
   }
 
@@ -190,85 +174,103 @@ class App extends Component {
   //finish
   handlePlayPress() {
     console.log("handlePlayPress - playstate: " + this.state.playState);
-    if(this.state.playState === "initial") {
-      this.getOriginalPosition()
-      this.position = 0.0;
-    } else if(this.state.playState === "finish") {
-      this.seekbar.style.left = this.origBarPos+'px';
-      this.seekhead.style.left = this.origHeadPos+'px';
-      this.playbackEngine.seek(0.0);
+    if (!this.state.seekActive) {
+      if (this.state.seekAtEnd) {
+        this.playbackEngine.seek(0);
+      }
+      this.playbackEngine.play();
+      this.setState({seekActive: true, seekAtEnd: false});
+      window.requestAnimationFrame(this.updateSeekHeadPeriodic);
     }
-    this.playbackEngine.play();
-    this.setState({playState: "play"})
-    window.requestAnimationFrame(this.updateSeekHead.bind(this));
   }
 
   handleStopPress() {
     console.log("handleStopPress Start - playState:" + this.state.playState);
-    if(this.state.playState === "initial") {
-      this.getOriginalPosition()
-    } else if(this.state.playState === "play") {
+    if (this.state.seekActive) {
       this.playbackEngine.stop(false);
-      this.position = this.playbackEngine.currentPosition();
-      this.setState({playState: "paused"});
-    } else if(this.state.playState === "paused") {
-      this.seekbar.style.left = this.origBarPos+'px';
-      this.seekhead.style.left = this.origHeadPos+'px';
+      this.setState({
+        seekActive: false,
+      });
+    } else {
+      this.playbackEngine.seek(0);
+    }
+    this.updateSeekHeadPosition();
+  }
+
+  handleRewindPress() {
+    if (this.state.seekActive) {
       this.playbackEngine.stop(true);
       this.playbackEngine.seek(0);
-      this.setState({playState: "initial"});
-    }
-    console.log("handleStopPress End - playState:" + this.state.playState);
-  }
-
-  updateSeekHead() {
-    var currPlayPos = this.playbackEngine.currentPosition();
-
-    this.seekbar.style.left = (this.origBarPos+currPlayPos*PIXELS_PER_BEAT)+'px';
-    this.seekhead.style.left = (this.origHeadPos+currPlayPos*PIXELS_PER_BEAT)+'px';
-
-    if(this.playbackEngine.isPlaying()) {
-      window.requestAnimationFrame(this.updateSeekHead.bind(this));
-    } else if(this.state.playState === "play") {
-      this.playbackEngine.seek(0);
+      this.handleStopPress();
+      setTimeout(() => this.handlePlayPress(), 0);
+    } else {
+      this.handleStopPress();
     }
   }
 
-  getMeasureBarOffsetForEventX(x) {
-    var rect = this.measureBar.getBoundingClientRect();
-    return x - rect.left;
+  updateSeekHeadPosition() {
+    let seekHeadDiv = document.getElementById(this.seekHeadElem.props.id);
+    let {seekBarDiv} = this;
+    let currPlayPos = this.playbackEngine.currentPosition();
+    let epx = currPlayPos * PIXELS_PER_BEAT - this.state.scrollPos;
+    if (epx >= 0) {
+      let px = this.getMeasureBarX() + epx;
+      seekHeadDiv.style.display = 'block';
+      seekHeadDiv.style.left = (px - OFFSET) + 'px';
+      seekBarDiv.style.display = 'block';
+      seekBarDiv.style.left = px + 'px';
+    } else {
+      // seek head is off to the left of the screen, hide it
+      seekHeadDiv.style.display = 'none';
+      seekBarDiv.style.display = 'none';
+    }
   }
 
-  getMeasureBar() {
-    if(this.measureBar == null) {
+  updateSeekHeadPeriodic() {
+    if (!this.state.seekActive) {
+      return;
+    }
+
+    this.updateSeekHeadPosition();
+
+    if (this.playbackEngine.isPlaying()) {
+      window.requestAnimationFrame(this.updateSeekHeadPeriodic);
+    } else {
+      this.setState({
+        seekActive: false,
+        seekAtEnd: true
+      });
+    }
+  }
+
+  getMeasureBarX() {
+    if (!this.measureBar) {
       this.measureBar = document.getElementById("measureBar");
+    }
+    return this.measureBar.getBoundingClientRect().left;
+  }
+
+  instantBarSeek(beats) {
+    if (this.state.seekActive) {
+      this.playbackEngine.stop(true);
+      this.playbackEngine.seek(beats);
+      this.playbackEngine.play();
+      this.updateSeekHeadPosition();
+    } else {
+      this.playbackEngine.seek(beats);
+      this.updateSeekHeadPosition();
     }
   }
 
   handleMeasureBarClick(event) {
     console.log("handleMeasureBarClick", event.pageX);
-    this.getMeasureBar();
-    this.getOriginalPosition();
-    this.seekbar.style.left = event.pageX + 'px';
-    this.seekhead.style.left =  event.pageX - OFFSET + 'px';
-    this.playbackEngine.seek(this.getMeasureBarOffsetForEventX(event.pageX)/PIXELS_PER_BEAT);
+    let px = event.pageX - this.getMeasureBarX() + this.state.scrollPos;
+    let beats = px / PIXELS_PER_BEAT;
+    this.instantBarSeek(beats);
   }
 
   handleMeasureScroll(pos) {
-    this.setState({scrollPos: pos});
-  }
-
-  getOffsetForEventX(x) {
-    var rect = this.seekdiv.getBoundingClientRect();
-    return x - rect.left;
-  }
-
-  getStyle() {
-    return {
-      left:this.markedposition+"px",
-      position: 'fixed',
-      transition: 'none'
-    };
+    this.setState({scrollPos: pos}, () => this.updateSeekHeadPosition());
   }
 
   render() {
@@ -315,16 +317,23 @@ class App extends Component {
 
     var marker;
 
-    if(this.state.marker) {
-      console.log("MARKER IS TRUE");
-      marker = (
-        <FontIcon
-          id="markerhead"
-          className="material-icons floating-seek-icon"
-          style={this.getStyle()}>
-          arrow_drop_down
-        </FontIcon>
-      );
+    if (this.state.markerPos !== null) {
+      var epx = this.state.markerPos * PIXELS_PER_BEAT - this.state.scrollPos;
+      if (epx >= 0) {
+        var px = this.getMeasureBarX() + epx;
+        marker = (
+          <FontIcon
+            id="markerhead"
+            className="material-icons floating-seek-icon"
+            style={{
+              left:(px-OFFSET)+"px",
+              position: 'fixed',
+              transition: 'none'
+            }}>
+            arrow_drop_down
+          </FontIcon>
+        );
+      }
     }
 
     return (
@@ -337,12 +346,14 @@ class App extends Component {
           scrollPos={this.state.scrollPos}
           handlePlayPress={this.handlePlayPress}
           handleStopPress={this.handleStopPress}
+          handleRewindPress={this.handleRewindPress}
           handleMeasureBarClick={this.handleMeasureBarClick}
           handleMeasureScroll={this.handleMeasureScroll}/>
 
           {marker}
 
           <FontIcon
+            ref={elem => { this.seekHeadElem = elem; }}
             id="seekhead"
             className="material-icons floating-seek-icon"
             style={{position: 'fixed', transition: 'none'}}>
@@ -350,6 +361,7 @@ class App extends Component {
           </FontIcon>
 
           <div
+            ref={div => { this.seekBarDiv = div; }}
             id="seekbar"
             className="floating-seek-bar"
             style={{pointerEvents: 'none'}}>

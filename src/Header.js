@@ -89,7 +89,7 @@ class Header extends Component {
             </FontIcon>
             <FontIcon
               className="material-icons header-trackcontrol-icon"
-              onClick={this.props.handleStopPress}>
+              onClick={this.props.handleRewindPress}>
               skip_previous
             </FontIcon>
           </div>

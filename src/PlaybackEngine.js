@@ -2,7 +2,7 @@ import Tone from 'tone';
 
 function beatsToToneTime(beats) {
     if (beats < 0 || isNaN(beats) || beats > 1e10) {
-        throw new Error("bad beats");
+        throw new Error("bad beats " + beats);
     }
     return `0:${beats}:0`;
 }
@@ -76,6 +76,28 @@ class Wow1 extends Instrument {
                  releaseCurve:'cosine',
                  octaves:4,
              }});
+        this.output = this.synth;
+    }
+    destroy() {
+        this.synth.dispose();
+    }
+    play(freq, dur, time) {
+        this.synth.triggerAttackRelease(freq, dur, time);
+    }
+}
+
+class Bell1 extends Instrument {
+    constructor() {
+        super();
+        this.synth = new Tone.MetalSynth({
+            "harmonicity" : 12,
+            "resonance" : 800,
+            "modulationIndex" : 20,
+            "envelope" : {
+                "decay" : 0.4,
+            },
+            "volume" : -15
+        });
         this.output = this.synth;
     }
     destroy() {
@@ -315,6 +337,9 @@ class PlaybackEngine {
                 break;
             case "wow1":
                 instr = new Wow1();
+                break;
+            case "bell1":
+                instr = new Bell1();
                 break;
             case "kick":
                 instr = new Kick();

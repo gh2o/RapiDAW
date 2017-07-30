@@ -103,7 +103,7 @@ SECONDARY TEAL: #009688;
 
 #header-addtrack-input::placeholder {
   font-size: 12px !important;
-  font-family: 'Open Sans', sans-serif; 
+  font-family: 'Open Sans', sans-serif;
 }
 
 .header-track-measure {
@@ -181,4 +181,8 @@ SECONDARY TEAL: #009688;
   height: 100%;
   left: 16rem;
   background-color: #5D4037;
+}
+
+#markerhead {
+  color: #79BED9 !important;
 }
