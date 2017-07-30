@@ -41,16 +41,23 @@ class App extends Component {
 
     this.state = {
       midiTracks: {},
+      notesByTrackId: {},
       seekpos: {left: '-16rem'}
     };
   }
 
   updateOrRemoveStateTrack(track, remove) {
-    this.setState({
-      midiTracks: update(this.state.midiTracks, 
-        track ? {[track.id]: {$set: track}} :
-                {$unset: [track.id]})
-    });
+    if (remove) {
+      var unset = {$unset: [track.id]};
+      this.setState({
+        midiTracks: update(this.state.midiTracks, unset),
+        notesByTrackId: update(this.state.notesByTrackId, unset)
+      });
+    } else {
+      this.setState({
+        midiTracks: update(this.state.midiTracks, {[track.id]: {$set: track}})
+      });
+    }
   }
 
   handleCreateTrack(event) {
@@ -87,7 +94,10 @@ class App extends Component {
       }
       case 'notesRefreshed':
       {
-        this.setState(this.state);
+        let {track, notes} = eventParams;
+        this.setState({
+          notesByTrackId: update(this.state.notesByTrackId, {[track.id]: {$set: notes}})
+        });
         break;
       }
       default:
@@ -105,14 +115,18 @@ class App extends Component {
       return (
         <Track
             key={track.id}
-            datastoreClient={this.MIDIDatastoreClient}
             track={track}
             notes={this.MIDIDatastoreClient.getNotes(track) || []}
             trackDeleteClicked={track => {
                 this.MIDIDatastoreClient.removeTrack(track);
                 this.updateOrRemoveStateTrack(track, true);
             }}
-            noteAddedCallback={() => this.setState(this.state)}/>
+            noteAddedCallback={(track, note) => {
+              this.MIDIDatastoreClient.addOrUpdateNote(track, note);
+              this.setState({
+                notesByTrackId: update(this.state.notesByTrackId, {[track.id]: {$push: [note]}})
+              });
+            }}/>
       );
     });
 
