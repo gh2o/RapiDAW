@@ -5,9 +5,10 @@ class Track extends Component {
   render() {
     return (
       <div className="track-container">
-      	<div className="track-info">
-      		<p>{this.props.track.name}</p>
-      	</div>
+        <div className="track-info">
+            <p>{this.props.track.name}</p>
+            
+        </div>
       </div>
     );
   }
