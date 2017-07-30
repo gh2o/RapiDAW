@@ -146,7 +146,7 @@ class App extends Component {
 
   onKeyPress(e) {
     e = e || window.event;
-    if (!(e.keyCode !== SPACE_KEY || e.keyCode !== MARKER_KEY && e.keyCode !== PLAYMARK_KEY)) {
+    if ([SPACE_KEY, MARKER_KEY, PLAYMARK_KEY].indexOf(e.keyCode) < 0) {
       return;
     }
     console.log("enter pressed - onKeyPress Called");
