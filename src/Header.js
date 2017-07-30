@@ -49,7 +49,11 @@ class Header extends Component {
               onClick={this.props.handlePlayPress}>
                 play_arrow
             </FontIcon>
-            <FontIcon className="material-icons header-trackcontrol-icon">pause</FontIcon>
+            <FontIcon
+              className="material-icons header-trackcontrol-icon"
+              onClick={this.props.handleStopPress}>
+              pause
+            </FontIcon>
             <FontIcon className="material-icons header-trackcontrol-icon">skip_previous</FontIcon>
 
             <div className="header-trackcontrol-seek">

@@ -43,6 +43,8 @@ class App extends Component {
     this.handleCreateTrack = this.handleCreateTrack.bind(this);
     this.datastoreCallback = this.datastoreCallback.bind(this);
     this.handlePlayPress = this.handlePlayPress.bind(this);
+    this.handleStopPress = this.handleStopPress.bind(this);
+
 
     this.MIDIDatastore = new MIDIDatastore();
     this.MIDIDatastoreClient = this.MIDIDatastore.getClient("MainClient");
@@ -53,6 +55,7 @@ class App extends Component {
 
     this.state = {
       midiTracks: {},
+      playState: "initial",
       notesByTrackId: {}
     };
   }
@@ -129,27 +132,49 @@ class App extends Component {
 
   handlePlayPress() {
     console.log("handlePlayPress");
+    if(this.state.playState === "initial") {
+      this.seekhead = document.getElementById("seekhead");
+      this.seekbar = document.getElementById("seekbar");
+      this.origBarPos = this.seekbar.getBoundingClientRect().left;
+      this.origHeadPos = this.seekhead.getBoundingClientRect().left;
+    } else if(this.state.playState === "finish") {
+      this.seekbar.style.left = this.origBarPos+'px';
+      this.seekhead.style.left = this.origHeadPos+'px';
+      this.playbackEngine.seek(0.0);
+    }
+    this.setState({playState: "play"})
     this.playbackEngine.play();
     window.requestAnimationFrame(this.updateSeekHead.bind(this));
   }
 
+  handleStopPress() {
+    console.log("handleStopPress");
+    if(this.state.playState === "play") {
+      this.setState({playState: "paused"});
+      this.playbackEngine.stop(false);
+    } else {
+      this.seekbar.style.left = this.origBarPos+'px';
+      this.seekhead.style.left = this.origHeadPos+'px';
+      this.playbackEngine.stop(true);
+      this.setState({playState: "initial"});
+    }
+  }
+
   updateSeekHead() {
-    var seekhead = document.getElementById("seekhead");
-    var seekbar = document.getElementById("seekbar");
-    var currbarPos = seekbar.getBoundingClientRect().left;
-    var currheadPos = seekhead.getBoundingClientRect().left;
     var currPlayPos = this.playbackEngine.currentPosition();
 
-    console.log("updateSeekHead before", currPos, currPlayPos);
+    console.log("updateSeekHead before", currPlayPos);
 
-    seekbar.style.left = (currbarPos+currPlayPos+10)+'px';
-    seekhead.style.left = (currheadPos+currPlayPos+10)+'px';
+    this.seekbar.style.left = (this.origBarPos+currPlayPos*PIXELS_PER_BEAT)+'px';
+    this.seekhead.style.left = (this.origHeadPos+currPlayPos*PIXELS_PER_BEAT)+'px';
 
-    var currPos = seekhead.getBoundingClientRect().left;
-    console.log("updateSeekHead after", currPos, currPlayPos);
+    console.log("updateSeekHead after", currPlayPos);
 
     if(this.playbackEngine.isPlaying()) {
       window.requestAnimationFrame(this.updateSeekHead.bind(this));
+    } else {
+      this.playbackEngine.stop(true);
+      this.setState({playState: "finish"});
     }
   }
 
