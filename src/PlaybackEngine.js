@@ -41,7 +41,7 @@ class Lead2 extends Instrument {
         this.synth1 = new Tone.PolySynth(10, Tone.Synth,
             {oscillator: {type:'triangle'},
              envelope: {decay:0.18,sustain:0,release:0.02}});
-        ///this.synth1.connect(this.combiner);
+        this.synth1.connect(this.combiner);
 
         this.synth2 = new Tone.PolySynth(10, Tone.Synth,
             {oscillator: {type:'square'},
