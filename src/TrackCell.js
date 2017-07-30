@@ -10,6 +10,13 @@ class TrackCell extends Component {
       <div
         className="track-cell-container"
         style={this.getStyle()}
+        onMouseDown={evt => {
+          if (evt.button === 0) {
+            if (this.props.note) {
+              this.props.noteDragStarted(this.props.note);
+            }
+          }
+        }}
         onContextMenu={evt => {
           evt.preventDefault();
           if (this.props.note) {

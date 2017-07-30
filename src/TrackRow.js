@@ -13,6 +13,7 @@ class TrackRow extends Component {
     super();
     this.handleMouseDownOrMove = this.handleMouseDownOrMove.bind(this);
     this.handleMouseUp = this.handleMouseUp.bind(this);
+    this.noteDragStarted = this.noteDragStarted.bind(this);
     this.noteDeleteClicked = this.noteDeleteClicked.bind(this);
     this.state = {
       notes: [],
@@ -49,6 +50,10 @@ class TrackRow extends Component {
     }
   }
 
+  noteDragStarted(note) {
+    this.props.noteDragStarted(note);
+  }
+
   noteDeleteClicked(note) {
     this.props.noteDeleted(note);
   }
@@ -60,6 +65,7 @@ class TrackRow extends Component {
         key={note.id}
         beat={note.beat}
         note={note}
+        noteDragStarted={this.noteDragStarted}
         noteDeleteClicked={this.noteDeleteClicked}/>);
     }
     if (this.state.mouseIn && this.props.mouseActive) {

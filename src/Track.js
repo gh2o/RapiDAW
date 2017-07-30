@@ -41,7 +41,6 @@ class Track extends Component {
 
     this.state = {
       mouseActive: false,
-      activeNote: null,
     }
   }
 
@@ -63,7 +62,11 @@ class Track extends Component {
         notes={notesByPitch[pitch] || []}
         mouseActive={this.state.mouseActive}
         noteAdded={note => this.props.noteAddedCallback(this.props.track, note)}
-        noteDeleted={note => this.props.noteDeletedCallback(this.props.track, note)}/>);
+        noteDeleted={note => this.props.noteDeletedCallback(this.props.track, note)}
+        noteDragStarted={note => {
+          this.props.noteDeletedCallback(this.props.track, note);
+          this.setState({mouseActive: true});
+        }}/>);
     }
 
     return (
