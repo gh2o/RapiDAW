@@ -1,6 +1,7 @@
 // vim: ts=2 sw=2
 
 import React, { Component } from 'react';
+import update from 'immutability-helper';
 import './App.css';
 
 // MODEL
@@ -44,6 +45,14 @@ class App extends Component {
     };
   }
 
+  updateOrRemoveStateTrack(track, remove) {
+    this.setState({
+      midiTracks: update(this.state.midiTracks, 
+        track ? {[track.id]: {$set: track}} :
+                {$unset: [track.id]})
+    });
+  }
+
   handleCreateTrack(event) {
     if (event.keyCode !== ENTER_KEY) {
       return;
@@ -57,8 +66,7 @@ class App extends Component {
     var track = new MIDITrack(id,trackName);
 
     this.MIDIDatastoreClient.addOrUpdateTrack(track);
-    this.state.midiTracks[track.id] = track;
-    this.setState();
+    this.updateOrRemoveStateTrack(track, false);
   }
 
   datastoreCallback(/*String*/ eventName, /*Object*/ eventParams) {
@@ -68,15 +76,13 @@ class App extends Component {
       {
         console.log("TRACK ADDED");
         let {track} = eventParams;
-        this.state.midiTracks[track.id] = track;
-        this.setState(this.state);
+        this.updateOrRemoveStateTrack(track, false);
         break;
       }
       case 'trackRemoved':
       {
         let {track} = eventParams;
-        delete this.state.midiTracks[track.id];
-        this.setState(this.state);
+        this.updateOrRemoveStateTrack(track, true);
         break;
       }
       case 'notesRefreshed':
@@ -104,8 +110,7 @@ class App extends Component {
             notes={this.MIDIDatastoreClient.getNotes(track) || []}
             trackDeleteClicked={track => {
                 this.MIDIDatastoreClient.removeTrack(track);
-                delete this.state.midiTracks[track.id];
-                this.setState(this.state);
+                this.updateOrRemoveStateTrack(track, true);
             }}
             noteAddedCallback={() => this.setState(this.state)}/>
       );
