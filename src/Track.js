@@ -140,10 +140,12 @@ class Track extends Component {
         </div>
 
         <div className="pianoroll-container">
-          <div className="piano">
+          <div className="piano" ref={div => { this.pianoKeysDiv = div; }}>
             {this.pianoElements}
           </div>
-          <div className="piano-container" ref={div => { this.pianoConDiv = div; }}>
+          <div className="piano-container"
+              ref={div => { this.pianoConDiv = div; }}
+              onScroll={evt => { this.pianoKeysDiv.scrollTop = evt.target.scrollTop; }}>
             <div className="piano-sub">
               {trackRows}
             </div>
