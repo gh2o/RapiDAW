@@ -1,4 +1,4 @@
-/* vim: sw=2 ts=2 */
+/* vim sw=2 ts=2 */
 
 .track-container {
   background-color: #E0E0E0;
@@ -7,6 +7,9 @@
   transition: background-color 0.33s;
   margin-bottom: 1rem;
   display: flex;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
 }
 
 .track-container:hover {
