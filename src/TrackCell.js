@@ -31,7 +31,8 @@ class TrackCell extends Component {
 
   getStyle() {
     return {
-      left:(this.props.beat * PIXELS_PER_BEAT)+"px"
+      left:(this.props.beat * PIXELS_PER_BEAT)+"px",
+      width:(this.props.duration * PIXELS_PER_BEAT)+"px",
     };
   }
 }
