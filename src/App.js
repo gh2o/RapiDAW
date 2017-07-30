@@ -89,7 +89,7 @@ class App extends Component {
     var trackName = event.target.value.trim();
     event.target.value = '';
     var id = generateID();
-    var track = new MIDITrack(id,trackName,0);
+    var track = new MIDITrack(id,trackName,0,1);
 
     this.MIDIDatastoreClient.addOrUpdateTrack(track);
     this.updateOrRemoveStateTrack(track, false);
@@ -223,6 +223,12 @@ class App extends Component {
             }}
             trackInstrumentUpdated={(track,instrument) => {
               track.instrument = instrument;
+              this.MIDIDatastoreClient.addOrUpdateTrack(track);
+              this.updateOrRemoveStateTrack(track, false);
+            }}
+            trackVolumeUpdated={(track,volume) => {
+              console.log("VOLUME UPDATE", volume);
+              track.volume = volume;
               this.MIDIDatastoreClient.addOrUpdateTrack(track);
               this.updateOrRemoveStateTrack(track, false);
             }}

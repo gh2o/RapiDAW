@@ -12,6 +12,8 @@ import Slider from 'material-ui/Slider';
 
 import './Track.css';
 
+export const PIANO_MIDI_OFFSET = 9; // typical piano starts at MIDI note 9 for A0
+
 class Track extends Component {
   constructor() {
     super();
@@ -38,10 +40,11 @@ class Track extends Component {
       false
     ];
     for (var i=0; i < this.pianoElements.length; i++) {
+        var pitch = i + PIANO_MIDI_OFFSET;
         if (this.pianoElements[i]) {
-          this.pianoElements[i] = (<div className="piano-key black" key={i}></div>);
+          this.pianoElements[i] = (<div className="piano-key black" key={i}>{pitch}</div>);
         } else {
-          this.pianoElements[i] = (<div className="piano-key white" key={i}></div>);
+          this.pianoElements[i] = (<div className="piano-key white" key={i}>{pitch}</div>);
         }
     }
     this.pianoElements.reverse();
@@ -54,8 +57,11 @@ class Track extends Component {
     }
   }
 
-  handleChange = (event, index, instrument) => {
+  handleInstrumentChange = (event, index, instrument) => {
       this.props.trackInstrumentUpdated(this.props.track, instrument);
+  }
+  handleVolumeChange = (event, volume) => {
+      this.props.trackVolumeUpdated(this.props.track, volume);
   }
 
   finishDragOrResize() {
@@ -86,7 +92,7 @@ class Track extends Component {
 
     var trackRows = [];
     for (var i = 0; i < 88; i++) {
-      let pitch = 87 - i;
+      let pitch = PIANO_MIDI_OFFSET + 87 - i;
       trackRows.push(<TrackRow
         key={pitch}
         pitch={pitch}
@@ -125,9 +131,9 @@ class Track extends Component {
           <p>{this.props.track.name}</p>
           <DropDownMenu 
             value={this.props.track.instrument} 
-            onChange={this.handleChange}
+            onChange={this.handleInstrumentChange}
             iconStyle={{fill: '#8D6E63'}}
-            underlineStyle={{borderColor: '#8D6E63'}}
+            underlineStyle={{display: 'none'}}
           >
             <MenuItem value={0} primaryText="RAW" />
             <MenuItem value={1} primaryText="Instrument1" />
@@ -136,7 +142,7 @@ class Track extends Component {
             <MenuItem value={4} primaryText="Instrument4" />
             <MenuItem value={5} primaryText="Instrument5" />
           </DropDownMenu>
-          <Slider defaultValue={1} className="track-info-slider"/>
+          <Slider value={this.props.track.volume} className="track-info-slider" onChange={this.handleVolumeChange}/>
         </div>
 
         <div className="pianoroll-container">
