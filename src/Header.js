@@ -15,8 +15,7 @@ class Header extends Component {
     return (
       <Paper className="header-container" zDepth={3}>
         <Toolbar className="header-toolbar">
-          <ToolbarTitle text="SONGNAME" />    
-
+          <ToolbarTitle text={this.props.songname} />
           <ToolbarGroup>
             <Avatar className="header-avatar" icon={<FontIcon className="material-icons">person</FontIcon>}/>
             <Avatar className="header-avatar" icon={<FontIcon className="material-icons">person</FontIcon>}/>
@@ -26,8 +25,8 @@ class Header extends Component {
 
         <div className="header-subcontainer">
           <Paper className="header-addtrack" zDepth={2}>
-            <TextField 
-              className="header-addtrack-input" 
+            <TextField
+              className="header-addtrack-input"
               defaultValue="New Track"
               placeholder="create new track"
               value={this.props.create.value}
