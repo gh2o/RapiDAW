@@ -89,6 +89,7 @@ class PlaybackEngine {
         while (true) {
             item = this.note_timeline.peek();
             if (!item) {
+                this.stop(false);
                 return;
             }
             if (item.time > cur_ticks) {
