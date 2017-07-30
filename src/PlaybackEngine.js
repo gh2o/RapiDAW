@@ -71,6 +71,13 @@ class HiHat extends Instrument {
     }
 }
 
+class TrackState {
+    constructor() {
+        this.instrument = null;
+        this.spec = null;
+    }
+}
+
 class PlaybackEngine {
     constructor(/*MIDIDatastore*/ datastore) {
         this.datastoreCallback = this.datastoreCallback.bind(this);
@@ -81,8 +88,7 @@ class PlaybackEngine {
         this.transport_evt = null;
         this.note_timeline = null;
 
-        this.instr_by_track_id = {};
-        this.instrspc_by_track_id = {};
+        this.trkst_by_track_id = {};
 
         window.peng = this;
     }
@@ -195,7 +201,7 @@ class PlaybackEngine {
             if (item.time > cur_ticks) {
                 break;
             }
-            this.instr_by_track_id[item.track.id]
+            this.trkst_by_track_id[item.track.id].instrument
                 .play(
                     pitchNumToFrequency(item.note.pitch),
                     new Tone.Time(item.duration, "i").toSeconds(),
@@ -213,21 +219,28 @@ class PlaybackEngine {
             case 'trackAddedOrUpdated':
             {
                 let {track} = eventParams;
-                let instr = this.instr_by_track_id[track.id];
-                if (!isSameInstrument(track.instrument, this.instrspc_by_track_id[track.id])) {
-                    instr && instr.destroy();
-                    this.instr_by_track_id[track.id] = this.createInstrumentForTrack(track);
-                    this.instrspc_by_track_id[track.id] = track.instrument;
+                let trkst = this.trkst_by_track_id[track.id] || new TrackState();
+                this.trkst_by_track_id[track.id] = trkst;
+                let {instrument} = trkst;
+                if (!isSameInstrument(track.instrument, trkst.spec)) {
+                    instrument && instrument.destroy();
+                    trkst.fader || (trkst.fader = new Tone.Gain(track.volume)).toMaster();
+                    trkst.instrument = this.createInstrumentForTrack(track, trkst.fader);
+                    trkst.spec = track.instrument;
                 }
+                trkst.fader.gain.value = track.volume;
                 break;
             }
             case 'trackRemoved':
             {
                 let {track} = eventParams;
-                let instr = this.instr_by_track_id[track.id];
-                instr && instr.destroy();
-                delete this.instr_by_track_id[track.id];
-                delete this.instrspc_by_track_id[track.id];
+                let trkst = this.trkst_by_track_id[track.id];
+                if (trkst) {
+                    let {instrument} = trkst;
+                    instrument && instrument.destroy();
+                    trkst.fader && trkst.fader.dispose();
+                    delete this.trkst_by_track_id[track.id];
+                }
                 break;
             }
             default:
@@ -237,7 +250,7 @@ class PlaybackEngine {
         }
     }
 
-    /*Tone*/ createInstrumentForTrack(/*MIDITrack*/ track) {
+    /*Tone*/ createInstrumentForTrack(/*MIDITrack*/ track, /*Tone*/ output) {
         let instr;
         switch (track.instrument) {
             case "lead1":
@@ -251,7 +264,7 @@ class PlaybackEngine {
                 instr = new HiHat();
                 break;
         }
-        instr.output.toMaster();
+        instr.output.connect(output);
         return instr;
     }
 }

@@ -112,7 +112,12 @@ class Track extends Component {
            }}>
 
         <div className="track-info">
-          <FontIcon className="material-icons close-link"  onClick={() => this.props.trackDeleteClicked(this.props.track)}>close</FontIcon>
+          <FontIcon
+            className="material-icons close-link"
+            style={{cursor: 'pointer'}}
+            onClick={() => this.props.trackDeleteClicked(this.props.track)}>
+              close
+          </FontIcon>
           <br />
           <p>{this.props.track.name}</p>
           <DropDownMenu 
