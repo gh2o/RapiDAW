@@ -64,7 +64,11 @@ class Header extends Component {
               onClick={this.props.handleStopPress}>
               pause
             </FontIcon>
-            <FontIcon className="material-icons header-trackcontrol-icon">skip_previous</FontIcon>
+            <FontIcon
+              className="material-icons header-trackcontrol-icon"
+              onClick={this.props.handleStopPress}>
+              skip_previous
+            </FontIcon>
 
             <div className="header-trackcontrol-seek">
               {/* track seeker here*/}
@@ -72,7 +76,10 @@ class Header extends Component {
           </Paper>
         </div>
 
-        <div className="header-track-measure">
+        <div
+          id="measureBar"
+          className="header-track-measure"
+          onClick={this.props.handleMeasureBarClick}>
           {this.measure}
         </div>
 

@@ -12,25 +12,28 @@ import { generateID } from './Utils.js';
 
 // MATERIAL UI COMPONENTS
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import ContentAdd from 'material-ui/svg-icons/content/add';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import FontIcon from 'material-ui/FontIcon';
 
 // UI COMPONENTS
 import Header from './Header.js';
-import TrackHead from './TrackHead.js';
 import Track from './Track.js';
 
 // PLAYBACK
 import PlaybackEngine from './PlaybackEngine.js';
 
 var ENTER_KEY = 13;
+var SPACE_KEY = 32;
+
 export const PIXELS_PER_BEAT = 40;
 
 class App extends Component {
 
   constructor() {
     super();
+    console.log("ONKEYPRESS");
+    document.onkeypress = this.onKeyPress.bind(this);
+
     injectTapEventPlugin();
 
     this.muiTheme = getMuiTheme({
@@ -44,7 +47,7 @@ class App extends Component {
     this.datastoreCallback = this.datastoreCallback.bind(this);
     this.handlePlayPress = this.handlePlayPress.bind(this);
     this.handleStopPress = this.handleStopPress.bind(this);
-
+    this.handleMeasureBarClick = this.handleMeasureBarClick.bind(this);
 
     this.MIDIDatastore = new MIDIDatastore();
     this.MIDIDatastoreClient = this.MIDIDatastore.getClient("MainClient");
@@ -96,11 +99,9 @@ class App extends Component {
   }
 
   datastoreCallback(/*String*/ eventName, /*Object*/ eventParams) {
-    console.log(eventName);
     switch (eventName) {
       case 'trackAddedOrUpdated':
       {
-        console.log("TRACK ADDED");
         let {track} = eventParams;
         this.updateOrRemoveStateTrack(track, false);
         break;
@@ -139,6 +140,25 @@ class App extends Component {
     }
   }
 
+  onKeyPress(e) {
+    e = e || window.event;
+    if (e.keyCode !== SPACE_KEY) {
+      return;
+    }
+    console.log("enter pressed - onKeyPress Called");
+    e.preventDefault();
+    this.getOriginalPosition();
+    if(this.state.playState === "play") {
+      this.playbackEngine.stop(false);
+      window.requestAnimationFrame(this.updateSeekHead.bind(this));
+      this.state.playState = "paused";
+    } else if(this.state.playState === "paused" || this.state.playState === "initial") {
+      this.playbackEngine.play();
+      window.requestAnimationFrame(this.updateSeekHead.bind(this));
+      this.state.playState = "play";
+    }
+    // use e.keyCode
+  }
 
   //initial
   //play
@@ -190,6 +210,26 @@ class App extends Component {
     }
   }
 
+  getMeasureBarOffsetForEventX(x) {
+    var rect = this.measureBar.getBoundingClientRect();
+    return x - rect.left;
+  }
+
+  getMeasureBar() {
+    if(this.measureBar == null) {
+      this.measureBar = document.getElementById("measureBar");
+    }
+  }
+
+  handleMeasureBarClick(event) {
+    console.log("handleMeasureBarClick", event.pageX);
+    this.getMeasureBar();
+    this.getOriginalPosition();
+    this.seekbar.style.left = event.pageX + 'px';
+    this.seekhead.style.left =  event.pageX - 23.5 + 'px';
+    this.playbackEngine.seek(this.getMeasureBarOffsetForEventX(event.pageX)/PIXELS_PER_BEAT);
+  }
+
   getOffsetForEventX(x) {
     var rect = this.seekdiv.getBoundingClientRect();
     return x - rect.left;
@@ -228,7 +268,6 @@ class App extends Component {
               this.updateOrRemoveStateTrack(track, false);
             }}
             trackVolumeUpdated={(track,volume) => {
-              console.log("VOLUME UPDATE", volume);
               track.volume = volume;
               this.MIDIDatastoreClient.addOrUpdateTrack(track);
               this.updateOrRemoveStateTrack(track, false);
@@ -245,7 +284,8 @@ class App extends Component {
           create={{ onKeyDown: this.handleCreateTrack }}
           songname="THE DOPEST SONG"
           handlePlayPress={this.handlePlayPress}
-          handleStopPress={this.handleStopPress}/>
+          handleStopPress={this.handleStopPress}
+          handleMeasureBarClick={this.handleMeasureBarClick}/>
 
           <FontIcon
             id="seekhead"

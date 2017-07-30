@@ -64,7 +64,6 @@ class Track extends Component {
   }
 
   render() {
-    console.log(this.props.track);
     var notesByPitch = {};
     for (let note of Object.values(this.props.notes)) {
       if (!(note.pitch in notesByPitch)) {
@@ -118,12 +117,15 @@ class Track extends Component {
             iconStyle={{fill: '#8D6E63'}}
             underlineStyle={{display: 'none'}}
           >
-            <MenuItem value={0} primaryText="RAW" />
-            <MenuItem value={1} primaryText="Instrument1" />
-            <MenuItem value={2} primaryText="Instrument2" />
-            <MenuItem value={3} primaryText="Instrument3" />
-            <MenuItem value={4} primaryText="Instrument4" />
-            <MenuItem value={5} primaryText="Instrument5" />
+            <MenuItem value="lead1" primaryText="Lead 1" />
+            <MenuItem value="lead2" primaryText="Lead 2" />
+            <MenuItem value="lead3" primaryText="Lead 3" />
+            <MenuItem value="bass1" primaryText="Bass 1" />
+            <MenuItem value="bass2" primaryText="Bass 2" />
+            <MenuItem value="bass3" primaryText="Bass 3" />
+            <MenuItem value="kick" primaryText="Kick" />
+            <MenuItem value="snare" primaryText="Snare" />
+            <MenuItem value="hihat" primaryText="Hi-Hat" />
           </DropDownMenu>
           <Slider value={this.props.track.volume} className="track-info-slider" onChange={this.handleVolumeChange}/>
         </div>

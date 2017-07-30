@@ -22,7 +22,6 @@ class MIDIDatastore {
     }
 
     /*void*/ fireEvent(/*String*/ client, /*String*/ eventName, /*Object*/ eventParams) {
-        console.log("fireEvent");
         let clientName = client.name;
         for (let cbName in this.callbacks) {
             if (cbName !== clientName) {
@@ -67,7 +66,6 @@ class MIDIDatastoreClient {
     }
 
     /*void*/ addOrUpdateTrack(/*MIDITrack*/ track) {
-        console.log("addOrUpdateTrack called!");
         this.datastore.tracksByTrackId[track.id] = track;
         if (!(track.id in this.datastore.notesByTrackId)) {
             this.datastore.notesByTrackId[track.id] = {};
