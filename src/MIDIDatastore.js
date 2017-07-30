@@ -40,7 +40,7 @@ class MIDIDatastoreClient {
     }
 
     /*MIDINote[]*/ getNotes(/*MIDITrack*/ track) {
-        return this.datastore.notesByTrackId[track.id];
+        return Object.values(this.datastore.notesByTrackId[track.id]);
     }
 
     /*MIDITrack[]*/ getTracks() {
