@@ -266,7 +266,10 @@ class App extends Component {
     let beats = px / PIXELS_PER_BEAT;
 
     if (this.state.seekActive) {
-      // TODO
+      this.playbackEngine.stop(true);
+      this.playbackEngine.seek(beats);
+      this.playbackEngine.play();
+      this.updateSeekHeadPosition();
     } else {
       this.playbackEngine.seek(beats);
       this.updateSeekHeadPosition();
