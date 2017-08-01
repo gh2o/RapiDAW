@@ -110,6 +110,24 @@ class Bell1 extends Instrument {
     }
 }
 
+class Saw1 extends Instrument {
+    constructor() {
+        super();
+        this.synth = new Tone.PolySynth(10, Tone.Synth,
+            {oscillator: {type: 'sawtooth'}, envelope: {attack:0.005,decay:0.005,sustain:1,release:0.005}});
+        this.filter = new Tone.Filter(12000);
+        this.synth.connect(this.filter);
+        this.output = this.filter;
+    }
+    destroy() {
+        this.synth.dispose();
+        this.filter.dispose();
+    }
+    play(freq, dur, time) {
+        this.synth.triggerAttackRelease(freq, dur, time);
+    }
+}
+
 class Kick extends Instrument {
     constructor() {
         super();
@@ -359,6 +377,9 @@ class PlaybackEngine {
                 break;
             case "bell1":
                 instr = new Bell1();
+                break;
+            case "saw1":
+                instr = new Saw1();
                 break;
             case "kick":
                 instr = new Kick();

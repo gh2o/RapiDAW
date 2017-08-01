@@ -130,6 +130,7 @@ class Track extends Component {
             <MenuItem value="lead2" primaryText="Lead 2" />
             <MenuItem value="wow1" primaryText="Wow 1" />
             <MenuItem value="bell1" primaryText="Bell 1" />
+            <MenuItem value="saw1" primaryText="Saw 1" />
             <MenuItem value="kick" primaryText="Kick" />
             <MenuItem value="hihat" primaryText="Hi-Hat" />
           </DropDownMenu>
