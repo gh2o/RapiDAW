@@ -155,10 +155,10 @@ class Track extends Component {
   }
 
   componentDidUpdate() {
-    if (this.pianoConDiv.scrollLeft !== this.props.scrollPos) {
-      this.pianoConDiv.scrollLeft = Math.min(
-        this.props.scrollPos,
-        this.pianoConDiv.scrollWidth - this.pianoConDiv.clientWidth);
+    let div = this.pianoConDiv;
+    let maxScroll = div.scrollWidth - div.clientWidth;
+    if (div.scrollLeft !== this.props.scrollPos && !(this.props.scrollPos >= maxScroll && div.scrollLeft === maxScroll)) {
+      div.scrollLeft = Math.min(this.props.scrollPos, maxScroll);
     }
   }
 }

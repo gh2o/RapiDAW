@@ -46,10 +46,10 @@ class Header extends Component {
   }
 
   componentDidUpdate() {
-    if (this.mbarSubDiv.scrollLeft !== this.props.scrollPos) {
-      this.mbarSubDiv.scrollLeft = Math.min(
-          this.props.scrollPos,
-          this.mbarSubDiv.scrollWidth - this.mbarSubDiv.clientWidth);
+    let div = this.mbarSubDiv;
+    let maxScroll = div.scrollWidth - div.clientWidth;
+    if (div.scrollLeft !== this.props.scrollPos && !(this.props.scrollPos >= maxScroll && div.scrollLeft === maxScroll)) {
+      div.scrollLeft = Math.min(this.props.scrollPos, maxScroll);
     }
   }
 

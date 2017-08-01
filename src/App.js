@@ -246,7 +246,7 @@ class App extends Component {
 
     var {desc, epx} = this.updateSeekHeadPosition();
     if (desc === 'right') {
-      this.setState({scrollPos: epx - 50});
+      this.setState({scrollPos: this.state.scrollPos + epx - 50});
     }
 
     if (this.playbackEngine.isPlaying()) {
