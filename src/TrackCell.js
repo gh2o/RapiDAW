@@ -43,8 +43,8 @@ class TrackCell extends Component {
     );
   }
 
-  resizeUpdate(evt, rect) {
-    this.setState({ resizeMousePx: evt.pageX - rect.left });
+  resizeUpdate(evt, rect, scrollPos) {
+    this.setState({ resizeMousePx: evt.pageX - rect.left + scrollPos });
   }
 
   resizeFinish() {

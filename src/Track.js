@@ -107,7 +107,7 @@ class Track extends Component {
            onMouseLeave={this.finishDragOrResize}
            onMouseMove={evt => {
              if (this.state.resizedNote) {
-               this.state.resizedCell.resizeUpdate(evt, this.pianoConDiv.getBoundingClientRect());
+               this.state.resizedCell.resizeUpdate(evt, this.pianoConDiv.getBoundingClientRect(), this.props.scrollPos);
              }
            }}>
 
