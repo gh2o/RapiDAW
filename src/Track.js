@@ -155,7 +155,9 @@ class Track extends Component {
 
   componentDidUpdate() {
     if (this.pianoConDiv.scrollLeft !== this.props.scrollPos) {
-      this.pianoConDiv.scrollLeft = this.props.scrollPos;
+      this.pianoConDiv.scrollLeft = Math.min(
+        this.props.scrollPos,
+        this.pianoConDiv.scrollWidth - this.pianoConDiv.clientWidth);
     }
   }
 }
