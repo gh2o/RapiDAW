@@ -132,7 +132,7 @@ class Kick extends Instrument {
     constructor() {
         super();
         this.ready = false;
-        this.player = new Tone.Player('/kick.wav', () => {this.ready = true;});
+        this.player = new Tone.Player('kick.wav', () => {this.ready = true;});
         this.output = this.player;
     }
     destroy() {
