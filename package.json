@@ -14,7 +14,7 @@
     "react-tap-event-plugin": "*",
     "tone": "^0.10.0"
   },
-  "homepage": "https://www.thegavinli.com/rihack/",
+  "homepage": "https://gh2o.github.io/RapiDAW",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
