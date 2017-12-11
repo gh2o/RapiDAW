@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import update from 'immutability-helper';
 import './App.css';
-import './loader.css';
+// import './loader.css';
 
 // MODEL
 import RapidWrapper from './RapidWrapper.js';
@@ -355,7 +355,7 @@ class App extends Component {
     }
 
   componentDidMount() {
-    this.animateLoader();
+    // this.animateLoader();
   }
 
   render() {
@@ -439,7 +439,7 @@ class App extends Component {
       <MuiThemeProvider muiTheme={this.muiTheme}>
         <div className="App">
 
-          {!this.state.loaded ? loader : null}
+          {/* {!this.state.loaded ? loader : null} */}
 
           <Header
           create={{ onKeyDown: this.handleCreateTrack }}
