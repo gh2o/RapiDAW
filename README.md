@@ -13,3 +13,8 @@ The project is up and running [here](https://gh2o.github.io/RapiDAW/)!
 #### Shoutouts
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
+
+## Team
+* Arlen Pan
+* Gavin Li
+* Leo Wong
